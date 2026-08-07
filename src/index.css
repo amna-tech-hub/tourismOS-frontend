@@ -1,1 +1,84 @@
 @import "tailwindcss";
+
+@theme {
+  /* ===== FONTS ===== */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+
+  /* ===== COLOR PALETTE (Light Only) ===== */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F8FAFC;
+  --color-bg-tertiary: #F1F5F9;
+  --color-bg-card: #FFFFFF;
+
+  --color-text-primary: #0F172A;     /* Deep slate for crisp readability */
+  --color-text-secondary: #475569;   /* Subtitles & card descriptions */
+  --color-text-muted: #94A3B8;       /* Meta information & captions */
+
+  /* Yellow Accents & Buttons */
+  --color-amber-primary: #F59E0B;     /* Main CTA Yellow */
+  --color-amber-hover: #D97706;       /* Hover Yellow */
+  --color-amber-light: #FEF3C7;       /* Soft Yellow for Badges & Highlights */
+
+  --color-border-subtle: #E2E8F0;
+  --color-border-light: #F1F5F9;
+
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+}
+
+/* ===== BASE STYLES ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans); /* Outfit */
+  font-weight: 400;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings: Playfair Display */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif); /* Playfair Display */
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* Paragraphs, Subheadings, & UI Text: Outfit */
+p, span, label, input, button, .subheading {
+  font-family: var(--font-sans); /* Outfit */
+}
+
+/* ===== REUSABLE BUTTON & UI CLASSES ===== */
+@layer components {
+  /* Primary Yellow Button */
+  .btn-yellow {
+    @apply inline-flex items-center justify-center font-sans font-medium rounded-xl px-6 py-3 
+           bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 
+           hover:bg-amber-600 transition-all duration-200 active:scale-[0.98] 
+           disabled:opacity-50 disabled:pointer-events-none cursor-pointer;
+  }
+
+  /* Outline Button */
+  .btn-outline {
+    @apply inline-flex items-center justify-center font-sans font-medium rounded-xl px-6 py-3 
+           bg-white text-slate-900 border border-slate-200 
+           hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 
+           active:scale-[0.98] cursor-pointer;
+  }
+
+  /* Soft Accent Badge */
+  .badge-yellow {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-sans font-semibold 
+           bg-amber-100 text-amber-900;
+  }
+
+  /* Explicit Subheading Utility */
+  .subheading {
+    @apply font-sans text-slate-600 font-medium;
+  }
+}

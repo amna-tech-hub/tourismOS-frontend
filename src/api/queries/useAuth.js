@@ -42,6 +42,37 @@ export const useLogout = () => {
   });
 };
 
+// Fixed: Wrapped in custom hook functions
+export const useVerifyOtp = () => {
+  return useMutation({
+    mutationFn: (payload) => authApi.verifyOTP(payload),
+  });
+};
+
+export const useResendOtp = () => {
+  return useMutation({
+    mutationFn: (payload) => authApi.resendOTP(payload),
+  });
+};
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: (payload) => authApi.forgotPassword(payload),
+  });
+};
+
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: (payload) => authApi.resetPassword(payload),
+  });
+};
+
+export const useAcceptInvite = () => {
+  return useMutation({
+    mutationFn: (payload) => authApi.acceptInvite(payload),
+  });
+};
+
 // Check active session on app boot via httpOnly cookie
 export const useCurrentAuthUser = () => {
   return useQuery({

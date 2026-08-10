@@ -37,6 +37,8 @@ import SuperAdminDashboard from '../pages/super-admin/SuperAdminDashboard';
 import NotFound from '../pages/shared/NotFound';
 import Unauthorized from '../pages/shared/Unauthorized';
 import DashboardLayout from '../layouts/DashboardLayout';
+import CompanyManagement from '../pages/super-admin/CompanyManagement';
+import UserManagement from '../pages/super-admin/UserManagement';
 
 export const router = createBrowserRouter([
   // PUBLIC & UNPROTECTED ROUTES
@@ -96,7 +98,7 @@ export const router = createBrowserRouter([
 
       // 3. EMPLOYEE PORTAL
       {
-        element: <RoleRoute allowedRoles={[ROLES.EMPLOYEE]} />,
+        element: <RoleRoute allowedRoles={[ROLES.EMPLOYEE,ROLES.COMPANY_ADMIN]} />,
         children: [
           {
             element: <DashboardLayout portalType="employee" />,
@@ -116,6 +118,10 @@ export const router = createBrowserRouter([
             element: <DashboardLayout portalType="super-admin" />,
             children: [
               { path: '/super-admin/dashboard', element: <SuperAdminDashboard /> },
+              { path: '/super-admin/companies', element: <CompanyManagement/>},
+              { path:  '/super-admin/users', element: <UserManagement/>},
+
+         
           
             ],
           },
@@ -125,7 +131,7 @@ export const router = createBrowserRouter([
   },
 
   // SYSTEM & FALLBACK ROUTES
-  
+
   { path: '/unauthorized', element: <Unauthorized /> },
   { path: '*', element: <NotFound /> },
 ]);

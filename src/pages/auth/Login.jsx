@@ -22,6 +22,7 @@ export default function Login() {
         onSuccess: (data) => {
           loginUser(data);
           const role = data.user?.role || data.role;
+console.log(data," role of user");
 
           if (role === 'company_admin' || role === 'company') {
             navigate('/company/dashboard');

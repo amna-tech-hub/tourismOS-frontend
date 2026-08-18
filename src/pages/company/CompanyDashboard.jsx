@@ -1,146 +1,1226 @@
-import React from 'react';
-import { useCompanyDashboard, useCreditHistory } from '../../api/queries/useCompany';
+import React, { useMemo, useState } from "react";
+import {
+  Users,
+  Map,
+  CalendarCheck,
+  Wallet,
+  TrendingUp,
+  CreditCard,
+  Clock,
+  ArrowUpRight,
+  ArrowRight,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  Clock3,
+  Loader2,
+  RefreshCw,
+  AlertCircle,
+  CalendarDays,
+} from "lucide-react";
 
-export default function CompanyDashboard() {
-  const { data: dashboardData, isLoading: isDashboardLoading, isError } = useCompanyDashboard();
-//   const { data: creditHistory, isLoading: isCreditsLoading } = useCreditHistory();
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 
-  if (isDashboardLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
-      </div>
-    );
-  }
+import { useCompanyDashboard } from "../../api/queries/useCompany";
 
-  if (isError) {
-    return (
-      <div className="p-6 bg-red-50 border border-red-200 text-red-700 rounded-xl font-sans">
-        Failed to load company dashboard data. Please refresh or check API connection.
-      </div>
-    );
-  }
 
-  const stats = dashboardData?.stats || {
-    totalTours: 0,
-    activeBookings: 0,
-    totalRevenue: '$0',
-    availableCredits: 0,
+// ======================================================
+// HELPERS
+// ======================================================
+
+const formatCurrency = (amount = 0) => {
+  return new Intl.NumberFormat("en-PK", {
+    style: "currency",
+    currency: "PKR",
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
+const formatNumber = (number = 0) => {
+  return new Intl.NumberFormat("en-US").format(number);
+};
+
+const formatDate = (date) => {
+  if (!date) return "—";
+
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const formatShortDate = (date) => {
+  if (!date) return "";
+
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+};
+
+
+// ======================================================
+// STATUS BADGE
+// ======================================================
+
+const BookingStatus = ({ status }) => {
+  const styles = {
+    confirmed:
+      "bg-emerald-50 text-emerald-700 border-emerald-100",
+    pending:
+      "bg-amber-50 text-amber-700 border-amber-100",
+    cancelled:
+      "bg-red-50 text-red-700 border-red-100",
   };
 
+  const icons = {
+    confirmed: CheckCircle2,
+    pending: Clock3,
+    cancelled: XCircle,
+  };
+
+  const Icon = icons[status] || Clock3;
+
   return (
-    <div className="space-y-8 p-6 md:p-8 bg-white min-h-screen">
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold capitalize ${
+        styles[status] ||
+        "bg-slate-50 text-slate-600 border-slate-200"
+      }`}
+    >
+      <Icon size={12} />
+      {status || "unknown"}
+    </span>
+  );
+};
+
+
+// ======================================================
+// PAYMENT STATUS
+// ======================================================
+
+const PaymentStatus = ({ status }) => {
+  const isPaid = status === "paid";
+
+  return (
+    <span
+      className={`text-xs font-medium ${
+        isPaid
+          ? "text-emerald-600"
+          : status === "refunded"
+          ? "text-red-600"
+          : "text-slate-400"
+      }`}
+    >
+      {isPaid
+        ? "Paid"
+        : status === "refunded"
+        ? "Refunded"
+        : "Payment pending"}
+    </span>
+  );
+};
+
+
+// ======================================================
+// KPI CARD
+// ======================================================
+
+const StatCard = ({
+  title,
+  value,
+  subtitle,
+  icon: Icon,
+  iconClass,
+}) => {
+  return (
+    <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 font-serif">Company Overview</h1>
-          <p className="subheading text-slate-500 text-sm mt-1">
-            Manage your tours, track bookings, and monitor credit transactions.
+          <p className="text-sm font-medium text-slate-500">
+            {title}
           </p>
+
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+            {value}
+          </h3>
+
+          {subtitle && (
+            <p className="mt-1 text-xs text-slate-400">
+              {subtitle}
+            </p>
+          )}
         </div>
 
-        <div className="flex items-center gap-3">
-          <button className="btn-outline text-sm py-2.5">
-            View Analytics
-          </button>
-          <button className="btn-yellow text-sm py-2.5">
-            + Create New Tour
-          </button>
-        </div>
-      </div>
-
-      {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">
-            Total Tours
-          </span>
-          <div className="text-3xl font-bold text-slate-900 font-sans">
-            {stats.totalTours}
-          </div>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">
-            Active Bookings
-          </span>
-          <div className="text-3xl font-bold text-slate-900 font-sans">
-            {stats.activeBookings}
-          </div>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">
-            Total Revenue
-          </span>
-          <div className="text-3xl font-bold text-slate-900 font-sans">
-            {stats.totalRevenue}
-          </div>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 shadow-sm space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 font-sans">
-            Platform Credits
-          </span>
-          <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold text-amber-900 font-sans">
-              {stats.availableCredits}
-            </span>
-            <span className="badge-yellow">Active</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Credit History Table Section */}
-      <div className="space-y-4 pt-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900 font-serif">Recent Credit History</h2>
-          <span className="text-xs text-slate-500 font-sans">Updated just now</span>
-        </div>
-
-        <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-          {/* <table className="w-full text-left font-sans text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold">
-              <tr>
-                <th className="py-3.5 px-6">Transaction ID</th>
-                <th className="py-3.5 px-6">Type</th>
-                <th className="py-3.5 px-6">Amount</th>
-                <th className="py-3.5 px-6">Date</th>
-                <th className="py-3.5 px-6 text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {isCreditsLoading ? (
-                <tr>
-                  <td colSpan="5" className="py-8 text-center text-slate-400">
-                    Loading credit history...
-                  </td>
-                </tr>
-              ) : creditHistory?.data?.length > 0 ? (
-                creditHistory.data.map((item) => (
-                  <tr key={item._id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-4 px-6 font-mono text-xs text-slate-600">{item._id}</td>
-                    <td className="py-4 px-6 font-medium text-slate-900">{item.description || 'Credit Purchase'}</td>
-                    <td className={`py-4 px-6 font-semibold ${item.amount > 0 ? 'text-emerald-600' : 'text-slate-900'}`}>
-                      {item.amount > 0 ? `+${item.amount}` : item.amount}
-                    </td>
-                    <td className="py-4 px-6 text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="py-4 px-6 text-right">
-                      <span className="badge-yellow">Completed</span>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="py-8 text-center text-slate-400">
-                    No credit history transactions recorded yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table> */}
+        <div
+          className={`flex h-11 w-11 items-center justify-center rounded-xl ${iconClass}`}
+        >
+          <Icon size={21} />
         </div>
       </div>
     </div>
   );
-}
+};
+
+
+// ======================================================
+// CUSTOM CHART TOOLTIP
+// ======================================================
+
+const BookingTooltip = ({
+  active,
+  payload,
+  label,
+}) => {
+  if (!active || !payload || !payload.length) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-lg">
+      <p className="mb-1 text-xs font-medium text-slate-400">
+        {formatShortDate(label)}
+      </p>
+
+      <p className="text-sm font-semibold text-slate-900">
+        {payload[0].value}{" "}
+        {payload[0].value === 1
+          ? "booking"
+          : "bookings"}
+      </p>
+    </div>
+  );
+};
+
+
+// ======================================================
+// MAIN COMPONENT
+// ======================================================
+
+const Overview = () => {
+  const [period, setPeriod] = useState(30);
+
+const {
+  data: response,
+  isLoading,
+  isError,
+  refetch,
+  isFetching,
+} = useCompanyDashboard(period);
+  // ----------------------------------------------------
+  // API RESPONSE
+  // ----------------------------------------------------
+console.log(response," response ", period," period");
+
+  const dashboard = response?.data;
+
+  const company = dashboard?.company;
+
+  const stats = dashboard?.stats || {};
+
+  const bookingTrend =
+    dashboard?.bookingTrend?.data || [];
+
+  const recentBookings =
+    dashboard?.recentBookings || [];
+
+  const recentTours =
+    dashboard?.recentTours || [];
+
+  const aiCredits =
+    dashboard?.aiCredits || {};
+
+  // ----------------------------------------------------
+  // CHART DATA
+  // ----------------------------------------------------
+
+  const chartData = useMemo(() => {
+    return bookingTrend.map((item) => ({
+      ...item,
+      formattedDate: item.date,
+    }));
+  }, [bookingTrend]);
+
+  // ----------------------------------------------------
+  // LOADING
+  // ----------------------------------------------------
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2
+            size={30}
+            className="animate-spin text-amber-500"
+          />
+
+          <p className="text-sm text-slate-500">
+            Loading your dashboard...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // ERROR
+  // ----------------------------------------------------
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center px-6">
+        <div className="max-w-md rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
+            <AlertCircle size={24} />
+          </div>
+
+          <h2 className="mt-4 text-xl font-semibold">
+            Unable to load dashboard
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-500">
+            Something went wrong while loading your
+            company overview.
+          </p>
+
+          <button
+            onClick={() => refetch()}
+            className="btn-yellow mt-5"
+          >
+            <RefreshCw size={16} className="mr-2" />
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------
+  // AI CREDIT PROGRESS
+  // ----------------------------------------------------
+
+  const creditPercentage =
+    Math.min(
+      100,
+      Math.max(
+        0,
+        aiCredits.percentageRemaining || 0
+      )
+    );
+
+  // ----------------------------------------------------
+  // RENDER
+  // ----------------------------------------------------
+
+  return (
+    <div className="space-y-6 pb-10">
+
+      {/* ==================================================
+          PAGE HEADER
+      ================================================== */}
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium text-amber-600">
+              Company Overview
+            </p>
+
+            {company?.status && (
+              <span className="badge-yellow capitalize">
+                {company.status}
+              </span>
+            )}
+          </div>
+
+          <h1 className="mt-1 text-3xl font-semibold">
+            Welcome back,{" "}
+            <span className="text-amber-500">
+              {company?.name || "Company"}
+            </span>
+          </h1>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Here's what's happening with your travel
+            business.
+          </p>
+        </div>
+
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="btn-outline self-start sm:self-auto"
+        >
+          <RefreshCw
+            size={16}
+            className={`mr-2 ${
+              isFetching ? "animate-spin" : ""
+            }`}
+          />
+          Refresh
+        </button>
+
+      </div>
+
+
+      {/* ==================================================
+          KPI CARDS
+      ================================================== */}
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+        <StatCard
+          title="Total Revenue"
+          value={formatCurrency(
+            stats.totalRevenue
+          )}
+          subtitle="After platform commission"
+          icon={Wallet}
+          iconClass="bg-amber-50 text-amber-600"
+        />
+
+        <StatCard
+          title="Total Bookings"
+          value={formatNumber(
+            stats.totalBookings
+          )}
+          subtitle="All company bookings"
+          icon={CalendarCheck}
+          iconClass="bg-blue-50 text-blue-600"
+        />
+
+        <StatCard
+          title="Total Tours"
+          value={formatNumber(
+            stats.totalTours
+          )}
+          subtitle="Active company tours"
+          icon={Map}
+          iconClass="bg-emerald-50 text-emerald-600"
+        />
+
+        <StatCard
+          title="Employees"
+          value={formatNumber(
+            stats.totalEmployees
+          )}
+          subtitle="Team members"
+          icon={Users}
+          iconClass="bg-violet-50 text-violet-600"
+        />
+
+      </div>
+
+
+      {/* ==================================================
+          REVENUE SUMMARY
+      ================================================== */}
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-slate-500">
+              Gross Revenue
+            </p>
+
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+              <Wallet size={17} />
+            </div>
+          </div>
+
+          <p className="mt-3 text-xl font-semibold text-slate-900">
+            {formatCurrency(
+              stats.grossRevenue
+            )}
+          </p>
+
+          <p className="mt-1 text-xs text-slate-400">
+            Total amount paid by customers
+          </p>
+        </div>
+
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-slate-500">
+              Platform Commission
+            </p>
+
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500">
+              <ArrowUpRight size={17} />
+            </div>
+          </div>
+
+          <p className="mt-3 text-xl font-semibold text-slate-900">
+            {formatCurrency(
+              stats.totalCommission
+            )}
+          </p>
+
+          <p className="mt-1 text-xs text-slate-400">
+            Deducted by TourismOS
+          </p>
+        </div>
+
+
+        <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-amber-700">
+              Your Earnings
+            </p>
+
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+              <TrendingUp size={17} />
+            </div>
+          </div>
+
+          <p className="mt-3 text-xl font-semibold text-slate-900">
+            {formatCurrency(
+              stats.totalRevenue
+            )}
+          </p>
+
+          <p className="mt-1 text-xs text-amber-700/70">
+            Gross revenue minus commission
+          </p>
+        </div>
+
+      </div>
+
+
+      {/* ==================================================
+          BOOKING TREND + AI CREDITS
+      ================================================== */}
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+
+        {/* ================================================
+            BOOKING TREND
+        ================================================ */}
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+              <h2 className="text-lg font-semibold">
+                Booking Overview
+              </h2>
+
+              <p className="mt-1 text-xs text-slate-400">
+                Booking activity over time
+              </p>
+            </div>
+
+            <div className="flex rounded-lg bg-slate-100 p-1">
+
+              {[7, 30, 90].map((value) => (
+                <button
+                  key={value}
+                  onClick={() => setPeriod(value)}
+                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                    period === value
+                      ? "bg-white text-slate-900 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  {value}D
+                </button>
+              ))}
+
+            </div>
+
+          </div>
+
+
+          <div className="mt-6 h-[300px] w-full">
+
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+            >
+              <AreaChart
+                data={chartData}
+                margin={{
+                  top: 10,
+                  right: 10,
+                  left: -20,
+                  bottom: 0,
+                }}
+              >
+
+                <defs>
+                  <linearGradient
+                    id="bookingGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0%"
+                      stopColor="#F59E0B"
+                      stopOpacity={0.25}
+                    />
+
+                    <stop
+                      offset="100%"
+                      stopColor="#F59E0B"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#E2E8F0"
+                />
+
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={formatShortDate}
+                  tick={{
+                    fontSize: 11,
+                    fill: "#94A3B8",
+                  }}
+                  axisLine={false}
+                  tickLine={false}
+                  minTickGap={25}
+                />
+
+                <YAxis
+                  allowDecimals={false}
+                  tick={{
+                    fontSize: 11,
+                    fill: "#94A3B8",
+                  }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+
+                <Tooltip
+                  content={<BookingTooltip />}
+                />
+
+                <Area
+                  type="monotone"
+                  dataKey="bookings"
+                  stroke="#F59E0B"
+                  strokeWidth={2.5}
+                  fill="url(#bookingGradient)"
+                  activeDot={{
+                    r: 5,
+                  }}
+                />
+
+              </AreaChart>
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
+
+        {/* ================================================
+            AI CREDITS
+        ================================================ */}
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+          <div className="flex items-start justify-between">
+
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                  <Sparkles size={18} />
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold">
+                    AI Credits
+                  </h2>
+
+                  <p className="text-xs text-slate-400">
+                    {aiCredits.plan || "Starter"} Plan
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <span className="badge-yellow">
+              {aiCredits.plan || "Starter"}
+            </span>
+
+          </div>
+
+
+          <div className="mt-7">
+
+            <div className="flex items-end justify-between">
+
+              <div>
+                <p className="text-3xl font-semibold text-slate-900">
+                  {formatNumber(
+                    aiCredits.remaining
+                  )}
+                </p>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  credits remaining
+                </p>
+              </div>
+
+              <p className="text-sm font-semibold text-amber-600">
+                {aiCredits.percentageRemaining || 0}%
+              </p>
+
+            </div>
+
+
+            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-100">
+
+              <div
+                className="h-full rounded-full bg-amber-500 transition-all duration-500"
+                style={{
+                  width: `${creditPercentage}%`,
+                }}
+              />
+
+            </div>
+
+
+            <div className="mt-3 flex justify-between text-xs text-slate-400">
+
+              <span>
+                Used{" "}
+                {formatNumber(
+                  aiCredits.used
+                )}
+              </span>
+
+              <span>
+                Total{" "}
+                {formatNumber(
+                  aiCredits.total
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div className="mt-7 border-t border-slate-100 pt-5">
+
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Clock size={14} />
+
+              <span>
+                Last used{" "}
+                {aiCredits.lastUsedAt
+                  ? formatDate(
+                      aiCredits.lastUsedAt
+                    )
+                  : "Never"}
+              </span>
+            </div>
+
+
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+              <CalendarDays size={14} />
+
+              <span>
+                Expires{" "}
+                {aiCredits.expiresAt
+                  ? formatDate(
+                      aiCredits.expiresAt
+                    )
+                  : "—"}
+              </span>
+            </div>
+
+          </div>
+
+
+          <button
+            className="btn-yellow mt-6 w-full"
+            type="button"
+          >
+            <CreditCard
+              size={16}
+              className="mr-2"
+            />
+            Manage Subscription
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {/* ==================================================
+          RECENT BOOKINGS
+      ================================================== */}
+
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+
+          <div>
+            <h2 className="text-lg font-semibold">
+              Recent Bookings
+            </h2>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Latest activity from your customers
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 transition hover:text-amber-700"
+          >
+            View all
+            <ArrowRight size={15} />
+          </button>
+
+        </div>
+
+
+        {recentBookings.length === 0 ? (
+
+          <div className="px-5 py-12 text-center">
+            <CalendarCheck
+              size={30}
+              className="mx-auto text-slate-300"
+            />
+
+            <p className="mt-3 text-sm font-medium text-slate-600">
+              No bookings yet
+            </p>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Your recent bookings will appear here.
+            </p>
+          </div>
+
+        ) : (
+
+          <div className="overflow-x-auto">
+
+            <table className="w-full min-w-[760px]">
+
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/50">
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Traveler
+                  </th>
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Tour
+                  </th>
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Amount
+                  </th>
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Status
+                  </th>
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Payment
+                  </th>
+
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Date
+                  </th>
+
+                </tr>
+              </thead>
+
+
+              <tbody>
+
+                {recentBookings.map((booking) => (
+
+                  <tr
+                    key={booking._id}
+                    className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50"
+                  >
+
+                    <td className="px-5 py-4">
+
+                      <div>
+                        <p className="text-sm font-medium text-slate-800">
+                          {booking.traveler?.name ||
+                            "Unknown traveler"}
+                        </p>
+
+                        <p className="mt-0.5 text-xs text-slate-400">
+                          {booking.traveler?.email ||
+                            "—"}
+                        </p>
+                      </div>
+
+                    </td>
+
+
+                    <td className="px-5 py-4">
+
+                      <p className="max-w-[180px] truncate text-sm font-medium text-slate-700">
+                        {booking.tour?.title ||
+                          "Unknown tour"}
+                      </p>
+
+                      {booking.tour?.from &&
+                        booking.tour?.to && (
+                          <p className="mt-0.5 text-xs text-slate-400">
+                            {booking.tour.from} →{" "}
+                            {booking.tour.to}
+                          </p>
+                        )}
+
+                    </td>
+
+
+                    <td className="px-5 py-4">
+
+                      <p className="text-sm font-semibold text-slate-800">
+                        {formatCurrency(
+                          booking.totalAmount
+                        )}
+                      </p>
+
+                      {booking.paymentStatus ===
+                        "paid" &&
+                        booking.companyPayout !==
+                          undefined && (
+                          <p className="mt-0.5 text-xs text-emerald-600">
+                            Earned{" "}
+                            {formatCurrency(
+                              booking.companyPayout
+                            )}
+                          </p>
+                        )}
+
+                    </td>
+
+
+                    <td className="px-5 py-4">
+                      <BookingStatus
+                        status={booking.status}
+                      />
+                    </td>
+
+
+                    <td className="px-5 py-4">
+                      <PaymentStatus
+                        status={
+                          booking.paymentStatus
+                        }
+                      />
+                    </td>
+
+
+                    <td className="px-5 py-4 text-sm text-slate-500">
+                      {formatDate(
+                        booking.createdAt
+                      )}
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+      {/* ==================================================
+          RECENT TOURS + AI ACTIVITY
+      ================================================== */}
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+
+        {/* ================================================
+            RECENT TOURS
+        ================================================ */}
+
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+
+            <div>
+              <h2 className="text-lg font-semibold">
+                Recent Tours
+              </h2>
+
+              <p className="mt-1 text-xs text-slate-400">
+                Your latest tour packages
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 hover:text-amber-700"
+            >
+              View all
+              <ArrowRight size={15} />
+            </button>
+
+          </div>
+
+
+          <div className="divide-y divide-slate-100">
+
+            {recentTours.length === 0 ? (
+
+              <div className="px-5 py-12 text-center">
+                <Map
+                  size={30}
+                  className="mx-auto text-slate-300"
+                />
+
+                <p className="mt-3 text-sm font-medium text-slate-600">
+                  No tours yet
+                </p>
+              </div>
+
+            ) : (
+
+              recentTours.map((tour) => (
+
+                <div
+                  key={tour._id}
+                  className="flex items-center justify-between gap-4 px-5 py-4 transition hover:bg-slate-50/50"
+                >
+
+                  <div className="min-w-0">
+
+                    <div className="flex items-center gap-2">
+
+                      <h3 className="truncate text-sm font-semibold text-slate-800">
+                        {tour.title}
+                      </h3>
+
+                      <span
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${
+                          tour.status ===
+                          "published"
+                            ? "bg-emerald-50 text-emerald-600"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {tour.status}
+                      </span>
+
+                    </div>
+
+
+                    <p className="mt-1 text-xs text-slate-400">
+
+                      {tour.from &&
+                        tour.to
+                        ? `${tour.from} → ${tour.to}`
+                        : `${tour.duration || 0} day${
+                            tour.duration === 1
+                              ? ""
+                              : "s"
+                          }`}
+
+                    </p>
+
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      Created{" "}
+                      {formatShortDate(
+                        tour.createdAt
+                      )}
+                    </p>
+
+                  </div>
+
+
+                  <div className="shrink-0 text-right">
+
+                    <p className="text-sm font-semibold text-slate-800">
+                      {formatCurrency(
+                        tour.price
+                      )}
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      Max{" "}
+                      {tour.maxParticipants ||
+                        0}{" "}
+                      travelers
+                    </p>
+
+                  </div>
+
+                </div>
+
+              ))
+
+            )}
+
+          </div>
+
+        </div>
+
+
+        {/* ================================================
+            AI ACTIVITY
+        ================================================ */}
+
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+
+            <div>
+              <h2 className="text-lg font-semibold">
+                AI Credit Activity
+              </h2>
+
+              <p className="mt-1 text-xs text-slate-400">
+                Recent AI usage and credit changes
+              </p>
+            </div>
+
+            <Sparkles
+              size={19}
+              className="text-amber-500"
+            />
+
+          </div>
+
+
+          <div className="divide-y divide-slate-100">
+
+            {aiCredits.recentActivity?.length ===
+            0 ? (
+
+              <div className="px-5 py-12 text-center">
+                <Sparkles
+                  size={30}
+                  className="mx-auto text-slate-300"
+                />
+
+                <p className="mt-3 text-sm font-medium text-slate-600">
+                  No AI activity yet
+                </p>
+              </div>
+
+            ) : (
+
+              aiCredits.recentActivity?.map(
+                (activity) => {
+
+                  const isUsage =
+                    activity.type ===
+                    "usage";
+
+                  return (
+                    <div
+                      key={activity._id}
+                      className="flex gap-3 px-5 py-4"
+                    >
+
+                      <div
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                          isUsage
+                            ? "bg-red-50 text-red-500"
+                            : "bg-emerald-50 text-emerald-600"
+                        }`}
+                      >
+                        {isUsage ? (
+                          <ArrowUpRight
+                            size={16}
+                          />
+                        ) : (
+                          <Sparkles
+                            size={16}
+                          />
+                        )}
+                      </div>
+
+
+                      <div className="min-w-0 flex-1">
+
+                        <div className="flex items-start justify-between gap-3">
+
+                          <p className="text-sm font-medium capitalize text-slate-700">
+                            {activity.type}
+                          </p>
+
+                          <span
+                            className={`shrink-0 text-sm font-semibold ${
+                              isUsage
+                                ? "text-red-500"
+                                : "text-emerald-600"
+                            }`}
+                          >
+                            {activity.credits > 0
+                              ? "+"
+                              : ""}
+                            {formatNumber(
+                              activity.credits
+                            )}
+                          </span>
+
+                        </div>
+
+
+                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">
+                          {activity.description ||
+                            "AI credit activity"}
+                        </p>
+
+
+                        <p className="mt-1 text-[11px] text-slate-300">
+                          {formatDate(
+                            activity.createdAt
+                          )}
+                        </p>
+
+                      </div>
+
+                    </div>
+                  );
+                }
+              )
+
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
+
+export default Overview;

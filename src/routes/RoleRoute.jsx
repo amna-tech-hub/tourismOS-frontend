@@ -5,6 +5,7 @@ import { ROLE_HOME_ROUTES } from '../constants/roles';
 
 export default function RoleRoute({ allowedRoles }) {
   const { user } = useAuth();
+console.log(user," finding role");
 
   if (!user || !allowedRoles.includes(user.role)) {
     const fallbackRoute = ROLE_HOME_ROUTES[user?.role] || '/unauthorized';

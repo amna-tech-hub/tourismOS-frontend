@@ -4,6 +4,21 @@ export const QUERY_KEYS = {
     DASHBOARD: ['company', 'dashboard'],
     PROFILE: ['company', 'profile'],
     CREDIT_HISTORY: ['company', 'credit-history'],
+    EMPLOYEES: ["company", "employees"],
+
+  EMPLOYEES_LIST: (params) => [
+    "company",
+    "employees",
+    "list",
+    params,
+  ],
+
+  EMPLOYEE_DETAIL: (employeeId) => [
+    "company",
+    "employees",
+    "detail",
+    employeeId,
+  ],
   },
 
   SUPER_ADMIN: {
@@ -18,6 +33,10 @@ export const QUERY_KEYS = {
     USER_STATS: (id) => ['super-admin', 'users', id, 'stats'],
     ROLES: ['super-admin', 'users', 'roles'],
 
+    // Subscriptions & Plans
+    SUBSCRIPTION_PLANS: ['super-admin', 'subscriptions', 'plans'],
+    COMPANY_SUBSCRIPTIONS: ['super-admin', 'subscriptions', 'company-ledger'],
+
     // Security & Analytics
     FRAUD_ATTEMPTS: ['super-admin', 'fraud-attempts'],
 
@@ -26,11 +45,21 @@ export const QUERY_KEYS = {
     COMPANY_OVERVIEW: ['admin', 'dashboard', 'company'],
     BOOKING_OVERVIEW: ['admin', 'dashboard', 'booking'],
     PLATFORM_STATS: ['admin', 'dashboard', 'platform-stats'],
+    DASHBOARD_ANALYSIS: ['admin', 'dashboard', 'platform-analysis'],
+    TOUR_ANALYTICS: ['super-admin', 'tours', 'analytics'],
   },
+
   TRAVELER: {
     // Auth & Profile
     PROFILE: ['traveler', 'profile'],
-    ALL_TOURS:['tour'],
+
+    // Tours
+    PUBLIC_TOURS: (params) => ['tours', 'public', params],
+    COMPANY_TOURS: (params) => ['tours', 'company', params],
+    TOUR_BY_ID: (id) => ['tours', id],
+    TOUR_DETAILS: (id) => ['tours', 'details', id],
+    ALL_TOURS: ['tours', 'all'],
+     ADMIN_TOURS: (params) => ['tours', 'admin', params],
 
     // Travel Journals
     MY_JOURNALS: ['traveler', 'journals', 'me'],

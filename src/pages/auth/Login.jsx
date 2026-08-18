@@ -20,9 +20,11 @@ export default function Login() {
       { email, password },
       {
         onSuccess: (data) => {
+          console.log(data," login success");
+          
           loginUser(data);
-          const role = data.user?.role || data.role;
-console.log(data," role of user");
+          const role = data.data.user?.role || data.role;
+console.log(data.data.user.role," role of user");
 
           if (role === 'company_admin' || role === 'company') {
             navigate('/company/dashboard');

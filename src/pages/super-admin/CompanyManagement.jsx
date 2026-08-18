@@ -6,7 +6,10 @@ import {
   useActivateCompany,
   useDeleteCompany,
   useCompanyStats,
+  useTourAnalytics,
 } from "../../api/queries/useSuperAdmin";
+
+import CompanyPerformanceChart from "../../components/charts/company-chart/CompanyPerformanceChart";
 
 import {
   FaPlus,
@@ -18,20 +21,23 @@ import {
   FaEye,
   FaTrash,
   FaCheck,
+  FaBuilding,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaCoins,
 } from "react-icons/fa";
 
 export default function Company() {
-  // Search & Filter Parameters
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [verificationFilter, setVerificationFilter] = useState("");
   const [page, setPage] = useState(1);
 
-  // Modal States
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
 
-  // Invite Form State
   const [companyForm, setCompanyForm] = useState({
     companyName: "",
     email: "",
@@ -39,7 +45,6 @@ export default function Company() {
     address: "",
   });
 
-  // Query Parameters
   const queryParams = {
     page,
     limit: 10,
@@ -50,7 +55,6 @@ export default function Company() {
     }),
   };
 
-  // React Query Hooks
   const {
     data: companyData,
     isLoading,
@@ -61,6 +65,11 @@ export default function Company() {
     data: companyStatsData,
     isLoading: isStatsLoading,
   } = useCompanyStats(selectedCompanyId);
+
+  const {
+    data: tourAnalyticsData,
+    isLoading: isAnalyticsLoading,
+  } = useTourAnalytics();
 
   const createCompanyMutation = useCreateCompany();
   const suspendCompanyMutation = useSuspendCompany();
@@ -77,8 +86,11 @@ export default function Company() {
 
   const companyStats = companyStatsData?.data;
 
+  const companyPerformance =
+    tourAnalyticsData?.data?.companyTourDistribution || [];
+
   // --------------------------------------------------
-  // Invite Company
+  // INVITE COMPANY
   // --------------------------------------------------
 
   const handleInviteSubmit = (e) => {
@@ -99,49 +111,42 @@ export default function Company() {
   };
 
   // --------------------------------------------------
-  // Status Badge
+  // STATUS BADGES
   // --------------------------------------------------
 
   const getStatusBadge = (status) => {
     switch (status) {
       case "active":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-bold">
-            <FaCheckCircle className="text-[9px]" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-bold whitespace-nowrap">
+            <FaCheckCircle className="text-[9px] shrink-0" />
             Active
           </span>
         );
 
       case "suspended":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold">
-            <FaBan className="text-[9px]" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold whitespace-nowrap">
+            <FaBan className="text-[9px] shrink-0" />
             Suspended
           </span>
         );
 
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold">
-            <FaExclamationCircle className="text-[9px]" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold whitespace-nowrap">
+            <FaExclamationCircle className="text-[9px] shrink-0" />
             Inactive
           </span>
         );
     }
   };
 
-  // --------------------------------------------------
-  // Verification Badge
-  // --------------------------------------------------
-
   const getVerificationBadge = (status = "pending") => {
     const styles = {
-      verified:
-        "bg-emerald-50 text-emerald-700 border-emerald-100",
-      pending:
-        "bg-amber-50 text-amber-700 border-amber-100",
-      rejected:
-        "bg-red-50 text-red-700 border-red-100",
+      verified: "bg-emerald-50 text-emerald-700 border-emerald-100",
+      pending: "bg-amber-50 text-amber-700 border-amber-100",
+      rejected: "bg-red-50 text-red-700 border-red-100",
     };
 
     const icons = {
@@ -152,7 +157,7 @@ export default function Company() {
 
     return (
       <span
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-bold capitalize ${
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-bold capitalize whitespace-nowrap ${
           styles[status] || styles.pending
         }`}
       >
@@ -162,23 +167,16 @@ export default function Company() {
     );
   };
 
-  // --------------------------------------------------
-  // AI Plan Badge
-  // --------------------------------------------------
-
   const getPlanBadge = (plan = "Starter") => {
     const badgeColors = {
-      Starter:
-        "bg-slate-100 text-slate-700 border-slate-200",
-      Pro:
-        "bg-amber-100 text-amber-900 border-amber-200",
-      Enterprise:
-        "bg-indigo-100 text-indigo-900 border-indigo-200",
+      Starter: "bg-slate-100 text-slate-700 border-slate-200",
+      Pro: "bg-amber-100 text-amber-900 border-amber-200",
+      Enterprise: "bg-indigo-100 text-indigo-900 border-indigo-200",
     };
 
     return (
       <span
-        className={`inline-flex px-2.5 py-1 rounded-lg text-[10px] font-semibold border ${
+        className={`inline-flex px-2.5 py-1 rounded-lg text-[10px] font-semibold border whitespace-nowrap ${
           badgeColors[plan] || badgeColors.Starter
         }`}
       >
@@ -188,7 +186,7 @@ export default function Company() {
   };
 
   // --------------------------------------------------
-  // Company Actions
+  // COMPANY ACTIONS
   // --------------------------------------------------
 
   const handleSuspend = (company) => {
@@ -216,133 +214,160 @@ export default function Company() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* --------------------------------------------------
-          Header
-      -------------------------------------------------- */}
+    <div className="w-full space-y-5 sm:space-y-6">
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-serif text-slate-900">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-2xl font-bold font-serif text-text-primary">
             Companies
           </h1>
 
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-text-muted mt-1 max-w-2xl leading-relaxed">
             Manage and monitor registered tourism companies across TourismOS.
           </p>
         </div>
 
         <button
+          type="button"
           onClick={() => setIsInviteModalOpen(true)}
-          className="btn-yellow text-xs py-2.5 px-4 gap-2 self-start sm:self-auto cursor-pointer inline-flex items-center"
+          className="btn-yellow text-xs py-2.5 px-4 gap-2 cursor-pointer inline-flex items-center justify-center w-full sm:w-auto shrink-0"
         >
-          <FaPlus />
+          <FaPlus className="text-[10px]" />
           Invite Company
         </button>
       </div>
 
-      {/* --------------------------------------------------
-          Search & Filters
-      -------------------------------------------------- */}
+      {/* =====================================================
+          COMPANY PERFORMANCE CHART
+      ===================================================== */}
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Search */}
+      {isAnalyticsLoading ? (
+        <div className="bg-bg-card rounded-2xl border border-border-subtle p-4 sm:p-6">
+          <div className="min-h-[280px] sm:h-[390px] flex items-center justify-center">
+            <div className="text-center text-text-muted">
+              <div className="w-7 h-7 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
 
-        <div className="relative w-full md:w-80">
-          <FaSearch className="absolute left-3.5 top-3 text-xs text-slate-400" />
-
-          <input
-            type="text"
-            placeholder="Search company, email, or phone..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500 bg-slate-50/50"
-          />
+              <p className="text-xs">
+                Loading company performance...
+              </p>
+            </div>
+          </div>
         </div>
+      ) : (
+        <div className="w-full overflow-hidden">
+          <CompanyPerformanceChart data={companyPerformance} />
+        </div>
+      )}
 
-        {/* Filters */}
+      {/* =====================================================
+          SEARCH & FILTERS
+      ===================================================== */}
 
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setPage(1);
-            }}
-            className="w-full sm:w-auto px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500 bg-white text-slate-700 cursor-pointer"
-          >
-            <option value="">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="suspended">Suspended</option>
-          </select>
+      <div className="bg-bg-card rounded-2xl border border-border-subtle p-3 sm:p-4 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
+          {/* Search */}
 
-          <select
-            value={verificationFilter}
-            onChange={(e) => {
-              setVerificationFilter(e.target.value);
-              setPage(1);
-            }}
-            className="w-full sm:w-auto px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500 bg-white text-slate-700 cursor-pointer"
-          >
-            <option value="">All Verifications</option>
-            <option value="verified">Verified</option>
-            <option value="pending">Pending</option>
-            <option value="rejected">Rejected</option>
-          </select>
+          <div className="relative w-full lg:max-w-sm">
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[11px] text-text-muted pointer-events-none" />
+
+            <input
+              type="text"
+              placeholder="Search company, email, or phone..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-secondary/50 transition-colors"
+            />
+          </div>
+
+          {/* Filters */}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex items-center gap-3 w-full lg:w-auto">
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setPage(1);
+              }}
+              className="w-full lg:w-auto min-w-0 lg:min-w-[145px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-card text-text-primary cursor-pointer"
+            >
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="suspended">Suspended</option>
+            </select>
+
+            <select
+              value={verificationFilter}
+              onChange={(e) => {
+                setVerificationFilter(e.target.value);
+                setPage(1);
+              }}
+              className="w-full lg:w-auto min-w-0 lg:min-w-[160px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-card text-text-primary cursor-pointer"
+            >
+              <option value="">All Verifications</option>
+              <option value="verified">Verified</option>
+              <option value="pending">Pending</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* --------------------------------------------------
-          Companies Table
-      -------------------------------------------------- */}
+      {/* =====================================================
+          COMPANIES TABLE
+      ===================================================== */}
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200 uppercase tracking-wider">
+      <div className="bg-bg-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden">
+        <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <table className="w-full min-w-[950px] text-left text-xs">
+            <thead className="bg-bg-secondary text-text-muted font-semibold border-b border-border-subtle uppercase tracking-wider">
               <tr>
-                <th className="py-3.5 px-5">Company</th>
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
+                  Company
+                </th>
 
-                <th className="py-3.5 px-5">
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                   Status
                 </th>
 
-                <th className="py-3.5 px-5">
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                   Verification
                 </th>
 
-                <th className="py-3.5 px-5">
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                   AI Plan
                 </th>
 
-                <th className="py-3.5 px-5">
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                   AI Credits
                 </th>
 
-                <th className="py-3.5 px-5">
+                <th className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                   Registered
                 </th>
 
-                <th className="py-3.5 px-5 text-right">
+                <th className="py-3.5 px-4 sm:px-5 text-right whitespace-nowrap">
                   Actions
                 </th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-border-light text-text-secondary">
               {/* Loading */}
 
               {isLoading ? (
                 <tr>
                   <td
                     colSpan="7"
-                    className="py-14 text-center text-slate-400"
+                    className="py-14 text-center text-text-muted"
                   >
-                    <div className="w-7 h-7 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin mx-auto mb-3" />
+                    <div className="w-7 h-7 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
 
                     <p className="text-xs">
                       Loading companies directory...
@@ -355,16 +380,12 @@ export default function Company() {
                 <tr>
                   <td
                     colSpan="7"
-                    className="py-14 text-center text-red-500"
+                    className="py-14 text-center text-error"
                   >
                     <FaExclamationCircle className="mx-auto mb-2 text-lg" />
 
                     <p className="text-xs">
                       Failed to fetch companies.
-                    </p>
-
-                    <p className="text-[10px] text-red-400 mt-1">
-                      Please try again.
                     </p>
                   </td>
                 </tr>
@@ -383,32 +404,42 @@ export default function Company() {
                     totalCredits - usedCredits
                   );
 
+                  const creditPercentage =
+                    totalCredits > 0
+                      ? Math.min(
+                          100,
+                          (remainingCredits / totalCredits) * 100
+                        )
+                      : 0;
+
                   return (
                     <tr
                       key={company._id}
-                      className="hover:bg-slate-50/80 transition-colors"
+                      className="hover:bg-bg-secondary/80 transition-colors"
                     >
                       {/* Company */}
 
-                      <td className="py-4 px-5">
-                        <div className="font-semibold text-slate-900 text-sm">
-                          {company.companyName}
-                        </div>
+                      <td className="py-4 px-4 sm:px-5 align-middle">
+                        <div className="min-w-[180px]">
+                          <div className="font-semibold text-text-primary text-sm truncate max-w-[240px]">
+                            {company.companyName}
+                          </div>
 
-                        <div className="text-[11px] text-slate-400 mt-0.5">
-                          {company.email}
+                          <div className="text-[11px] text-text-muted mt-0.5 truncate max-w-[240px]">
+                            {company.email}
+                          </div>
                         </div>
                       </td>
 
                       {/* Status */}
 
-                      <td className="py-4 px-5">
+                      <td className="py-4 px-4 sm:px-5 align-middle">
                         {getStatusBadge(company.status)}
                       </td>
 
                       {/* Verification */}
 
-                      <td className="py-4 px-5">
+                      <td className="py-4 px-4 sm:px-5 align-middle">
                         {getVerificationBadge(
                           company.verificationStatus
                         )}
@@ -416,36 +447,29 @@ export default function Company() {
 
                       {/* AI Plan */}
 
-                      <td className="py-4 px-5">
-                        {getPlanBadge(
-                          company.aiCredits?.plan
-                        )}
+                      <td className="py-4 px-4 sm:px-5 align-middle">
+                        {getPlanBadge(company.aiCredits?.plan)}
                       </td>
 
                       {/* AI Credits */}
 
-                      <td className="py-4 px-5">
-                        <div className="min-w-[100px]">
+                      <td className="py-4 px-4 sm:px-5 align-middle">
+                        <div className="min-w-[120px]">
                           <div className="flex items-baseline gap-1">
-                            <span className="font-semibold text-slate-800">
+                            <span className="font-semibold text-text-primary">
                               {remainingCredits.toLocaleString()}
                             </span>
 
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-text-muted">
                               / {totalCredits.toLocaleString()}
                             </span>
                           </div>
 
-                          <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-1.5">
+                          <div className="w-full h-1.5 bg-bg-tertiary rounded-full overflow-hidden mt-1.5">
                             <div
-                              className="h-full bg-amber-500 rounded-full"
+                              className="h-full bg-amber-primary rounded-full transition-all duration-300"
                               style={{
-                                width: `${Math.min(
-                                  100,
-                                  (remainingCredits /
-                                    totalCredits) *
-                                    100
-                                )}%`,
+                                width: `${creditPercentage}%`,
                               }}
                             />
                           </div>
@@ -454,7 +478,7 @@ export default function Company() {
 
                       {/* Registered */}
 
-                      <td className="py-4 px-5 text-slate-400 whitespace-nowrap">
+                      <td className="py-4 px-4 sm:px-5 align-middle text-text-muted whitespace-nowrap">
                         {company.createdAt
                           ? new Date(
                               company.createdAt
@@ -468,19 +492,17 @@ export default function Company() {
 
                       {/* Actions */}
 
-                      <td className="py-4 px-5">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-4 px-4 sm:px-5 align-middle">
+                        <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
                           {/* View */}
 
                           <button
                             type="button"
                             title="View company details"
                             onClick={() =>
-                              setSelectedCompanyId(
-                                company._id
-                              )
+                              setSelectedCompanyId(company._id)
                             }
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-border-subtle text-text-muted hover:text-text-primary hover:bg-bg-secondary transition-colors cursor-pointer shrink-0"
                           >
                             <FaEye className="text-[11px]" />
                           </button>
@@ -497,7 +519,7 @@ export default function Company() {
                               disabled={
                                 suspendCompanyMutation.isPending
                               }
-                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer disabled:opacity-50"
+                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaBan className="text-[11px]" />
                             </button>
@@ -515,7 +537,7 @@ export default function Company() {
                               disabled={
                                 activateCompanyMutation.isPending
                               }
-                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 transition-colors cursor-pointer disabled:opacity-50"
+                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaCheck className="text-[11px]" />
                             </button>
@@ -532,7 +554,7 @@ export default function Company() {
                             disabled={
                               deleteCompanyMutation.isPending
                             }
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
                           >
                             <FaTrash className="text-[11px]" />
                           </button>
@@ -547,17 +569,17 @@ export default function Company() {
                 <tr>
                   <td
                     colSpan="7"
-                    className="py-14 text-center text-slate-400"
+                    className="py-14 text-center text-text-muted"
                   >
-                    <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
-                      <FaSearch className="text-slate-300" />
+                    <div className="w-10 h-10 rounded-full bg-bg-secondary flex items-center justify-center mx-auto mb-3">
+                      <FaSearch className="text-text-muted" />
                     </div>
 
-                    <p className="text-xs font-medium text-slate-500">
+                    <p className="text-xs font-medium text-text-secondary">
                       No companies found
                     </p>
 
-                    <p className="text-[10px] text-slate-400 mt-1">
+                    <p className="text-[10px] text-text-muted mt-1">
                       Try changing your search or filters.
                     </p>
                   </td>
@@ -567,17 +589,17 @@ export default function Company() {
           </table>
         </div>
 
-        {/* --------------------------------------------------
-            Pagination
-        -------------------------------------------------- */}
+        {/* =====================================================
+            PAGINATION
+        ===================================================== */}
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 text-xs">
-          <span className="text-slate-400">
-            Page {meta.page} of {meta.totalPages || 1}{" "}
-            ({meta.totalDocuments || 0} companies)
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 border-t border-border-light text-xs">
+          <span className="text-text-muted text-center sm:text-left">
+            Page {meta.page} of {meta.totalPages || 1} (
+            {meta.totalDocuments || 0} companies)
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <button
               disabled={page === 1}
               onClick={() =>
@@ -589,9 +611,7 @@ export default function Company() {
             </button>
 
             <button
-              disabled={
-                page >= (meta.totalPages || 1)
-              }
+              disabled={page >= (meta.totalPages || 1)}
               onClick={() => setPage((p) => p + 1)}
               className="btn-outline py-1.5 px-3 text-xs disabled:opacity-40 cursor-pointer"
             >
@@ -601,31 +621,32 @@ export default function Company() {
         </div>
       </div>
 
-      {/* ==================================================
+      {/* =====================================================
           INVITE COMPANY MODAL
-      ================================================== */}
+      ===================================================== */}
 
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-bg-card rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-5 shadow-xl border border-border-subtle max-h-[90vh] overflow-y-auto">
             {/* Header */}
 
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-              <div>
-                <h3 className="text-lg font-bold font-serif text-slate-900">
+            <div className="flex justify-between items-start gap-3 border-b border-border-light pb-3">
+              <div className="min-w-0">
+                <h3 className="text-lg font-bold font-serif text-text-primary">
                   Invite Tourism Company
                 </h3>
 
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
                   An invitation will be sent to the company email.
                 </p>
               </div>
 
               <button
+                type="button"
                 onClick={() =>
                   setIsInviteModalOpen(false)
                 }
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-text-muted hover:text-text-primary p-1 cursor-pointer shrink-0"
               >
                 <FaTimes />
               </button>
@@ -640,8 +661,9 @@ export default function Company() {
               {/* Company Name */}
 
               <div>
-                <label className="block font-semibold mb-1 text-slate-700">
-                  Company Name
+                <label className="block font-semibold mb-1.5 text-text-secondary">
+                  Company Name{" "}
+                  <span className="text-error">*</span>
                 </label>
 
                 <input
@@ -655,15 +677,16 @@ export default function Company() {
                     })
                   }
                   placeholder="e.g. Karakoram Adventures"
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
                 />
               </div>
 
               {/* Email */}
 
               <div>
-                <label className="block font-semibold mb-1 text-slate-700">
-                  Company Email
+                <label className="block font-semibold mb-1.5 text-text-secondary">
+                  Company Email{" "}
+                  <span className="text-error">*</span>
                 </label>
 
                 <input
@@ -677,14 +700,14 @@ export default function Company() {
                     })
                   }
                   placeholder="admin@company.com"
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
                 />
               </div>
 
               {/* Phone */}
 
               <div>
-                <label className="block font-semibold mb-1 text-slate-700">
+                <label className="block font-semibold mb-1.5 text-text-secondary">
                   Phone
                 </label>
 
@@ -698,14 +721,14 @@ export default function Company() {
                     })
                   }
                   placeholder="03144276663"
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
                 />
               </div>
 
               {/* Address */}
 
               <div>
-                <label className="block font-semibold mb-1 text-slate-700">
+                <label className="block font-semibold mb-1.5 text-text-secondary">
                   Address
                 </label>
 
@@ -719,29 +742,27 @@ export default function Company() {
                     })
                   }
                   placeholder="Rahim Yar Khan, Pakistan"
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
                 />
               </div>
 
               {/* Buttons */}
 
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="pt-2 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
                   type="button"
                   onClick={() =>
                     setIsInviteModalOpen(false)
                   }
-                  className="btn-outline py-2 px-4 text-xs cursor-pointer"
+                  className="btn-outline py-2 px-4 text-xs cursor-pointer w-full sm:w-auto"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  disabled={
-                    createCompanyMutation.isPending
-                  }
-                  className="btn-yellow py-2 px-4 text-xs cursor-pointer"
+                  disabled={createCompanyMutation.isPending}
+                  className="btn-yellow py-2 px-4 text-xs cursor-pointer w-full sm:w-auto"
                 >
                   {createCompanyMutation.isPending
                     ? "Sending..."
@@ -753,123 +774,205 @@ export default function Company() {
         </div>
       )}
 
-      {/* ==================================================
+      {/* =====================================================
           COMPANY DETAILS MODAL
-      ================================================== */}
+      ===================================================== */}
 
       {selectedCompanyId && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-bg-card rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-xl border border-border-subtle max-h-[90vh] overflow-y-auto">
             {/* Header */}
 
-            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-              <div>
+            <div className="flex items-start justify-between gap-3 border-b border-border-light pb-4">
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-2xl font-serif font-bold text-slate-900">
+                  <h3 className="text-lg sm:text-xl font-serif font-bold text-text-primary break-words">
                     {companyStats?.companyName ||
                       "Company Details"}
                   </h3>
 
-                  {getStatusBadge(
-                    companyStats?.status || "active"
-                  )}
+                  {companyStats &&
+                    getStatusBadge(
+                      companyStats.status || "active"
+                    )}
                 </div>
 
-                <p className="text-xs text-slate-400 mt-1">
-                  {companyStats?.email}
+                <p className="text-xs text-text-muted mt-1.5 flex items-start gap-1.5 break-all">
+                  <FaEnvelope className="text-[10px] mt-0.5 shrink-0" />
+
+                  {companyStats?.email || "N/A"}
                 </p>
               </div>
 
               <button
+                type="button"
                 onClick={() =>
                   setSelectedCompanyId(null)
                 }
-                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                className="text-text-muted hover:text-text-primary p-1 cursor-pointer shrink-0"
               >
-                <FaTimes />
+                <FaTimes className="text-sm" />
               </button>
             </div>
 
             {/* Loading */}
 
             {isStatsLoading ? (
-              <div className="py-12 text-center text-slate-400">
-                <div className="w-8 h-8 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin mx-auto mb-3" />
+              <div className="py-12 text-center text-text-muted">
+                <div className="w-8 h-8 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
 
-                Fetching company details...
+                <p className="text-xs">
+                  Fetching company details...
+                </p>
               </div>
             ) : (
               <>
-                {/* Stats */}
+                {/* =================================================
+                    STATS GRID
+                ================================================= */}
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 pt-4">
                   {/* Employees */}
 
-                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase block mb-1">
+                  <div className="bg-bg-secondary border border-border-subtle p-3 rounded-xl text-center min-w-0">
+                    <span className="text-[9px] font-semibold text-text-muted uppercase block mb-1">
                       Employees
                     </span>
 
-                    <span className="text-xl font-bold text-slate-900">
-                      {companyStats?.stats
-                        ?.totalEmployees || 0}
+                    <span className="text-lg sm:text-xl font-bold text-text-primary">
+                      {companyStats?.stats?.totalEmployees || 0}
                     </span>
                   </div>
 
                   {/* Tours */}
 
-                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase block mb-1">
+                  <div className="bg-bg-secondary border border-border-subtle p-3 rounded-xl text-center min-w-0">
+                    <span className="text-[9px] font-semibold text-text-muted uppercase block mb-1">
                       Tours
                     </span>
 
-                    <span className="text-xl font-bold text-slate-900">
-                      {companyStats?.stats?.totalTours ||
-                        0}
+                    <span className="text-lg sm:text-xl font-bold text-text-primary">
+                      {companyStats?.stats?.totalTours || 0}
                     </span>
                   </div>
 
                   {/* Bookings */}
 
-                  <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase block mb-1">
+                  <div className="bg-bg-secondary border border-border-subtle p-3 rounded-xl text-center min-w-0">
+                    <span className="text-[9px] font-semibold text-text-muted uppercase block mb-1">
                       Bookings
                     </span>
 
-                    <span className="text-xl font-bold text-slate-900">
-                      {companyStats?.stats
-                        ?.totalBookings || 0}
+                    <span className="text-lg sm:text-xl font-bold text-text-primary">
+                      {companyStats?.stats?.totalBookings || 0}
                     </span>
                   </div>
 
                   {/* Revenue */}
 
-                  <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl">
-                    <span className="text-[10px] font-semibold text-amber-700 uppercase block mb-1">
-                      Revenue
+                  <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-center min-w-0">
+                    <span className="text-[9px] font-semibold text-emerald-700 uppercase block mb-1">
+                      Net Revenue
                     </span>
 
-                    <span className="text-xl font-bold text-slate-900">
+                    <span className="text-base sm:text-xl font-bold text-text-primary break-words">
                       PKR{" "}
                       {(
-                        companyStats?.stats?.revenue ||
+                        companyStats?.stats?.revenue?.total ||
                         0
                       ).toLocaleString()}
                     </span>
                   </div>
                 </div>
 
-                {/* AI Credits */}
+                {/* =================================================
+                    REVENUE BREAKDOWN
+                ================================================= */}
+
+                <div className="bg-amber-50/40 border border-amber-200/50 p-3 sm:p-4 rounded-xl mt-3">
+                  <h4 className="text-xs font-semibold text-amber-800 mb-3 flex items-center gap-1.5">
+                    <FaCoins className="text-[10px]" />
+                    Revenue Breakdown
+                  </h4>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
+                    {/* Gross Sales */}
+
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                      <span className="block text-text-muted mb-0.5">
+                        Gross Sales
+                      </span>
+
+                      <span className="font-bold text-text-primary break-words">
+                        PKR{" "}
+                        {(
+                          companyStats?.stats?.revenue
+                            ?.totalBookingValue || 0
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+
+                    {/* Commission */}
+
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                      <span className="block text-text-muted mb-0.5">
+                        Commission
+                      </span>
+
+                      <span className="font-bold text-amber-600 break-words">
+                        - PKR{" "}
+                        {(
+                          companyStats?.stats?.revenue
+                            ?.platformCommission || 0
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+
+                    {/* Net Earnings */}
+
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                      <span className="block text-text-muted mb-0.5">
+                        Net Earnings
+                      </span>
+
+                      <span className="font-bold text-emerald-600 break-words">
+                        PKR{" "}
+                        {(
+                          companyStats?.stats?.revenue?.total ||
+                          0
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+
+                    {/* Average */}
+
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                      <span className="block text-text-muted mb-0.5">
+                        Avg / Booking
+                      </span>
+
+                      <span className="font-bold text-text-primary break-words">
+                        PKR{" "}
+                        {Math.round(
+                          companyStats?.stats?.revenue
+                            ?.averageBookingValue || 0
+                        ).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* =================================================
+                    AI CREDITS
+                ================================================= */}
 
                 {(() => {
                   const aiCredits =
                     companyStats?.stats?.aiCredits;
 
-                  const total =
-                    aiCredits?.total || 500;
+                  const total = aiCredits?.total || 500;
 
-                  const used =
-                    aiCredits?.used || 0;
+                  const used = aiCredits?.used || 0;
 
                   const remaining =
                     aiCredits?.remaining ??
@@ -886,23 +989,26 @@ export default function Company() {
                       : 0;
 
                   return (
-                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl space-y-3">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 text-xs">
-                        <span className="font-semibold text-slate-700">
-                          AI Credits ·{" "}
-                          {aiCredits?.plan ||
-                            "Starter"}{" "}
-                          Plan
+                    <div className="bg-bg-secondary border border-border-subtle p-3 sm:p-4 rounded-xl space-y-2 mt-3">
+                      <div className="flex flex-col gap-1.5 sm:flex-row sm:justify-between sm:items-center text-xs">
+                        <span className="font-semibold text-text-secondary flex items-center gap-1.5">
+                          <FaCheckCircle className="text-amber-500 text-[10px] shrink-0" />
+
+                          <span>
+                            AI Credits ·{" "}
+                            {aiCredits?.plan ||
+                              "Starter"}{" "}
+                            Plan
+                          </span>
                         </span>
 
                         <span className="font-bold text-amber-600">
-                          {remaining.toLocaleString()}{" "}
-                          / {total.toLocaleString()}{" "}
-                          remaining
+                          {remaining.toLocaleString()} /{" "}
+                          {total.toLocaleString()} remaining
                         </span>
                       </div>
 
-                      <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                         <div
                           className="bg-amber-500 h-full rounded-full transition-all duration-300"
                           style={{
@@ -911,10 +1017,9 @@ export default function Company() {
                         />
                       </div>
 
-                      <div className="flex justify-between text-[10px] text-slate-400">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:justify-between text-[10px] text-text-muted">
                         <span>
-                          Used:{" "}
-                          {used.toLocaleString()}
+                          Used: {used.toLocaleString()}
                         </span>
 
                         <span>
@@ -937,36 +1042,47 @@ export default function Company() {
                   );
                 })()}
 
-                {/* Company Details */}
+                {/* =================================================
+                    COMPANY INFORMATION
+                ================================================= */}
 
-                <div className="border-t border-slate-100 pt-5 space-y-4">
-                  <h4 className="font-serif font-bold text-slate-900 text-sm">
+                <div className="border-t border-border-light pt-4 mt-4">
+                  <h4 className="font-serif font-bold text-text-primary text-sm mb-4 flex items-center gap-1.5">
+                    <FaBuilding className="text-amber-500 text-xs" />
                     Company Information
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
-                    <div>
-                      <span className="font-semibold text-slate-800 block mb-1">
+                    {/* Phone */}
+
+                    <div className="min-w-0">
+                      <span className="font-semibold text-text-secondary block mb-1 flex items-center gap-1">
+                        <FaPhone className="text-[10px] text-text-muted" />
                         Phone
                       </span>
 
-                      <span className="text-slate-500">
+                      <span className="text-text-primary break-words">
                         {companyStats?.phone || "N/A"}
                       </span>
                     </div>
 
-                    <div>
-                      <span className="font-semibold text-slate-800 block mb-1">
+                    {/* Address */}
+
+                    <div className="min-w-0">
+                      <span className="font-semibold text-text-secondary block mb-1 flex items-center gap-1">
+                        <FaMapMarkerAlt className="text-[10px] text-text-muted" />
                         Address
                       </span>
 
-                      <span className="text-slate-500">
+                      <span className="text-text-primary break-words">
                         {companyStats?.address || "N/A"}
                       </span>
                     </div>
 
-                    <div>
-                      <span className="font-semibold text-slate-800 block mb-1">
+                    {/* Verification */}
+
+                    <div className="min-w-0">
+                      <span className="font-semibold text-text-secondary block mb-1">
                         Verification
                       </span>
 
@@ -976,23 +1092,27 @@ export default function Company() {
                       )}
                     </div>
 
-                    <div>
-                      <span className="font-semibold text-slate-800 block mb-1">
+                    {/* AI Plan */}
+
+                    <div className="min-w-0">
+                      <span className="font-semibold text-text-secondary block mb-1">
                         AI Plan
                       </span>
 
                       {getPlanBadge(
-                        companyStats?.stats?.aiCredits
-                          ?.plan
+                        companyStats?.stats?.aiCredits?.plan
                       )}
                     </div>
 
-                    <div>
-                      <span className="font-semibold text-slate-800 block mb-1">
+                    {/* Registered */}
+
+                    <div className="sm:col-span-2 min-w-0">
+                      <span className="font-semibold text-text-secondary block mb-1 flex items-center gap-1">
+                        <FaCalendarAlt className="text-[10px] text-text-muted" />
                         Registered
                       </span>
 
-                      <span className="text-slate-500">
+                      <span className="text-text-primary break-words">
                         {companyStats?.createdAt
                           ? new Date(
                               companyStats.createdAt
@@ -1012,23 +1132,24 @@ export default function Company() {
               </>
             )}
 
-            {/* Footer */}
+            {/* =====================================================
+                MODAL FOOTER
+            ===================================================== */}
 
-            <div className="pt-4 border-t border-slate-100 flex justify-end">
+            <div className="pt-4 border-t border-border-light flex justify-end mt-4">
               <button
+                type="button"
                 onClick={() =>
                   setSelectedCompanyId(null)
                 }
-                className="btn-outline py-2 px-5 text-xs cursor-pointer"
+                className="btn-outline py-2 px-5 text-xs cursor-pointer w-full sm:w-auto"
               >
                 Close
               </button>
             </div>
           </div>
         </div>
-        
       )}
     </div>
   );
 }
-

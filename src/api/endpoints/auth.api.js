@@ -19,7 +19,7 @@ export const authApi = {
   },
 
   getMe: async () => {
-    const { data } =axios.get('/auth/me', { withCredentials: true });
+    const { data } =api.get('/auth/me', { withCredentials: true });
     return data;
   },
   

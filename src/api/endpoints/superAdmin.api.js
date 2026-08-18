@@ -72,6 +72,12 @@ export const superAdminApi = {
     const { data } = await api.get('admin/dashboard/platform-stats');
     return data;
   },
+
+      getAnalysis: async () => {
+    const { data } = await api.get('admin/dashboard/platform-analysis');
+    return data;
+  },
+
   getUsers: async (params = {}) => {
     const { data } = await api.get("/users", { params });
     return data;
@@ -86,6 +92,7 @@ export const superAdminApi = {
     const { data } = await api.get(`/users/${id}/stats`);
     return data;
   },
+
 
   updateUserRole: async (id, roleId) => {
     const { data } = await api.patch(`/users/${id}/role`, { roleId });
@@ -111,4 +118,62 @@ export const superAdminApi = {
     const { data } = await api.get("/users/roles");
     return data;
   },
+
+  getPlans: async () => {
+    const response = await api.get('/subscription/plans');
+    return response.data;
+  },
+
+  // Company: Create Checkout Session
+  createCheckoutSession: async (payload) => {
+    const response = await api.post('/subscription/checkout', payload);
+    return response.data;
+  },
+
+  // Super Admin: Get All Plans
+  getAllPlansAdmin: async () => {
+    const response = await api.get('/subscription/admin/plans');
+    return response.data;
+  },
+
+  // Super Admin: Create Plan
+  createPlan: async (planData) => {
+    const response = await api.post('/subscription/admin/plans', planData);
+    return response.data;
+  },
+
+  // Super Admin: Update Plan
+ // Super Admin: Update Plan
+updatePlan: async (id, planData) => {
+  const response = await api.put(
+    `/subscription/admin/plans/${id}`,
+    planData
+  );
+
+  return response.data;
+},
+
+  // Super Admin: Toggle Active Status
+  togglePlanStatus: async (id) => {
+    const response = await api.patch(`/subscription/admin/plans/${id}/toggle`);
+    return response.data;
+  },
+
+  // Super Admin: Get Company Subscriptions Ledger
+  getCompanySubscriptions: async () => {
+    const response = await api.get('/subscription/admin/company-subscriptions');
+    return response.data;
+  },
+  // Tours & Reviews Management
+getTourAnalytics: async () => {
+  const response = await api.get('/admin/dashboard/tours/analytics');
+  return response.data;
+},
+
+deleteAdminReview: async (reviewId) => {
+  const response = await api.delete(`/admin/dashboard/tours/reviews/${reviewId}`);
+  return response.data;
+},
+
+
 };

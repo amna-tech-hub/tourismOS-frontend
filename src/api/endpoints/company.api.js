@@ -1,10 +1,13 @@
 import api from '../axios';
 
 export const companyApi = {
-  getDashboard: async () => {
-    const { data } = await api.get('/company/dashboard');
-    return data;
-  },
+ getDashboard: async (period = 30) => {
+  const response = await api.get(
+    `/company/dashboard?period=${period}`
+  );
+
+  return response.data;
+},
 
   getProfile: async () => {
     const { data } = await api.get('/company/profile');

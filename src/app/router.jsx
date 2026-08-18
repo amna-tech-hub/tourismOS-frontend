@@ -19,7 +19,7 @@ import Register from '../pages/auth/Register';
 // import ResetPassword from '../pages/auth/ResetPassword';
 
 // Public / Traveler Pages
-import Home from '../pages/traveler/Home';
+import Home from '../pages/traveler/Test';
 
 // Company Admin Pages
 import CompanyDashboard from '../pages/company/CompanyDashboard';
@@ -39,14 +39,23 @@ import Unauthorized from '../pages/shared/Unauthorized';
 import DashboardLayout from '../layouts/DashboardLayout';
 import CompanyManagement from '../pages/super-admin/CompanyManagement';
 import UserManagement from '../pages/super-admin/UserManagement';
+import Analysis from '../pages/super-admin/Analysis';
+import Subscriptions from '../pages/super-admin/Subscriptions';
+import Tours from '../pages/super-admin/Tours';
+import Test from '../pages/traveler/Test';
+import CompanyTour from '../pages/company/CompanyTour';
+import CompanySubscription from '../pages/company/CompanySubscription';
+import Employees from '../pages/company/Employees';
+import CompanyProfile from '../pages/company/Profile';
 
 export const router = createBrowserRouter([
   // PUBLIC & UNPROTECTED ROUTES
 
   {
+    path:'/',
     element: <PublicLayout/>,
     children: [
-      { path: '/', element: <Home /> },
+     { index: true, element: <Test /> },
    
     ],
   },
@@ -75,7 +84,7 @@ export const router = createBrowserRouter([
           {
             element: <TravelerLayout/>,
             children: [
-              { path: '/traveler/home', element: <Home /> },  
+              // { path: '/traveler/home', element: <Home /> },  
            
             ],
           },
@@ -90,7 +99,11 @@ export const router = createBrowserRouter([
             element: <DashboardLayout portalType="company"/>,
             children: [
               { path: '/company/dashboard', element: <CompanyDashboard /> },
-            
+             { path: '/company/employees', element: <Employees/> },
+             { path: '/company/subscription', element: <CompanySubscription/> },
+              { path: '/company/tours', element: <CompanyTour/> },
+              { path: '/company/profile', element: <CompanyProfile/> },
+
             ],
           },
         ],
@@ -120,6 +133,11 @@ export const router = createBrowserRouter([
               { path: '/super-admin/dashboard', element: <SuperAdminDashboard /> },
               { path: '/super-admin/companies', element: <CompanyManagement/>},
               { path:  '/super-admin/users', element: <UserManagement/>},
+              { path:  '/super-admin/analytics', element:<Analysis/>},
+              { path:  '/super-admin/subscriptions', element:<Subscriptions/>},
+              { path:  '/super-admin/tours', element:<Tours/>},
+
+
 
          
           

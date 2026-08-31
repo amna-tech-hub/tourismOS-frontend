@@ -19,7 +19,7 @@ import Register from '../pages/auth/Register';
 // import ResetPassword from '../pages/auth/ResetPassword';
 
 // Public / Traveler Pages
-import Home from '../pages/traveler/Test';
+// import Home from '../pages/traveler/Test';
 
 // Company Admin Pages
 import CompanyDashboard from '../pages/company/CompanyDashboard';
@@ -42,23 +42,44 @@ import UserManagement from '../pages/super-admin/UserManagement';
 import Analysis from '../pages/super-admin/Analysis';
 import Subscriptions from '../pages/super-admin/Subscriptions';
 import Tours from '../pages/super-admin/Tours';
-import Test from '../pages/traveler/Test';
+import Home from '../pages/traveler/Home';
 import CompanyTour from '../pages/company/CompanyTour';
 import CompanySubscription from '../pages/company/CompanySubscription';
 import Employees from '../pages/company/Employees';
 import CompanyProfile from '../pages/company/Profile';
-
+import PaymentSuccessPage from '../pages/shared/PaymentSuccessPage';
+import CompanyBookings from '../pages/company/CompanyBookings';
+import RootLayout from '../components/RootLayout';
+import AcceptInvite from '../pages/shared/AcceptInvite';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import VerifyOtp from '../pages/auth/VerifyOtp'
+import ResetPassword from '../pages/auth/ResetPassword';
+import TourDetail from '../pages/shared/tours/TourDetail';
+import About from '../pages/traveler/About';
+import MyBookings from '../pages/traveler/MyBookings';
+import BookingDetails from '../pages/traveler/BookingDetails';
+import PaymentCancelPage from '../pages/PaymentCancelPage';
+import Journal from '../pages/traveler/Journal';
+import TravelerProfile from '../pages/traveler/TravelerProfile';
+import JournalDetail from '../components/user/JournalDetail';
 export const router = createBrowserRouter([
-  // PUBLIC & UNPROTECTED ROUTES
-
   {
-    path:'/',
-    element: <PublicLayout/>,
+    element: <RootLayout />,
     children: [
-     { index: true, element: <Test /> },
-   
-    ],
-  },
+
+      // PUBLIC
+      {
+  path: "/",
+  element: <PublicLayout />,
+  children: [
+    { index: true, element: <Home /> },
+    { path: '/payment/success', element: <PaymentSuccessPage/> },
+    { path: '/accept-invitation', element: <AcceptInvite /> },
+    { path: '/tours/:id', element: <TourDetail /> },
+    { path: '/about', element: <About /> },
+  ],
+},
+  
 
   // AUTHENTICATION ROUTES 
 
@@ -68,13 +89,19 @@ export const router = createBrowserRouter([
     children: [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
-    //   { path: 'forgot-password', element: <ForgotPassword /> },
-    //   { path: 'reset-password', element: <ResetPassword /> },
+       { path: 'forgot-password', element: <ForgotPassword/> },
+      { path: 'reset-password', element: <ResetPassword/> },
+      { path: 'verify-otp', element: <VerifyOtp/> },
+        // {path:"payment/success", element:<PaymentSuccessPage/>},
+   
+
+      
     ],
   },
 
   // PROTECTED ROUTES 
   {
+      path: '/',
     element: <ProtectedRoute />,
     children: [
       // 1. TRAVELER PORTAL
@@ -84,8 +111,14 @@ export const router = createBrowserRouter([
           {
             element: <TravelerLayout/>,
             children: [
-              // { path: '/traveler/home', element: <Home /> },  
-           
+               { path: 'traveler/home', element: <Home /> },  
+                 { path:"dashboard/bookings" ,element:<MyBookings/>},
+                 {path:"bookings/:id" ,element:<BookingDetails/>},
+                 {path:"payment/cancel", element:<PaymentCancelPage/>},
+           {  path:"journal",element:<Journal/>},
+                      {  path:"journals/:id",element:<JournalDetail/>}
+
+           ,{path:"/profile",element:<TravelerProfile/>}
             ],
           },
         ],
@@ -103,6 +136,8 @@ export const router = createBrowserRouter([
              { path: '/company/subscription', element: <CompanySubscription/> },
               { path: '/company/tours', element: <CompanyTour/> },
               { path: '/company/profile', element: <CompanyProfile/> },
+              { path: '/company/bookings', element: <CompanyBookings/> },
+
 
             ],
           },
@@ -136,11 +171,6 @@ export const router = createBrowserRouter([
               { path:  '/super-admin/analytics', element:<Analysis/>},
               { path:  '/super-admin/subscriptions', element:<Subscriptions/>},
               { path:  '/super-admin/tours', element:<Tours/>},
-
-
-
-         
-          
             ],
           },
         ],
@@ -152,4 +182,4 @@ export const router = createBrowserRouter([
 
   { path: '/unauthorized', element: <Unauthorized /> },
   { path: '*', element: <NotFound /> },
-]);
+]}]);

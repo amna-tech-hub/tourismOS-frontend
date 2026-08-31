@@ -1,5 +1,6 @@
 import { Compass, Send,  Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import tourix from "/public/tourixLogo.webp";
 
 export default function Footer() {
   return (
@@ -12,9 +13,12 @@ export default function Footer() {
           {/* Brand & Mission */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-bold">
-                <Compass className="w-5 h-5" />
-              </div>
+               <img
+                          src={tourix}
+                          alt="Tourix Logo"
+                          className="w-9 h-9 rounded-xl object-cover"
+                        />
+              
               <span className="font-serif text-xl font-bold text-slate-900">
                 AI Tourism<span className="text-amber-500">OS</span>
               </span>

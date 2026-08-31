@@ -15,18 +15,9 @@ export const useLogin = () => {
     },
   });
 };
-
 export const useRegister = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: authApi.register,
-    onSuccess: (data) => {
-      if (data.user) {
-        userService.setUser(data.user);
-      }
-      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
-    },
   });
 };
 

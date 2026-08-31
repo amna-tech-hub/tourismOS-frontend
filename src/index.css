@@ -1,84 +1,494 @@
 @import "tailwindcss";
 
+/* =========================================================
+   TOURISMOS — GLOBAL DESIGN SYSTEM
+   ========================================================= */
+
 @theme {
-  /* ===== FONTS ===== */
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  /* =======================================================
+     FONTS
+     ======================================================= */
 
-  /* ===== COLOR PALETTE (Light Only) ===== */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F8FAFC;
-  --color-bg-tertiary: #F1F5F9;
-  --color-bg-card: #FFFFFF;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 
-  --color-text-primary: #0F172A;     /* Deep slate for crisp readability */
-  --color-text-secondary: #475569;   /* Subtitles & card descriptions */
-  --color-text-muted: #94A3B8;       /* Meta information & captions */
+  /* =======================================================
+     BRAND COLORS — YELLOW THEME
+     ======================================================= */
 
-  /* Yellow Accents & Buttons */
-  --color-amber-primary: #F59E0B;     /* Main CTA Yellow */
-  --color-amber-hover: #D97706;       /* Hover Yellow */
-  --color-amber-light: #FEF3C7;       /* Soft Yellow for Badges & Highlights */
+  --color-yellow-50: #fffbeb;
+  --color-yellow-100: #fef3c7;
+  --color-yellow-200: #fde68a;
+  --color-yellow-300: #fcd34d;
+  --color-yellow-400: #fbbf24;
+  --color-yellow-500: #f59e0b;
+  --color-yellow-600: #d97706;
+  --color-yellow-700: #b45309;
+  --color-yellow-800: #92400e;
+  --color-yellow-900: #78350f;
 
-  --color-border-subtle: #E2E8F0;
-  --color-border-light: #F1F5F9;
+  /* =======================================================
+     BACKGROUNDS
+     ======================================================= */
 
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #faf8f5;
+  --color-bg-tertiary: #f5f2ed;
+  --color-bg-card: #ffffff;
+  --color-bg-sidebar: #1e1e1e;
+  --color-bg-sidebar-dark: #1a1a1a;
+
+  /* =======================================================
+     TEXT
+     ======================================================= */
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #8a8a8a;
+  --color-text-light: #ffffff;
+  --color-text-sidebar: #f5f5f5;
+
+  /* =======================================================
+     BRAND / PRIMARY YELLOW
+     ======================================================= */
+
+  --color-brand-primary: #fbbf24;
+  --color-brand-hover: #d97706;
+  --color-brand-dark: #b45309;
+  --color-brand-light: #fef3c7;
+  --color-brand-soft: #fffbeb;
+
+  /* =======================================================
+     SUCCESS — EMERALD
+     ======================================================= */
+
+  --color-success: #10b981;
+  --color-success-dark: #059669;
+  --color-success-light: #d1fae5;
+  --color-success-soft: #ecfdf5;
+
+  /* =======================================================
+     INFO — SKY BLUE
+     ======================================================= */
+
+  --color-info: #3b82f6;
+  --color-info-dark: #2563eb;
+  --color-info-light: #dbeafe;
+  --color-info-soft: #eff6ff;
+
+  /* =======================================================
+     ERROR — ROSE
+     ======================================================= */
+
+  --color-error: #ef4444;
+  --color-error-dark: #dc2626;
+  --color-error-light: #fecaca;
+  --color-error-soft: #fef2f2;
+
+  /* =======================================================
+     WARNING — ORANGE
+     ======================================================= */
+
+  --color-warning: #f97316;
+  --color-warning-dark: #ea580c;
+  --color-warning-light: #fed7aa;
+  --color-warning-soft: #fff7ed;
+
+  /* =======================================================
+     PURPLE
+     ======================================================= */
+
+  --color-purple: #8b5cf6;
+  --color-purple-dark: #7c3aed;
+  --color-purple-light: #ede9fe;
+  --color-purple-soft: #f5f3ff;
+
+  /* =======================================================
+     NEUTRAL / GRAYS
+     ======================================================= */
+
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+
+  /* =======================================================
+     BORDERS
+     ======================================================= */
+
+  --color-border-subtle: #f0ede8;
+  --color-border-light: #e8e4dd;
+  --color-border-medium: #d6d0c8;
 }
 
-/* ===== BASE STYLES ===== */
+/* =========================================================
+   BASE
+   ========================================================= */
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-sans); /* Outfit */
+  margin: 0;
+  font-family: var(--font-sans);
   font-weight: 400;
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings: Playfair Display */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif); /* Playfair Display */
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
   color: var(--color-text-primary);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
-/* Paragraphs, Subheadings, & UI Text: Outfit */
-p, span, label, input, button, .subheading {
-  font-family: var(--font-sans); /* Outfit */
+p,
+span,
+label,
+input,
+textarea,
+select,
+button,
+.subheading {
+  font-family: var(--font-sans);
 }
 
-/* ===== REUSABLE BUTTON & UI CLASSES ===== */
+/* =========================================================
+   REUSABLE COMPONENTS
+   ========================================================= */
+
 @layer components {
-  /* Primary Yellow Button */
-  .btn-yellow {
-    @apply inline-flex items-center justify-center font-sans font-medium rounded-xl px-6 py-3 
-           bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 
-           hover:bg-amber-600 transition-all duration-200 active:scale-[0.98] 
-           disabled:opacity-50 disabled:pointer-events-none cursor-pointer;
+  /* =======================================================
+     PRIMARY BRAND BUTTON — Yellow
+     ======================================================= */
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center
+      font-sans font-semibold text-sm
+      rounded-xl px-6 py-3
+      bg-yellow-400 text-white
+      shadow-sm shadow-yellow-500/20
+      hover:bg-yellow-300 hover:shadow-yellow-500/30
+      transition-all duration-200
+      active:scale-[0.98]
+      disabled:opacity-50
+      disabled:pointer-events-none
+      cursor-pointer;
   }
 
-  /* Outline Button */
+  /* =======================================================
+     PRIMARY BUTTON — Small
+     ======================================================= */
+
+  .btn-primary-sm {
+    @apply inline-flex items-center justify-center
+      font-sans font-semibold text-xs
+      rounded-lg px-4 py-2
+      bg-yellow-400 text-white
+      shadow-sm shadow-yellow-500/20
+      hover:bg-yellow-300 hover:shadow-yellow-500/30
+      transition-all duration-200
+      active:scale-[0.98]
+      disabled:opacity-50
+      disabled:pointer-events-none
+      cursor-pointer;
+  }
+
+  /* =======================================================
+     OUTLINE BUTTON
+     ======================================================= */
+
   .btn-outline {
-    @apply inline-flex items-center justify-center font-sans font-medium rounded-xl px-6 py-3 
-           bg-white text-slate-900 border border-slate-200 
-           hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 
-           active:scale-[0.98] cursor-pointer;
+    @apply inline-flex items-center justify-center
+      font-sans font-medium text-sm
+      rounded-xl px-6 py-3
+      bg-white
+      text-slate-700
+      border border-slate-200
+      hover:bg-slate-50
+      hover:border-slate-300
+      transition-all duration-200
+      active:scale-[0.98]
+      disabled:opacity-50
+      disabled:pointer-events-none
+      cursor-pointer;
   }
 
-  /* Soft Accent Badge */
+  /* =======================================================
+     SMALL OUTLINE BUTTON
+     ======================================================= */
+
+  .btn-outline-sm {
+    @apply inline-flex items-center justify-center
+      font-sans font-medium text-xs
+      rounded-lg px-4 py-2
+      bg-white
+      text-slate-600
+      border border-slate-200
+      hover:bg-slate-50
+      hover:border-slate-300
+      transition-all duration-200
+      active:scale-[0.98]
+      cursor-pointer;
+  }
+
+  /* =======================================================
+     GHOST BUTTON
+     ======================================================= */
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center
+      font-sans font-medium text-sm
+      rounded-xl px-4 py-2
+      bg-transparent
+      text-slate-600
+      hover:bg-yellow-50
+      hover:text-yellow-700
+      transition-all duration-200
+      disabled:opacity-50
+      disabled:pointer-events-none
+      cursor-pointer;
+  }
+
+  /* =======================================================
+     BADGES
+     ======================================================= */
+
   .badge-yellow {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-sans font-semibold 
-           bg-amber-100 text-amber-900;
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-yellow-100
+      text-yellow-800;
   }
 
-  /* Explicit Subheading Utility */
-  .subheading {
-    @apply font-sans text-slate-600 font-medium;
+  .badge-yellow-filled {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-yellow-400
+      text-white;
   }
+
+  .badge-success {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-emerald-100
+      text-emerald-700;
+  }
+
+  .badge-success-filled {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-emerald-500
+      text-white;
+  }
+
+  .badge-info {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-blue-100
+      text-blue-700;
+  }
+
+  .badge-error {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-rose-100
+      text-rose-700;
+  }
+
+  .badge-purple {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-purple-100
+      text-purple-700;
+  }
+
+  .badge-gray {
+    @apply inline-flex items-center
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      bg-slate-100
+      text-slate-600;
+  }
+
+  /* =======================================================
+     CARDS
+     ======================================================= */
+
+  .card {
+    @apply rounded-2xl
+      border border-slate-200/60
+      bg-white
+      shadow-sm;
+  }
+
+  .card-soft {
+    @apply rounded-2xl
+      border border-slate-100
+      bg-slate-50/50;
+  }
+
+  .card-yellow {
+    @apply rounded-2xl
+      border border-yellow-200/60
+      bg-yellow-50/30;
+  }
+
+  /* =======================================================
+     SECTION TITLES
+     ======================================================= */
+
+  .section-title {
+    @apply text-lg
+      font-semibold
+      text-slate-900;
+  }
+
+  .section-description {
+    @apply mt-1
+      text-sm
+      text-slate-500;
+  }
+
+  /* =======================================================
+     INPUT
+     ======================================================= */
+
+  .input-primary {
+    @apply w-full
+      rounded-xl
+      border border-slate-200
+      bg-white
+      px-4 py-3
+      text-sm
+      text-slate-900
+      placeholder:text-slate-400
+      focus:border-yellow-400
+      focus:ring-2
+      focus:ring-yellow-400/20
+      focus:outline-none
+      transition-all
+      duration-200;
+  }
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+  background-color: var(--color-bg-sidebar);
+  color: var(--color-text-sidebar);
+}
+
+.sidebar-dark {
+  background-color: var(--color-bg-sidebar-dark);
+  color: var(--color-text-sidebar);
+}
+
+.sidebar-item-active {
+  background-color: var(--color-brand-primary);
+  color: #1e1e1e;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5d5d5;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8b8b8;
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: #fcd34d;
+  color: #1a1a1a;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+td {
+  font-family: var(--font-sans);
+}
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
 }

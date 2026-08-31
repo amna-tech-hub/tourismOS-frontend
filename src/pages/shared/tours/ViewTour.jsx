@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   X,
   MapPin,
@@ -80,23 +80,23 @@ const getSafetyConfig = (status) => {
       return {
         label: "Travel With Caution",
         icon: AlertTriangle,
-        container: "bg-amber-50/80 border-amber-200",
-        iconBg: "bg-amber-100",
-        iconColor: "text-amber-600",
-        text: "text-amber-800",
-        badge: "bg-amber-100 text-amber-700",
-        gradient: "from-amber-50 to-amber-100/30",
+        container: "bg-yellow-50/80 border-yellow-200",
+        iconBg: "bg-yellow-100",
+        iconColor: "text-yellow-600",
+        text: "text-yellow-800",
+        badge: "bg-yellow-100 text-yellow-700",
+        gradient: "from-yellow-50 to-yellow-100/30",
       };
     case "DANGER":
       return {
         label: "Travel Not Recommended",
         icon: ShieldAlert,
-        container: "bg-red-50/80 border-red-200",
-        iconBg: "bg-red-100",
-        iconColor: "text-red-600",
-        text: "text-red-800",
-        badge: "bg-red-100 text-red-700",
-        gradient: "from-red-50 to-red-100/30",
+        container: "bg-rose-50/80 border-rose-200",
+        iconBg: "bg-rose-100",
+        iconColor: "text-rose-600",
+        text: "text-rose-800",
+        badge: "bg-rose-100 text-rose-700",
+        gradient: "from-rose-50 to-rose-100/30",
       };
     default:
       return {
@@ -146,7 +146,7 @@ const WeatherCard = ({ weather }) => {
         return (
           <div
             key={item.label}
-            className={`rounded-2xl border p-4 ${colorMap[item.color]} transition-all hover:shadow-md hover:scale-[1.02]`}
+            className={`rounded-2xl border p-4 ${colorMap[item.color]}`}
           >
             <div className="flex items-center gap-2 mb-3">
               <Icon className="w-4 h-4" />
@@ -169,20 +169,20 @@ const WeatherCard = ({ weather }) => {
 const DisasterItem = ({ label, active, icon: Icon }) => {
   return (
     <div
-      className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${
+      className={`flex items-center justify-between p-4 rounded-2xl border-2 ${
         active
-          ? "bg-red-50/80 border-red-200 shadow-sm"
+          ? "bg-rose-50/80 border-rose-200"
           : "bg-emerald-50/60 border-emerald-200"
       }`}
     >
       <div className="flex items-center gap-3">
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-            active ? "bg-red-100" : "bg-emerald-100"
+            active ? "bg-rose-100" : "bg-emerald-100"
           }`}
         >
           <Icon
-            className={`w-5 h-5 ${active ? "text-red-500" : "text-emerald-500"}`}
+            className={`w-5 h-5 ${active ? "text-rose-500" : "text-emerald-500"}`}
           />
         </div>
         <span className="text-sm font-semibold text-slate-700">{label}</span>
@@ -190,7 +190,7 @@ const DisasterItem = ({ label, active, icon: Icon }) => {
       <span
         className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 ${
           active
-            ? "bg-red-200 text-red-700"
+            ? "bg-rose-200 text-rose-700"
             : "bg-emerald-200 text-emerald-700"
         }`}
       >
@@ -221,15 +221,15 @@ const ItineraryDay = ({ day, safety }) => {
   const SafetyIcon = safetyConfig.icon;
 
   return (
-    <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white">
+    <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
       {/* Day Header */}
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 bg-white hover:bg-slate-50/70 transition-all text-left group"
+        className="w-full flex items-center justify-between p-5 bg-white hover:bg-slate-50/70 text-left cursor-pointer"
       >
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-bold text-lg shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white flex items-center justify-center font-bold text-lg">
             {day.day}
           </div>
           <div>
@@ -252,7 +252,7 @@ const ItineraryDay = ({ day, safety }) => {
             </span>
           )}
           <ChevronDown
-            className={`w-6 h-6 text-slate-400 transition-all duration-300 group-hover:text-slate-600 ${
+            className={`w-6 h-6 text-slate-400 transition-transform duration-200 ${
               open ? "rotate-180" : ""
             }`}
           />
@@ -275,31 +275,37 @@ const ItineraryDay = ({ day, safety }) => {
           {day.activities?.length > 0 && (
             <div>
               <h5 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-500" />
+                <Sparkles className="w-5 h-5 text-yellow-500" />
                 Activities
               </h5>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {day.activities.map((activity) => (
-                  <div
-                    key={activity._id || activity.title}
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:shadow-md transition-all hover:border-amber-200"
-                  >
-                    {activity.image ? (
-                      <img
-                        src={activity.image}
-                        alt={activity.title}
-                        className="w-14 h-14 rounded-xl object-cover"
-                      />
-                    ) : (
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center shrink-0">
-                        <MapPin className="w-6 h-6 text-amber-600" />
-                      </div>
-                    )}
-                    <span className="text-sm font-semibold text-slate-700">
-                      {activity.title}
-                    </span>
-                  </div>
-                ))}
+                {day.activities.map((activity, index) => {
+                  const title = typeof activity === "string" ? activity : activity?.title || "Unnamed Activity";
+                  const image = typeof activity === "object" ? activity?.image : null;
+                  const imageUrl = image?.url || null;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-slate-100 hover:border-yellow-200"
+                    >
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={title}
+                          className="w-14 h-14 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center shrink-0">
+                          <MapPin className="w-6 h-6 text-yellow-600" />
+                        </div>
+                      )}
+                      <span className="text-sm font-semibold text-slate-700">
+                        {title}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -381,14 +387,14 @@ const ItineraryDay = ({ day, safety }) => {
 const StatCard = ({ icon: Icon, label, value, color = "slate" }) => {
   const colors = {
     slate: "bg-slate-50 border-slate-200 text-slate-600",
-    amber: "bg-amber-50 border-amber-100 text-amber-600",
+    yellow: "bg-yellow-50 border-yellow-100 text-yellow-600",
     emerald: "bg-emerald-50 border-emerald-100 text-emerald-600",
     blue: "bg-blue-50 border-blue-100 text-blue-600",
     purple: "bg-purple-50 border-purple-100 text-purple-600",
   };
 
   return (
-    <div className={`rounded-2xl border p-5 ${colors[color]} transition-all hover:shadow-md`}>
+    <div className={`rounded-2xl border p-5 ${colors[color]}`}>
       <div className="flex items-center gap-3 mb-3">
         <Icon className="w-5 h-5" />
         <span className="text-xs font-medium uppercase tracking-wide opacity-70">
@@ -455,16 +461,19 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
   const coverImage =
     tourData?.coverImage?.url || tourData?.images?.[0]?.url || null;
 
+  const galleryImages = tourData?.images || [];
+  const hasGalleryImages = galleryImages.length > 0;
+
   return (
-    <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-6xl max-h-[92vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-6xl max-h-[92vh] rounded-3xl overflow-hidden flex flex-col">
         {/* ====================================================
             HEADER
         ==================================================== */}
 
         <div className="flex items-center justify-between px-8 py-5 border-b border-slate-100 shrink-0 bg-white">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
               <MapPin className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -475,7 +484,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
           <button
             type="button"
             onClick={onClose}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -508,10 +517,10 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             {/* Status Badge */}
             <div className="absolute top-6 left-6">
               <span
-                className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-full text-sm font-bold flex items-center gap-1.5 ${
                   tourData?.status === "published"
                     ? "bg-emerald-500 text-white"
-                    : "bg-amber-500 text-white"
+                    : "bg-yellow-500 text-white"
                 }`}
               >
                 {tourData?.status === "published" ? (
@@ -552,7 +561,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                 icon={Clock3}
                 label="Duration"
                 value={`${tourData?.duration || 0} Days`}
-                color="amber"
+                color="yellow"
               />
               <StatCard
                 icon={Users}
@@ -575,12 +584,42 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             </div>
 
             {/* =================================================
+                GALLERY IMAGES
+            ================================================= */}
+
+            {hasGalleryImages && (
+              <section>
+                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                  <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
+                  Gallery
+                  <span className="text-sm font-normal text-slate-400 ml-2">
+                    ({galleryImages.length} images)
+                  </span>
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {galleryImages.map((image, index) => (
+                    <div
+                      key={image._id || index}
+                      className="relative rounded-2xl overflow-hidden border-2 border-slate-200 aspect-square"
+                    >
+                      <img
+                        src={image.url}
+                        alt={`Gallery ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* =================================================
                 DESCRIPTION
             ================================================= */}
 
             <section>
               <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                 About This Tour
               </h3>
               <div className="bg-slate-50/80 rounded-2xl p-6 border border-slate-100">
@@ -596,12 +635,12 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
 
             <section>
               <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                 Tour Information
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-4 p-5 rounded-2xl bg-slate-50/80 border border-slate-100">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center">
                     {tourData?.company ? (
                       <Building2 className="w-5 h-5 text-slate-600" />
                     ) : (
@@ -618,7 +657,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-5 rounded-2xl bg-slate-50/80 border border-slate-100">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center">
                     <User className="w-5 h-5 text-slate-600" />
                   </div>
                   <div>
@@ -631,7 +670,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-5 rounded-2xl bg-slate-50/80 border border-slate-100">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center">
                     <CalendarDays className="w-5 h-5 text-slate-600" />
                   </div>
                   <div>
@@ -644,7 +683,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-5 rounded-2xl bg-slate-50/80 border border-slate-100">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center">
                     <CalendarDays className="w-5 h-5 text-slate-600" />
                   </div>
                   <div>
@@ -667,7 +706,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 flex items-center gap-3">
-                    <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                    <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                     Weather & Safety
                   </h3>
                   <p className="text-sm text-slate-500 mt-1 ml-4">
@@ -683,13 +722,13 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                       </span>
                     )}
                     {safetySummary.warning > 0 && (
-                      <span className="px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-sm font-bold flex items-center gap-1.5">
+                      <span className="px-4 py-1.5 rounded-full bg-yellow-100 text-yellow-700 text-sm font-bold flex items-center gap-1.5">
                         <AlertTriangle className="w-4 h-4" />
                         {safetySummary.warning} Warning
                       </span>
                     )}
                     {safetySummary.danger > 0 && (
-                      <span className="px-4 py-1.5 rounded-full bg-red-100 text-red-700 text-sm font-bold flex items-center gap-1.5">
+                      <span className="px-4 py-1.5 rounded-full bg-rose-100 text-rose-700 text-sm font-bold flex items-center gap-1.5">
                         <ShieldAlert className="w-4 h-4" />
                         {safetySummary.danger} Danger
                       </span>
@@ -701,7 +740,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
               {/* Loading */}
               {isPending && (
                 <div className="rounded-3xl border-2 border-dashed border-slate-200 p-12 text-center bg-slate-50/50">
-                  <div className="w-14 h-14 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <div className="w-14 h-14 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-lg font-semibold text-slate-700">
                     Checking safety conditions...
                   </p>
@@ -713,14 +752,14 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
 
               {/* Error */}
               {isError && !isPending && (
-                <div className="rounded-3xl border-2 border-red-200 bg-red-50/80 p-6">
+                <div className="rounded-3xl border-2 border-rose-200 bg-rose-50/80 p-6">
                   <div className="flex items-start gap-4">
-                    <AlertTriangle className="w-7 h-7 text-red-500 shrink-0 mt-0.5" />
+                    <AlertTriangle className="w-7 h-7 text-rose-500 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-red-800 text-lg">
+                      <h4 className="font-bold text-rose-800 text-lg">
                         Unable to load safety information
                       </h4>
-                      <p className="text-sm text-red-700 mt-1">
+                      <p className="text-sm text-rose-700 mt-1">
                         {error?.response?.data?.message ||
                           error?.message ||
                           "Something went wrong while checking tour safety."}
@@ -761,7 +800,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             {tourData?.budgetBreakdown && (
               <section>
                 <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                  <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                  <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                   Budget Breakdown
                 </h3>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -792,8 +831,8 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
                       PKR {formatCurrency(tourData.budgetBreakdown.food)}
                     </p>
                   </div>
-                  <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200">
-                    <Sparkles className="w-6 h-6 text-amber-500 mb-3" />
+                  <div className="p-5 rounded-2xl bg-gradient-to-br from-yellow-50 to-yellow-100/50 border border-yellow-200">
+                    <Sparkles className="w-6 h-6 text-yellow-500 mb-3" />
                     <p className="text-xs text-slate-500 uppercase tracking-wide font-medium">
                       Activities
                     </p>
@@ -812,16 +851,16 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             {tourData?.travelTips?.length > 0 && (
               <section>
                 <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                  <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                  <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                   Travel Tips
                 </h3>
                 <div className="space-y-3">
                   {tourData.travelTips.map((tip, index) => (
                     <div
                       key={index}
-                      className="flex items-start gap-4 p-4 rounded-2xl bg-amber-50/80 border border-amber-200"
+                      className="flex items-start gap-4 p-4 rounded-2xl bg-yellow-50/80 border border-yellow-200"
                     >
-                      <CircleCheck className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                      <CircleCheck className="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" />
                       <span className="text-sm text-slate-700">{tip}</span>
                     </div>
                   ))}
@@ -856,16 +895,16 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             {tourData?.importantNotes?.length > 0 && (
               <section>
                 <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                  <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                  <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                   Important Notes
                 </h3>
                 <div className="space-y-3">
                   {tourData.importantNotes.map((note, index) => (
                     <div
                       key={index}
-                      className="flex items-start gap-4 p-4 rounded-2xl bg-red-50/80 border border-red-200"
+                      className="flex items-start gap-4 p-4 rounded-2xl bg-rose-50/80 border border-rose-200"
                     >
-                      <Info className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                      <Info className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
                       <span className="text-sm text-slate-700">{note}</span>
                     </div>
                   ))}
@@ -880,18 +919,18 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
             {tourData?.faqs?.length > 0 && (
               <section>
                 <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                  <span className="w-1 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                  <span className="w-1 h-8 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full" />
                   Frequently Asked Questions
                 </h3>
                 <div className="space-y-4">
                   {tourData.faqs.map((faq, index) => (
                     <details
                       key={faq._id || index}
-                      className="group border border-slate-200 rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow"
+                      className="group border border-slate-200 rounded-2xl overflow-hidden bg-white"
                     >
-                      <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors">
+                      <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-slate-50/70">
                         <span className="text-sm font-bold text-slate-800 flex items-center gap-3">
-                          <span className="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold">
+                          <span className="w-7 h-7 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs font-bold">
                             {index + 1}
                           </span>
                           {faq.question}
@@ -917,7 +956,7 @@ const TourDetails = ({ isOpen, onClose, tourId }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-8 h-12 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 transition-all hover:shadow-lg active:scale-95"
+            className="px-8 h-12 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800 cursor-pointer"
           >
             Close
           </button>

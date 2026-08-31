@@ -140,16 +140,6 @@ export default function Analysis() {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-border-subtle pb-6">
         <div>
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="badge-yellow inline-flex items-center gap-1.5">
-              <Crown className="w-3 h-3 text-amber-primary" />
-              Super Admin
-            </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1.5">
-              <Calendar className="w-3 h-3" />
-              {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-            </span>
-          </div>
           
           <h1 className="text-3xl md:text-4xl font-bold font-serif text-text-primary">
             Platform Analytics
@@ -159,10 +149,7 @@ export default function Analysis() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs bg-bg-secondary border border-border-subtle rounded-xl px-3.5 py-2">
-          <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-          <span className="font-medium text-text-secondary">Live Status</span>
-        </div>
+       
       </div>
 
       {/* KPI TOP CARDS GRID */}

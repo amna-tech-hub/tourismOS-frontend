@@ -159,7 +159,6 @@ export default function Subscriptions() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Convert comma-separated features into array
     const formattedFeatures =
       typeof formData.features === 'string'
         ? formData.features
@@ -168,7 +167,6 @@ export default function Subscriptions() {
             .filter((feature) => feature.length > 0)
         : formData.features;
 
-    // Request payload
     const payload = {
       name: formData.name.trim(),
       price: Number(formData.price),
@@ -178,17 +176,8 @@ export default function Subscriptions() {
       isActive: formData.isActive,
     };
 
-    // =======================================================
-    // UPDATE EXISTING PLAN
-    // =======================================================
-
     if (editingPlan) {
       const planId = editingPlan._id || editingPlan.id;
-
-      console.log('Updating subscription plan:', {
-        planId,
-        payload,
-      });
 
       if (!planId) {
         console.error('Cannot update subscription plan: missing ID');
@@ -210,12 +199,6 @@ export default function Subscriptions() {
 
       return;
     }
-
-    // =======================================================
-    // CREATE NEW PLAN
-    // =======================================================
-
-    console.log('Creating subscription plan:', payload);
 
     createPlanMutation.mutate(payload, {
       onSuccess: () => {
@@ -257,9 +240,9 @@ export default function Subscriptions() {
         <div>
           <div className="flex items-center gap-2 mb-2">
 
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded-full border border-amber-200/60 inline-flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full border border-yellow-200/60 inline-flex items-center gap-1.5">
 
-              <Crown className="w-3 h-3 text-amber-600" />
+              <Crown className="w-3 h-3 text-yellow-600" />
 
               Subscription Management
 
@@ -271,7 +254,7 @@ export default function Subscriptions() {
             Plans & Subscriptions
           </h1>
 
-          <p className="subheading text-xs mt-1">
+          <p className="text-xs mt-1 text-slate-500">
             Configure subscription tiers, credit allocations, and monitor company subscriptions.
           </p>
         </div>
@@ -280,7 +263,7 @@ export default function Subscriptions() {
 
           <button
             onClick={handleOpenCreateModal}
-            className="btn-yellow text-xs py-2.5 px-4 gap-2 shadow-sm"
+            className="btn-primary text-xs py-2.5 px-4 gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Create Subscription Plan
@@ -297,7 +280,7 @@ export default function Subscriptions() {
 
         {/* Revenue */}
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
 
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
@@ -317,7 +300,7 @@ export default function Subscriptions() {
 
         {/* Active subscriptions */}
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
 
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
@@ -329,7 +312,7 @@ export default function Subscriptions() {
             </h3>
           </div>
 
-          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
+          <div className="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center border border-yellow-200">
             <Building2 className="w-5 h-5" />
           </div>
 
@@ -337,7 +320,7 @@ export default function Subscriptions() {
 
         {/* Active plans */}
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 flex items-center justify-between">
 
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
@@ -365,9 +348,9 @@ export default function Subscriptions() {
 
         <button
           onClick={() => setActiveTab('plans')}
-          className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 transition-all ${
+          className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 cursor-pointer ${
             activeTab === 'plans'
-              ? 'border-amber-500 text-amber-600'
+              ? 'border-yellow-500 text-yellow-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -376,9 +359,9 @@ export default function Subscriptions() {
 
         <button
           onClick={() => setActiveTab('company-subscriptions')}
-          className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 transition-all ${
+          className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 cursor-pointer ${
             activeTab === 'company-subscriptions'
-              ? 'border-amber-500 text-amber-600'
+              ? 'border-yellow-500 text-yellow-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -397,7 +380,7 @@ export default function Subscriptions() {
 
             <div className="py-12 flex justify-center items-center text-slate-400 gap-2">
 
-              <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+              <Loader2 className="w-5 h-5 animate-spin text-yellow-500" />
 
               <span className="text-xs">
                 Loading subscription packages...
@@ -407,7 +390,7 @@ export default function Subscriptions() {
 
           ) : isErrorPlans ? (
 
-            <div className="py-12 text-center text-red-500 text-xs">
+            <div className="py-12 text-center text-rose-500 text-xs">
               Failed to load subscription plans.
             </div>
 
@@ -421,7 +404,7 @@ export default function Subscriptions() {
 
               <button
                 onClick={handleOpenCreateModal}
-                className="mt-3 btn-yellow text-xs py-2 px-4 inline-flex items-center gap-2"
+                className="mt-3 btn-primary text-xs py-2 px-4 inline-flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Create First Plan
@@ -444,9 +427,9 @@ export default function Subscriptions() {
                 return (
                   <div
                     key={planId}
-                    className={`bg-white border rounded-2xl p-6 shadow-xs relative flex flex-col justify-between transition-all ${
+                    className={`bg-white border rounded-2xl p-6 relative flex flex-col justify-between ${
                       plan.isActive
-                        ? 'border-slate-200 hover:border-amber-300'
+                        ? 'border-slate-200'
                         : 'border-slate-200 opacity-60 bg-slate-50/50'
                     }`}
                   >
@@ -477,7 +460,7 @@ export default function Subscriptions() {
                             onClick={() =>
                               handleOpenEditModal(plan)
                             }
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
                             title="Edit Plan"
                           >
                             <Edit3 className="w-4 h-4" />
@@ -492,9 +475,9 @@ export default function Subscriptions() {
                             disabled={
                               togglePlanMutation.isPending
                             }
-                            className={`p-1.5 rounded-lg transition-colors ${
+                            className={`p-1.5 rounded-lg cursor-pointer ${
                               plan.isActive
-                                ? 'text-red-400 hover:text-red-600 hover:bg-red-50'
+                                ? 'text-rose-400 hover:text-rose-600 hover:bg-rose-50'
                                 : 'text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50'
                             }`}
                             title={
@@ -504,7 +487,7 @@ export default function Subscriptions() {
                             }
                           >
                             {isTogglingThisPlan ? (
-                              <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
+                              <Loader2 className="w-4 h-4 animate-spin text-yellow-500" />
                             ) : (
                               <Power className="w-4 h-4" />
                             )}
@@ -535,15 +518,15 @@ export default function Subscriptions() {
 
                       {/* AI Credits */}
 
-                      <div className="my-6 p-3 rounded-xl bg-amber-50/60 border border-amber-200/50 flex items-center gap-3">
+                      <div className="my-6 p-3 rounded-xl bg-yellow-50/60 border border-yellow-200/50 flex items-center gap-3">
 
-                        <div className="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700">
+                        <div className="w-9 h-9 rounded-lg bg-yellow-100 flex items-center justify-center text-yellow-700">
                           <Zap className="w-5 h-5" />
                         </div>
 
                         <div>
 
-                          <span className="text-[10px] font-bold uppercase text-amber-800 block">
+                          <span className="text-[10px] font-bold uppercase text-yellow-800 block">
                             AI Credit Output
                           </span>
 
@@ -605,7 +588,7 @@ export default function Subscriptions() {
 
       {activeTab === 'company-subscriptions' && (
 
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
 
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
 
@@ -613,7 +596,7 @@ export default function Subscriptions() {
 
               <h3 className="text-base font-bold font-serif text-slate-900 inline-flex items-center gap-2">
 
-                <CreditCard className="w-5 h-5 text-amber-500" />
+                <CreditCard className="w-5 h-5 text-yellow-500" />
 
                 Subscription History
 
@@ -633,7 +616,7 @@ export default function Subscriptions() {
 
               <div className="py-12 flex justify-center items-center text-slate-400 gap-2">
 
-                <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+                <Loader2 className="w-5 h-5 animate-spin text-yellow-500" />
 
                 <span className="text-xs">
                   Loading company subscription history...
@@ -699,7 +682,7 @@ export default function Subscriptions() {
 
                       <tr
                         key={sub._id || sub.id}
-                        className="hover:bg-slate-50/50 transition-colors"
+                        className="hover:bg-slate-50/50"
                       >
 
                         {/* Company */}
@@ -728,8 +711,6 @@ export default function Subscriptions() {
 
                               <p className="font-bold text-slate-900">
                                 {sub.company?.companyName || 'N/A'}
-                                {console.log(sub.company," comapyn name"  )
-                                }
                               </p>
 
                               <p className="text-[10px] text-slate-400">
@@ -762,9 +743,9 @@ export default function Subscriptions() {
 
                         <td className="py-3.5 px-6 text-center">
 
-                          <span className="inline-flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/50">
+                          <span className="inline-flex items-center gap-1 font-semibold text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded-md border border-yellow-200/50">
 
-                            <Zap className="w-3 h-3 text-amber-500" />
+                            <Zap className="w-3 h-3 text-yellow-500" />
 
                             {sub.plan?.aiCredits?.toLocaleString() ||
                               0}
@@ -781,7 +762,7 @@ export default function Subscriptions() {
                             className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                               sub.status === 'active'
                                 ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-red-100 text-red-800'
+                                : 'bg-rose-100 text-rose-800'
                             }`}
                           >
                             {sub.status}
@@ -824,9 +805,9 @@ export default function Subscriptions() {
 
       {isModalOpen && (
 
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
 
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-slate-200">
 
             {/* Modal Header */}
 
@@ -846,7 +827,7 @@ export default function Subscriptions() {
 
             {submitError && (
 
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-xs text-red-700">
+              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-700">
 
                 <AlertCircle className="w-4 h-4 shrink-0" />
 
@@ -883,7 +864,7 @@ export default function Subscriptions() {
                     })
                   }
                   placeholder="e.g. Premium Agency"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
                   required
                 />
 
@@ -909,7 +890,7 @@ export default function Subscriptions() {
                         price: Number(e.target.value),
                       })
                     }
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
                     required
                   />
 
@@ -931,7 +912,7 @@ export default function Subscriptions() {
                         aiCredits: Number(e.target.value),
                       })
                     }
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
                     required
                   />
 
@@ -957,7 +938,7 @@ export default function Subscriptions() {
                     })
                   }
                   placeholder="200 AI Credits, Priority Support, Custom Branding"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
                 />
 
               </div>
@@ -969,7 +950,7 @@ export default function Subscriptions() {
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="btn-outline text-xs py-2 px-4 w-1/2"
+                  className="btn-outline text-xs py-2 px-4 w-1/2 cursor-pointer"
                   disabled={isSubmitting}
                 >
                   Cancel
@@ -978,7 +959,7 @@ export default function Subscriptions() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-yellow text-xs py-2 px-4 w-1/2 flex items-center justify-center gap-2"
+                  className="btn-primary text-xs py-2 px-4 w-1/2 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                 >
 
                   {isSubmitting && (

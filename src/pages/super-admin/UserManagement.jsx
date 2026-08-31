@@ -136,23 +136,9 @@ export default function UserManagement() {
         <FaCheckCircle className="text-[10px]" /> Verified
       </span>
     ) : (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60 text-[11px] font-semibold">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-yellow-50 text-yellow-700 border border-yellow-200/60 text-[11px] font-semibold">
         <FaExclamationCircle className="text-[10px]" /> Pending
       </span>
-    );
-  };
-
-  // Initial Avatar Helper (Clean Monogram)
-  const renderInitialsAvatar = (name, size = "md") => {
-    const initial = name?.charAt(0)?.toUpperCase() || "U";
-    const dimensions = size === "lg" ? "w-11 h-11 text-base" : "w-8 h-8 text-xs";
-
-    return (
-      <div
-        className={`${dimensions} rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold flex items-center justify-center shrink-0 tracking-wider`}
-      >
-        {initial}
-      </div>
     );
   };
 
@@ -173,7 +159,7 @@ export default function UserManagement() {
       {/* --------------------------------------------------
           Search & Filters Bar
       -------------------------------------------------- */}
-      <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
@@ -185,7 +171,7 @@ export default function UserManagement() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 transition-all"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 bg-white text-slate-800 placeholder:text-slate-400"
           />
         </div>
 
@@ -197,7 +183,7 @@ export default function UserManagement() {
               setRoleFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full sm:w-auto px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white text-slate-700 cursor-pointer font-medium"
+            className="w-full sm:w-auto px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 bg-white text-slate-700 cursor-pointer font-medium"
           >
             <option value="">All Roles</option>
             {roles.map((r) => (
@@ -213,7 +199,7 @@ export default function UserManagement() {
               setVerificationFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full sm:w-auto px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white text-slate-700 cursor-pointer font-medium"
+            className="w-full sm:w-auto px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 bg-white text-slate-700 cursor-pointer font-medium"
           >
             <option value="">All Verification</option>
             <option value="true">Verified</option>
@@ -228,7 +214,7 @@ export default function UserManagement() {
                 setIncludeDeleted(e.target.checked);
                 setPage(1);
               }}
-              className="rounded border-slate-300 text-amber-500 focus:ring-amber-500/20"
+              className="rounded border-slate-300 text-yellow-500 focus:ring-yellow-500/20 cursor-pointer"
             />
             Show Deleted
           </label>
@@ -238,7 +224,7 @@ export default function UserManagement() {
       {/* --------------------------------------------------
           Users Table
       -------------------------------------------------- */}
-      <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200/80 uppercase tracking-wider">
@@ -256,13 +242,13 @@ export default function UserManagement() {
               {isLoading ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-400">
-                    <div className="w-6 h-6 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin mx-auto mb-2" />
+                    <div className="w-6 h-6 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin mx-auto mb-2" />
                     <p className="text-xs">Loading user accounts...</p>
                   </td>
                 </tr>
               ) : isError ? (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center text-red-500">
+                  <td colSpan="6" className="py-12 text-center text-rose-500">
                     <FaExclamationCircle className="mx-auto mb-2 text-base" />
                     <p className="text-xs">Failed to load user directory.</p>
                   </td>
@@ -274,25 +260,20 @@ export default function UserManagement() {
                   return (
                     <tr
                       key={user._id}
-                      className={`hover:bg-slate-50/60 transition-colors ${
-                        isDeleted ? "bg-red-50/20 opacity-75" : ""
-                      }`}
+                      className={`${isDeleted ? "bg-rose-50/20 opacity-75" : ""}`}
                     >
-                      {/* User Info */}
+                      {/* User Info - No Avatar */}
                       <td className="py-3.5 px-5">
-                        <div className="flex items-center gap-3">
-                          {renderInitialsAvatar(user.name, "md")}
-                          <div>
-                            <div className="font-semibold text-slate-900 text-xs flex items-center gap-2">
-                              {user.name}
-                              {isDeleted && (
-                                <span className="text-[9px] font-bold bg-red-100 text-red-700 px-1.5 py-0.2 rounded">
-                                  Deleted
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-[11px] text-slate-400 mt-0.5">{user.email}</div>
+                        <div>
+                          <div className="font-semibold text-slate-900 text-xs flex items-center gap-2">
+                            {user.name}
+                            {isDeleted && (
+                              <span className="text-[9px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded">
+                                Deleted
+                              </span>
+                            )}
                           </div>
+                          <div className="text-[11px] text-slate-400 mt-0.5">{user.email}</div>
                         </div>
                       </td>
 
@@ -325,7 +306,7 @@ export default function UserManagement() {
                             type="button"
                             title="View Details"
                             onClick={() => setSelectedUserId(user._id)}
-                            className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+                            className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer"
                           >
                             <FaEye className="text-[10px]" />
                           </button>
@@ -337,7 +318,7 @@ export default function UserManagement() {
                                 title={user.emailVerified ? "Mark Unverified" : "Mark Verified"}
                                 onClick={() => handleToggleVerification(user)}
                                 disabled={toggleVerifyMutation.isPending}
-                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 transition-colors cursor-pointer disabled:opacity-50"
+                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 cursor-pointer disabled:opacity-50"
                               >
                                 <FaCheckCircle className="text-[10px]" />
                               </button>
@@ -349,7 +330,7 @@ export default function UserManagement() {
                                   setRoleChangeUser(user);
                                   setSelectedNewRole(user.role?._id || "");
                                 }}
-                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
+                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 cursor-pointer"
                               >
                                 <FaUserShield className="text-[10px]" />
                               </button>
@@ -359,7 +340,7 @@ export default function UserManagement() {
                                 title="Delete User"
                                 onClick={() => handleDelete(user)}
                                 disabled={deleteUserMutation.isPending}
-                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50"
+                                className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-rose-200 text-rose-500 hover:bg-rose-50 cursor-pointer disabled:opacity-50"
                               >
                                 <FaTrash className="text-[10px]" />
                               </button>
@@ -370,7 +351,7 @@ export default function UserManagement() {
                               title="Restore User"
                               onClick={() => handleRestore(user)}
                               disabled={restoreUserMutation.isPending}
-                              className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer disabled:opacity-50"
+                              className="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 cursor-pointer disabled:opacity-50"
                             >
                               <FaRedo className="text-[10px]" />
                             </button>
@@ -403,14 +384,14 @@ export default function UserManagement() {
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-3 py-1.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-transparent font-medium cursor-pointer transition-colors"
+              className="px-3 py-1.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-transparent font-medium cursor-pointer"
             >
               Previous
             </button>
             <button
               disabled={page >= (meta.totalPages || 1)}
               onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-transparent font-medium cursor-pointer transition-colors"
+              className="px-3 py-1.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:hover:bg-transparent font-medium cursor-pointer"
             >
               Next
             </button>
@@ -422,26 +403,23 @@ export default function UserManagement() {
           USER DETAILS & STATS MODAL
       ================================================== */}
       {selectedUserId && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-            {/* Header */}
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 space-y-5 border border-slate-100 max-h-[90vh] overflow-y-auto">
+            {/* Header - No Avatar */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-3">
-                {renderInitialsAvatar(userStats?.user?.name || "User", "lg")}
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-slate-900">
-                      {userStats?.user?.name || "User Account"}
-                    </h3>
-                    {getRoleBadge(userStats?.user?.role)}
-                  </div>
-                  <p className="text-xs text-slate-400 mt-0.5">{userStats?.user?.email}</p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-slate-900">
+                    {userStats?.user?.name || "User Account"}
+                  </h3>
+                  {getRoleBadge(userStats?.user?.role)}
                 </div>
+                <p className="text-xs text-slate-400 mt-0.5">{userStats?.user?.email}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedUserId(null)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
               >
                 <FaTimes />
               </button>
@@ -450,7 +428,7 @@ export default function UserManagement() {
             {/* Modal Body */}
             {isStatsLoading ? (
               <div className="py-10 text-center text-slate-400">
-                <div className="w-6 h-6 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin mx-auto mb-2" />
+                <div className="w-6 h-6 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin mx-auto mb-2" />
                 <p className="text-xs">Fetching account details...</p>
               </div>
             ) : userStats ? (
@@ -482,8 +460,8 @@ export default function UserManagement() {
                         {userStats.metrics.completedBookings}
                       </span>
                     </div>
-                    <div className="bg-amber-50/50 border border-amber-100 p-3 rounded-xl">
-                      <span className="text-[10px] font-bold text-amber-700 uppercase block mb-0.5">
+                    <div className="bg-yellow-50/50 border border-yellow-100 p-3 rounded-xl">
+                      <span className="text-[10px] font-bold text-yellow-700 uppercase block mb-0.5">
                         Total Spent
                       </span>
                       <span className="text-base font-bold text-slate-900">
@@ -497,7 +475,7 @@ export default function UserManagement() {
                   <div className="bg-slate-50 border border-slate-100 p-3.5 rounded-xl space-y-2.5">
                     <div className="flex justify-between items-center text-xs">
                       <span className="font-semibold text-slate-600 flex items-center gap-1.5">
-                        <FaBuilding className="text-amber-500 text-xs" /> Company
+                        <FaBuilding className="text-yellow-500 text-xs" /> Company
                       </span>
                       <span className="font-bold text-slate-900">
                         {userStats.metrics.companyName || "Unassigned"}
@@ -578,7 +556,7 @@ export default function UserManagement() {
               <button
                 type="button"
                 onClick={() => setSelectedUserId(null)}
-                className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                className="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
               >
                 Close
               </button>
@@ -591,8 +569,8 @@ export default function UserManagement() {
           UPDATE ROLE MODAL
       ================================================== */}
       {roleChangeUser && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 border border-slate-100">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Change Role</h3>
@@ -616,7 +594,7 @@ export default function UserManagement() {
                   value={selectedNewRole}
                   onChange={(e) => setSelectedNewRole(e.target.value)}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 bg-white text-slate-800"
+                  className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 bg-white text-slate-800 cursor-pointer"
                 >
                   <option value="" disabled>
                     Choose a role
@@ -633,14 +611,14 @@ export default function UserManagement() {
                 <button
                   type="button"
                   onClick={() => setRoleChangeUser(null)}
-                  className="px-3.5 py-2 border border-slate-200 rounded-lg font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="px-3.5 py-2 border border-slate-200 rounded-lg font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updateRoleMutation.isPending}
-                  className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold rounded-lg cursor-pointer disabled:opacity-50"
                 >
                   {updateRoleMutation.isPending ? "Saving..." : "Save Role"}
                 </button>

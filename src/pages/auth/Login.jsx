@@ -1,100 +1,161 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLogin } from '../../api/queries/useAuth';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useLogin } from "../../api/queries/useAuth";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-
+  const navigate = useNavigate();
   const loginMutation = useLogin();
   const { loginUser } = useAuth();
-  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errorMsg) setErrorMsg("");
+  };
+
+  const redirectUser = (user) => {
+    switch (user.role) {
+      case "super_admin":
+        navigate("/super-admin/dashboard", { replace: true });
+        break;
+      case "company_admin":
+      case "company":
+        navigate("/company/dashboard", { replace: true });
+        break;
+      case "employee":
+        navigate("/employee/dashboard", { replace: true });
+        break;
+      default:
+        navigate("/traveler/home", { replace: true });
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
 
-    loginMutation.mutate(
-      { email, password },
-      {
-        onSuccess: (data) => {
-          console.log(data," login success");
-          
-          loginUser(data);
-          const role = data.data.user?.role || data.role;
-console.log(data.data.user.role," role of user");
+    const email = formData.email.trim();
+    const password = formData.password;
 
-          if (role === 'company_admin' || role === 'company') {
-            navigate('/company/dashboard');
-          } else if (role === 'super_admin') {
-            navigate('/super-admin/dashboard');
-          } else {
-            navigate('/traveler/home');
-          }
-        },
-        onError: (err) => {
-          setErrorMsg(err.response?.data?.message || 'Invalid email or password.');
-        },
+    if (!email || !password) {
+      setErrorMsg("Please fill in all fields.");
+      return;
+    }
+
+    try {
+      const response = await loginMutation.mutateAsync({ email, password });
+      const user = response?.user || response?.data?.user;
+
+      if (!user) {
+        setErrorMsg("Login successful, but user information was not returned.");
+        return;
       }
-    );
+
+      loginUser(response);
+      redirectUser(user);
+    } catch (error) {
+      setErrorMsg(
+        error?.response?.data?.message ||
+          "Invalid email or password. Please try again."
+      );
+    }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-extrabold font-serif text-slate-900">
-          Welcome <span className="text-amber-500">Back</span>
+    <div className="w-full max-w-sm flex flex-col items-center">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-white tracking-wide">
+          Welcome Home
         </h2>
-        <div className="w-12 h-1 bg-amber-500 mx-auto rounded-full"></div>
-        <p className="text-xs text-slate-400 subheading">Sign in to manage your account and tours</p>
+        <p className="text-xs text-white/80 mt-1 font-light">
+          Login to continue your AI travel journey
+        </p>
       </div>
 
+      {/* Error Message */}
       {errorMsg && (
-        <div className="p-3 text-xs bg-red-50 text-red-600 border border-red-200 rounded-xl font-sans text-center">
+        <div className="w-full p-2.5 mb-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-900 text-xs text-center font-medium">
           {errorMsg}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 font-sans">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="w-full space-y-3">
+        {/* Email Input */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">✉️</span>
           <input
             type="email"
+            name="email"
             required
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            disabled={loginMutation.isPending}
+            className="w-full px-4 py-3 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
+          <Mail size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600" />
         </div>
 
+        {/* Password Input */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">🔒</span>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
+            name="password"
             required
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            value={formData.password}
+            onChange={handleChange}
+            disabled={loginMutation.isPending}
+            className="w-full px-4 py-3 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
 
+        {/* Forgot Password Link */}
+        <div className="text-right pr-2">
+          <Link
+            to="/auth/forgot-password"
+            className="text-xs text-slate-800 hover:underline font-medium"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loginMutation.isPending}
-          className="btn-yellow w-full rounded-full py-3.5 flex items-center justify-center gap-2 text-sm font-semibold shadow-amber-500/30"
+          className="w-full py-3 rounded-full bg-[#fbbf24] border border-amber-500/40 text-slate-800 font-semibold text-sm hover:bg-amber-300 transition-colors shadow-md flex items-center justify-center gap-2"
         >
-          {loginMutation.isPending ? 'Signing In...' : 'Sign In →'}
+          {loginMutation.isPending ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
 
-      <p className="text-center text-xs text-slate-500 font-sans">
-        Don't have an account?{' '}
-        <Link to="/auth/register" className="text-amber-600 font-semibold hover:underline">
-          Create account
+      {/* Account Signup Link */}
+      <p className="mt-4 text-xs text-slate-800">
+        Don't have an account yet?{" "}
+        <Link to="/auth/register" className="font-bold underline hover:text-black">
+          Create here
         </Link>
       </p>
     </div>

@@ -56,8 +56,8 @@ const TourCard = ({
           <span
             className={`badge-yellow ${
               status === "published"
-                ? "bg-success/10 text-success"
-                : "bg-warning/10 text-warning"
+                ? "bg-success-dark text-white"
+                : "bg-orange-400 text-white"
             }`}
           >
             {status === "published"

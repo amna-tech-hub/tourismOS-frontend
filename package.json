@@ -15,6 +15,7 @@
     "@tanstack/react-query-devtools": "^5.101.4",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",
+    "firebase": "^12.18.0",
     "icons": "^1.0.0",
     "lucide-react": "^1.31.0",
     "react": "19.2.8",

@@ -5,37 +5,59 @@ export const travelerApi = {
   // JOURNALS
   // ==========================================
   createJournal: async (payload) => {
-    const { data } = await api.post("/journals", payload);
+    const { data } = await api.post("/travel-journals", payload);
     return data;
   },
 
   getMyJournals: async () => {
-    const { data } = await api.get("/journals/my-journals");
+    const { data } = await api.get("/travel-journals");
     return data;
   },
 
+updateJournalEntry: async ({
+  id,
+  entryId,
+  day,
+  title,
+  memory,
+  photos,
+  expenses,
+}) => {
+  const { data } = await api.patch(
+    `/travel-journals/${id}/entries/${entryId}`,
+    {
+      day,
+      title,
+      memory,
+      photos,
+      expenses,
+    }
+  );
+
+  return data;
+},
   getJournalById: async (id) => {
-    const { data } = await api.get(`/journals/${id}`);
+    const { data } = await api.get(`/travel-journals/${id}`);
     return data;
   },
 
   addJournalEntry: async ({ id, ...payload }) => {
-    const { data } = await api.post(`/journals/${id}/entries`, payload);
+    const { data } = await api.post(`/travel-journals/${id}/entries`, payload);
     return data;
   },
 
-  updateJournal: async ({ id, ...payload }) => {
-    const { data } = await api.patch(`/journals/${id}`, payload);
-    return data;
-  },
+  // updateJournal: async ({ id, ...payload }) => {
+  //   const { data } = await api.patch(`/travel-journals/${id}`, payload);
+  //   return data;
+  // },
 
   deleteJournalEntry: async ({ id, entryId }) => {
-    const { data } = await api.delete(`/journals/${id}/entries/${entryId}`);
+    const { data } = await api.delete(`/travel-journals/${id}/entries/${entryId}`);
     return data;
   },
 
   deleteJournal: async (id) => {
-    const { data } = await api.delete(`/journals/${id}`);
+    const { data } = await api.delete(`/travel-journals/${id}`);
     return data;
   },
 
@@ -43,7 +65,6 @@ export const travelerApi = {
   // TOURS & AI PREVIEW FLOW
   // ==========================================
 
-  // Step 1: Generate AI Itinerary Preview
   generateTourPreview: async (payload) => {
     const { data } = await api.post("/tours/generate-preview", payload);
     return data;
@@ -62,10 +83,59 @@ export const travelerApi = {
   },
 
   // Get all public tours (for frontend showcase)
-  getPublicTours: async (params) => {
-    const { data } = await api.get("/tours", { params });
-    return data;
-  },
+getPublicTours: async (params = {}) => {
+  const {
+    page = 1,
+    limit = 8,
+    search = "",
+    provider = "",
+    minPrice = "",
+    maxPrice = "",
+    sort = "createdAt",
+    order = "desc",
+    companyId = "",
+  } = params;
+
+  const queryParams = new URLSearchParams();
+
+  queryParams.append("page", page);
+  queryParams.append("limit", limit);
+
+  // Search
+  if (search.trim()) {
+    queryParams.append("search", search.trim());
+  }
+
+  // Company filter
+  if (companyId) {
+    queryParams.append("companyId", companyId);
+  }
+
+  // Provider
+  // Backend expects `platform`
+  if (provider && provider !== "all") {
+    queryParams.append("platform", provider);
+  }
+
+  // Price filters
+  if (minPrice !== "") {
+    queryParams.append("minPrice", minPrice);
+  }
+
+  if (maxPrice !== "") {
+    queryParams.append("maxPrice", maxPrice);
+  }
+
+  // Sorting
+  queryParams.append("sort", sort);
+  queryParams.append("order", order);
+
+  const { data } = await api.get(
+    `/tours?${queryParams.toString()}`
+  );
+
+  return data;
+},
 // Publish draft tour
 publishTour: async (id) => {
   const { data } = await api.patch(
@@ -129,12 +199,7 @@ getCompanyTours: async (params = {}) => {
     return data;
   },
 
-  // Get tour detail with daily safety & weather intelligence
-  // getTourDetails: async (id) => {
-  //   const { data } = await api.post("/tours/tour-detail", { id });
-  //   return data;
-  // },
-
+ 
   // Update an existing tour
   updateTour: async ({ id, ...payload }) => {
     const { data } = await api.patch(`/tours/${id}`, payload);
@@ -149,7 +214,6 @@ getCompanyTours: async (params = {}) => {
 
   // Check tour safety
   checkTourSafety: async (payload) => {
-    console.log(payload,"payload");
     
     const { data } = await api.post("tours/tour-detail", payload);
     return data;
@@ -159,17 +223,17 @@ getCompanyTours: async (params = {}) => {
   // TOUR REVIEWS
   // ==========================================
   createReview: async (payload) => {
-    const { data } = await api.post("/reviews", payload);
+    const { data } = await api.post("/tour/review", payload);
     return data;
   },
 
   getTourReviews: async (tourId) => {
-    const { data } = await api.get(`/reviews/tour/${tourId}`);
+    const { data } = await api.get(`/tour/review/${tourId}`);
     return data;
   },
 
   deleteReview: async (reviewId) => {
-    const { data } = await api.delete(`/reviews/${reviewId}`);
+    const { data } = await api.delete(`/tour/review/delete/${reviewId}`);
     return data;
   },
 };

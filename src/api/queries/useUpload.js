@@ -21,3 +21,9 @@ export const useGenerateCoverImage = () => {
     mutationFn: ({ prompt }) => uploadApi.generateCoverImage({ prompt }),
   });
 };
+export const useDeleteImage = () => {
+  return useMutation({
+    mutationFn: (public_id) =>
+      uploadApi.deleteImage(public_id),
+  });
+};

@@ -30,7 +30,9 @@ import {
 } from "recharts";
 
 import { useCompanyDashboard } from "../../api/queries/useCompany";
-
+import { useNavigate } from "react-router-dom";
+import { FaBots } from "react-icons/fa6";
+import { FaRobot } from "react-icons/fa";
 
 // ======================================================
 // HELPERS
@@ -77,9 +79,9 @@ const BookingStatus = ({ status }) => {
     confirmed:
       "bg-emerald-50 text-emerald-700 border-emerald-100",
     pending:
-      "bg-amber-50 text-amber-700 border-amber-100",
+      "bg-yellow-50 text-yellow-700 border-yellow-100",
     cancelled:
-      "bg-red-50 text-red-700 border-red-100",
+      "bg-rose-50 text-rose-700 border-rose-100",
   };
 
   const icons = {
@@ -117,7 +119,7 @@ const PaymentStatus = ({ status }) => {
         isPaid
           ? "text-emerald-600"
           : status === "refunded"
-          ? "text-red-600"
+          ? "text-rose-600"
           : "text-slate-400"
       }`}
     >
@@ -143,7 +145,7 @@ const StatCard = ({
   iconClass,
 }) => {
   return (
-    <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-500">
@@ -186,7 +188,7 @@ const BookingTooltip = ({
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-lg">
+    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
       <p className="mb-1 text-xs font-medium text-slate-400">
         {formatShortDate(label)}
       </p>
@@ -208,18 +210,19 @@ const BookingTooltip = ({
 
 const Overview = () => {
   const [period, setPeriod] = useState(30);
+  const navigate = useNavigate();
 
-const {
-  data: response,
-  isLoading,
-  isError,
-  refetch,
-  isFetching,
-} = useCompanyDashboard(period);
+  const {
+    data: response,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useCompanyDashboard(period);
+
   // ----------------------------------------------------
   // API RESPONSE
   // ----------------------------------------------------
-console.log(response," response ", period," period");
 
   const dashboard = response?.data;
 
@@ -260,7 +263,7 @@ console.log(response," response ", period," period");
         <div className="flex flex-col items-center gap-3">
           <Loader2
             size={30}
-            className="animate-spin text-amber-500"
+            className="animate-spin text-yellow-500"
           />
 
           <p className="text-sm text-slate-500">
@@ -278,12 +281,12 @@ console.log(response," response ", period," period");
   if (isError) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-6">
-        <div className="max-w-md rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
+        <div className="max-w-md rounded-2xl border border-rose-100 bg-white p-8 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-500">
             <AlertCircle size={24} />
           </div>
 
-          <h2 className="mt-4 text-xl font-semibold">
+          <h2 className="mt-4 text-xl font-semibold text-slate-900">
             Unable to load dashboard
           </h2>
 
@@ -294,7 +297,7 @@ console.log(response," response ", period," period");
 
           <button
             onClick={() => refetch()}
-            className="btn-yellow mt-5"
+            className="btn-primary mt-5"
           >
             <RefreshCw size={16} className="mr-2" />
             Try Again
@@ -332,7 +335,7 @@ console.log(response," response ", period," period");
 
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-amber-600">
+            <p className="text-sm font-medium text-yellow-600">
               Company Overview
             </p>
 
@@ -343,9 +346,9 @@ console.log(response," response ", period," period");
             )}
           </div>
 
-          <h1 className="mt-1 text-3xl font-semibold">
+          <h1 className="mt-1 text-3xl font-semibold text-slate-900 ">
             Welcome back,{" "}
-            <span className="text-amber-500">
+            <span className="text-yellow-500 font-semibold font-serif" >
               {company?.name || "Company"}
             </span>
           </h1>
@@ -359,7 +362,7 @@ console.log(response," response ", period," period");
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="btn-outline self-start sm:self-auto"
+          className="btn-outline self-start sm:self-auto cursor-pointer"
         >
           <RefreshCw
             size={16}
@@ -386,7 +389,7 @@ console.log(response," response ", period," period");
           )}
           subtitle="After platform commission"
           icon={Wallet}
-          iconClass="bg-amber-50 text-amber-600"
+          iconClass="bg-yellow-50 text-yellow-600"
         />
 
         <StatCard
@@ -416,7 +419,7 @@ console.log(response," response ", period," period");
           )}
           subtitle="Team members"
           icon={Users}
-          iconClass="bg-violet-50 text-violet-600"
+          iconClass="bg-purple-50 text-purple-600"
         />
 
       </div>
@@ -428,7 +431,7 @@ console.log(response," response ", period," period");
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-500">
               Gross Revenue
@@ -451,13 +454,13 @@ console.log(response," response ", period," period");
         </div>
 
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-500">
               Platform Commission
             </p>
 
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-500">
               <ArrowUpRight size={17} />
             </div>
           </div>
@@ -474,13 +477,13 @@ console.log(response," response ", period," period");
         </div>
 
 
-        <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-5 shadow-sm">
+        <div className="rounded-2xl border border-yellow-200 bg-yellow-50/50 p-5">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-amber-700">
+            <p className="text-sm font-medium text-yellow-700">
               Your Earnings
             </p>
 
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-100 text-yellow-700">
               <TrendingUp size={17} />
             </div>
           </div>
@@ -491,7 +494,7 @@ console.log(response," response ", period," period");
             )}
           </p>
 
-          <p className="mt-1 text-xs text-amber-700/70">
+          <p className="mt-1 text-xs text-yellow-700/70">
             Gross revenue minus commission
           </p>
         </div>
@@ -509,12 +512,12 @@ console.log(response," response ", period," period");
             BOOKING TREND
         ================================================ */}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 xl:col-span-2">
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-semibold text-slate-900">
                 Booking Overview
               </h2>
 
@@ -529,9 +532,9 @@ console.log(response," response ", period," period");
                 <button
                   key={value}
                   onClick={() => setPeriod(value)}
-                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                  className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium ${
                     period === value
-                      ? "bg-white text-slate-900 shadow-sm"
+                      ? "bg-white text-slate-900"
                       : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
@@ -637,18 +640,18 @@ console.log(response," response ", period," period");
             AI CREDITS
         ================================================ */}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5">
 
           <div className="flex items-start justify-between">
 
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-                  <Sparkles size={18} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-100 text-yellow-600">
+                  <FaRobot size={18} />
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-semibold">
+                  <h2 className="text-lg font-semibold text-slate-900">
                     AI Credits
                   </h2>
 
@@ -682,7 +685,7 @@ console.log(response," response ", period," period");
                 </p>
               </div>
 
-              <p className="text-sm font-semibold text-amber-600">
+              <p className="text-sm font-semibold text-yellow-600">
                 {aiCredits.percentageRemaining || 0}%
               </p>
 
@@ -692,7 +695,7 @@ console.log(response," response ", period," period");
             <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-100">
 
               <div
-                className="h-full rounded-full bg-amber-500 transition-all duration-500"
+                className="h-full rounded-full bg-yellow-500"
                 style={{
                   width: `${creditPercentage}%`,
                 }}
@@ -755,7 +758,8 @@ console.log(response," response ", period," period");
 
 
           <button
-            className="btn-yellow mt-6 w-full"
+            className="btn-primary mt-6 w-full cursor-pointer"
+            onClick={() => navigate('/company/subscription')}
             type="button"
           >
             <CreditCard
@@ -774,12 +778,12 @@ console.log(response," response ", period," period");
           RECENT BOOKINGS
       ================================================== */}
 
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white">
 
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
 
           <div>
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold text-slate-900">
               Recent Bookings
             </h2>
 
@@ -790,7 +794,8 @@ console.log(response," response ", period," period");
 
           <button
             type="button"
-            className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 transition hover:text-amber-700"
+            className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-yellow-600 hover:text-yellow-700"
+            onClick={() => navigate('/company/bookings')}
           >
             View all
             <ArrowRight size={15} />
@@ -859,7 +864,7 @@ console.log(response," response ", period," period");
 
                   <tr
                     key={booking._id}
-                    className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50"
+                    className="border-b border-slate-100 last:border-0"
                   >
 
                     <td className="px-5 py-4">
@@ -967,12 +972,12 @@ console.log(response," response ", period," period");
             RECENT TOURS
         ================================================ */}
 
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white">
 
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
 
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-semibold text-slate-900">
                 Recent Tours
               </h2>
 
@@ -983,7 +988,8 @@ console.log(response," response ", period," period");
 
             <button
               type="button"
-              className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 hover:text-amber-700"
+              className="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-yellow-600 hover:text-yellow-700"
+              onClick={() => navigate('/company/tours')}
             >
               View all
               <ArrowRight size={15} />
@@ -1013,7 +1019,7 @@ console.log(response," response ", period," period");
 
                 <div
                   key={tour._id}
-                  className="flex items-center justify-between gap-4 px-5 py-4 transition hover:bg-slate-50/50"
+                  className="flex items-center justify-between gap-4 px-5 py-4"
                 >
 
                   <div className="min-w-0">
@@ -1094,12 +1100,12 @@ console.log(response," response ", period," period");
             AI ACTIVITY
         ================================================ */}
 
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white">
 
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
 
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-semibold text-slate-900">
                 AI Credit Activity
               </h2>
 
@@ -1110,7 +1116,7 @@ console.log(response," response ", period," period");
 
             <Sparkles
               size={19}
-              className="text-amber-500"
+              className="text-yellow-500"
             />
 
           </div>
@@ -1150,7 +1156,7 @@ console.log(response," response ", period," period");
                       <div
                         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
                           isUsage
-                            ? "bg-red-50 text-red-500"
+                            ? "bg-rose-50 text-rose-500"
                             : "bg-emerald-50 text-emerald-600"
                         }`}
                       >
@@ -1177,7 +1183,7 @@ console.log(response," response ", period," period");
                           <span
                             className={`shrink-0 text-sm font-semibold ${
                               isUsage
-                                ? "text-red-500"
+                                ? "text-rose-500"
                                 : "text-emerald-600"
                             }`}
                           >

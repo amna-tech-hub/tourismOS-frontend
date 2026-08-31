@@ -42,7 +42,7 @@ export default function SuperAdminDashboard() {
   } = usePlatformStats();
 
   // =========================================================
-  // DATA EXTRACTION (Updated for new response structure)
+  // DATA EXTRACTION
   // =========================================================
 
   const revenue = revenueData?.data?.trend || [];
@@ -50,13 +50,11 @@ export default function SuperAdminDashboard() {
   const bookingOverview = bookingData?.data || [];
   const companyOverview = companyData?.data || [];
 
-  // 🆕 Updated platform stats structure
   const platformStats = platformData?.data || {};
   const platformRevenue = platformStats.platformRevenue || {};
   const activity = platformStats.activity || {};
   const health = platformStats.health || {};
 
-  // 🆕 KPIs using platform revenue (commission)
   const totalPlatformRevenue = platformRevenue.total || 0;
   const fromBookings = platformRevenue.fromBookings || 0;
   const fromSubscriptions = platformRevenue.fromSubscriptions || 0;
@@ -69,27 +67,15 @@ export default function SuperAdminDashboard() {
   const totalPayouts = activity.totalPayoutsToCompanies || 0;
 
   // =========================================================
-  // REVENUE CALCULATIONS (Using platform revenue)
+  // REVENUE CALCULATIONS
   // =========================================================
 
-  // 🆕 Total platform revenue from trend data
   const totalPeriodRevenue = revenue.reduce(
     (total, item) => total + (item.platformRevenue || 0),
     0
   );
 
   const latestRevenue = revenue.length > 0 ? revenue[revenue.length - 1] : null;
-
-  // =========================================================
-  // DATE
-  // =========================================================
-
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
 
   // =========================================================
   // REVENUE RANGE
@@ -114,7 +100,7 @@ export default function SuperAdminDashboard() {
       ===================================================== */}
       <section className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4">
         <div>
-          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-amber-600 mb-1 sm:mb-2">
+          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-yellow-600 mb-1 sm:mb-2">
             Super Admin
           </p>
 
@@ -122,154 +108,150 @@ export default function SuperAdminDashboard() {
             Platform Overview
           </h1>
 
-          <p className="subheading text-xs sm:text-sm mt-1 sm:mt-2 max-w-2xl text-slate-500">
+          <p className="text-xs sm:text-sm mt-1 sm:mt-2 max-w-2xl text-slate-500">
             Monitor TourismOS performance, platform activity, and financial
             health from one place.
           </p>
         </div>
-
-        <div className="text-xs text-slate-400 font-medium shrink-0">
-          {formattedDate}
-        </div>
       </section>
 
       {/* =====================================================
-          KPI CARDS (UPDATED)
+          KPI CARDS
       ===================================================== */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {/* 🆕 Platform Revenue Card */}
-        <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200/60 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-700">
-              Platform Revenue
+   
+<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+  {/* Platform Revenue Card */}
+  <div className="card-yellow p-4 sm:p-5 flex flex-col">
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-yellow-700/80">
+        Platform Revenue
+      </span>
+      <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-200/60 flex items-center justify-center text-yellow-600 shrink-0">
+        <FaRupeeSign className="text-sm" />
+      </div>
+    </div>
+    <div className="mt-3">
+      {isPlatformLoading ? (
+        <div className="h-9 w-28 bg-yellow-200/30 rounded-lg animate-pulse" />
+      ) : isPlatformError ? (
+        <p className="text-sm text-rose-500">Unable to load</p>
+      ) : (
+        <>
+          <p className="text-2xl sm:text-3xl font-bold text-slate-900 break-words">
+            PKR {totalPlatformRevenue.toLocaleString()}
+          </p>
+          <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+            <span className="badge-success text-[9px] px-2 py-0.5">
+              {effectiveCommissionRate}% avg commission
             </span>
-
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-200/50 border border-amber-300/60 flex items-center justify-center text-amber-700 shrink-0">
-              <FaRupeeSign className="text-xs sm:text-sm" />
-            </div>
-          </div>
-
-          <div className="mt-3 sm:mt-4">
-            {isPlatformLoading ? (
-              <div className="h-8 sm:h-9 w-28 bg-amber-200/30 rounded-lg animate-pulse" />
-            ) : isPlatformError ? (
-              <p className="text-sm text-red-500">Unable to load</p>
-            ) : (
-              <>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 break-words">
-                  PKR {totalPlatformRevenue.toLocaleString()}
-                </p>
-                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    {effectiveCommissionRate}% avg commission
-                  </span>
-                </div>
-              </>
-            )}
-
-            <p className="text-xs text-slate-500 mt-2">
-              From {fromBookings.toLocaleString()} bookings + subscriptions
-            </p>
-          </div>
-        </div>
-
-        {/* Companies */}
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Companies
+            <span className="badge-gray text-[9px] px-2 py-0.5">
+              +{fromSubscriptions.toLocaleString()} subs
             </span>
-
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100/80 border border-slate-200/60 flex items-center justify-center text-slate-700 shrink-0">
-              <FaBuilding className="text-xs sm:text-sm" />
-            </div>
           </div>
+        </>
+      )}
+    </div>
+    <div className="mt-auto pt-3 border-t border-yellow-200/40">
+      <p className="text-[10px] text-slate-500">
+        {fromBookings.toLocaleString()} bookings · subscriptions
+      </p>
+    </div>
+  </div>
 
-          <div className="mt-3 sm:mt-4">
-            {isPlatformLoading ? (
-              <div className="h-8 sm:h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
-            ) : isPlatformError ? (
-              <p className="text-sm text-red-500">Unable to load</p>
-            ) : (
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900">
-                {totalCompanies.toLocaleString()}
-              </p>
-            )}
+  {/* Companies Card */}
+  <div className="card p-4 sm:p-5 flex flex-col">
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        Companies
+      </span>
+      <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-600 shrink-0">
+        <FaBuilding className="text-sm" />
+      </div>
+    </div>
+    <div className="mt-3">
+      {isPlatformLoading ? (
+        <div className="h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
+      ) : isPlatformError ? (
+        <p className="text-sm text-rose-500">Unable to load</p>
+      ) : (
+        <p className="text-2xl sm:text-3xl font-bold text-slate-900">
+          {totalCompanies.toLocaleString()}
+        </p>
+      )}
+    </div>
+    <div className="mt-auto pt-3 border-t border-slate-100">
+      <p className="text-[10px] text-slate-400">
+        Registered platform companies
+      </p>
+    </div>
+  </div>
 
-            <p className="text-xs text-slate-400 mt-2">
-              Registered platform companies
-            </p>
-          </div>
-        </div>
+  {/* Travelers Card */}
+  <div className="card p-4 sm:p-5 flex flex-col">
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        Travelers
+      </span>
+      <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
+        <FaPerson className="text-sm" />
+      </div>
+    </div>
+    <div className="mt-3">
+      {isPlatformLoading ? (
+        <div className="h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
+      ) : isPlatformError ? (
+        <p className="text-sm text-rose-500">Unable to load</p>
+      ) : (
+        <p className="text-2xl sm:text-3xl font-bold text-slate-900">
+          {totalUsers.toLocaleString()}
+        </p>
+      )}
+    </div>
+    <div className="mt-auto pt-3 border-t border-slate-100">
+      <p className="text-[10px] text-slate-400">
+        Registered traveler accounts
+      </p>
+    </div>
+  </div>
 
-        {/* Travelers */}
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Travelers
-            </span>
-
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
-              <FaPerson className="text-sm sm:text-base" />
-            </div>
-          </div>
-
-          <div className="mt-3 sm:mt-4">
-            {isPlatformLoading ? (
-              <div className="h-8 sm:h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
-            ) : isPlatformError ? (
-              <p className="text-sm text-red-500">Unable to load</p>
-            ) : (
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900">
-                {totalUsers.toLocaleString()}
-              </p>
-            )}
-
-            <p className="text-xs text-slate-400 mt-2">
-              Registered traveler accounts
-            </p>
-          </div>
-        </div>
-
-        {/* Bookings */}
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Bookings
-            </span>
-
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-              <CiBookmarkCheck className="text-lg sm:text-xl" />
-            </div>
-          </div>
-
-          <div className="mt-3 sm:mt-4">
-            {isPlatformLoading ? (
-              <div className="h-8 sm:h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
-            ) : isPlatformError ? (
-              <p className="text-sm text-red-500">Unable to load</p>
-            ) : (
-              <>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900">
-                  {totalBookings.toLocaleString()}
-                </p>
-                <p className="text-[10px] text-slate-400 mt-0.5 truncate">
-                  PKR {totalBookingValue.toLocaleString()} total value
-                </p>
-              </>
-            )}
-
-            <p className="text-xs text-slate-400 mt-2">
-              Platform bookings
-            </p>
-          </div>
-        </div>
-      </section>
+  {/* Bookings Card */}
+  <div className="card p-4 sm:p-5 flex flex-col">
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        Bookings
+      </span>
+      <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+        <CiBookmarkCheck className="text-lg" />
+      </div>
+    </div>
+    <div className="mt-3">
+      {isPlatformLoading ? (
+        <div className="h-9 w-20 bg-slate-100 rounded-lg animate-pulse" />
+      ) : isPlatformError ? (
+        <p className="text-sm text-rose-500">Unable to load</p>
+      ) : (
+        <>
+          <p className="text-2xl sm:text-3xl font-bold text-slate-900">
+            {totalBookings.toLocaleString()}
+          </p>
+          <p className="text-[10px] text-slate-400 mt-0.5">
+            PKR {totalBookingValue.toLocaleString()} total value
+          </p>
+        </>
+      )}
+    </div>
+    <div className="mt-auto pt-3 border-t border-slate-100">
+      <p className="text-[10px] text-slate-400">
+        Platform bookings
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* =====================================================
-          REVENUE OVERVIEW (UPDATED)
+          REVENUE OVERVIEW
       ===================================================== */}
-      <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <section className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
@@ -295,7 +277,7 @@ export default function SuperAdminDashboard() {
           </div>
         </div>
 
-        {/* 🆕 Revenue Summary Banner with Breakdown */}
+        {/* Revenue Summary Banner with Breakdown */}
         <div className="px-4 sm:px-6">
           <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 sm:px-5 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -309,7 +291,6 @@ export default function SuperAdminDashboard() {
                   : `PKR ${totalPeriodRevenue.toLocaleString()}`}
               </p>
               
-              {/* 🆕 Revenue Breakdown */}
               {!isRevenueLoading && !isRevenueError && (
                 <div className="flex items-center gap-2 sm:gap-3 mt-2 flex-wrap">
                   <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -336,7 +317,6 @@ export default function SuperAdminDashboard() {
                   PKR {(latestRevenue.platformRevenue || 0).toLocaleString()}
                 </p>
                 
-                {/* 🆕 Latest month breakdown */}
                 <p className="text-[9px] text-slate-400 mt-0.5">
                   {latestRevenue.commissionRevenue > 0 && `${latestRevenue.commissionRevenue.toLocaleString()} commission`}
                   {latestRevenue.commissionRevenue > 0 && latestRevenue.subscriptionRevenue > 0 && ' + '}
@@ -351,14 +331,14 @@ export default function SuperAdminDashboard() {
         <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-5">
           {isRevenueLoading ? (
             <div className="h-[260px] sm:h-[340px] flex flex-col items-center justify-center">
-              <div className="w-8 h-8 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin" />
               <p className="text-xs text-slate-400 mt-4">
                 Loading revenue analytics...
               </p>
             </div>
           ) : isRevenueError ? (
             <div className="h-[260px] sm:h-[340px] flex flex-col items-center justify-center text-center p-4">
-              <div className="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center mb-3">
+              <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-3">
                 !
               </div>
               <p className="text-sm font-semibold text-slate-700">
@@ -386,11 +366,11 @@ export default function SuperAdminDashboard() {
       </section>
 
       {/* =====================================================
-          BOOKING + COMPANY OVERVIEW (Unchanged)
+          BOOKING + COMPANY OVERVIEW
       ===================================================== */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
         {/* Booking Overview */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
           <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5">
             <h2 className="text-lg sm:text-xl font-bold font-serif text-slate-900">
               Booking Overview
@@ -404,7 +384,7 @@ export default function SuperAdminDashboard() {
           <div className="px-4 sm:px-6 pb-5 sm:pb-6">
             {isBookingLoading ? (
               <div className="h-[260px] sm:h-[300px] flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin" />
               </div>
             ) : isBookingError ? (
               <div className="h-[260px] sm:h-[300px] flex items-center justify-center text-center p-4">
@@ -427,7 +407,7 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Company Overview */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col justify-between">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
           <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5">
             <h2 className="text-lg sm:text-xl font-bold font-serif text-slate-900">
               Company Overview
@@ -441,7 +421,7 @@ export default function SuperAdminDashboard() {
           <div className="px-4 sm:px-6 pb-5 sm:pb-6">
             {isCompanyLoading ? (
               <div className="h-[260px] sm:h-[300px] flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-slate-200 border-t-amber-500 rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin" />
               </div>
             ) : isCompanyError ? (
               <div className="h-[260px] sm:h-[300px] flex items-center justify-center text-center p-4">

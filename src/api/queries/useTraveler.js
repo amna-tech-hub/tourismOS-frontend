@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { travelerApi } from "../endpoints/traveler.api";
 import { QUERY_KEYS } from "../../constants/queryKeys";
 import { authApi } from "../endpoints/auth.api";
@@ -6,6 +6,7 @@ import { authApi } from "../endpoints/auth.api";
 // ==========================================
 // AUTH & PROFILE HOOKS
 // ==========================================
+
 
 export const useTravelerProfile = () => {
   return useQuery({
@@ -26,6 +27,27 @@ export const useUpdateTravelerProfile = () => {
   });
 };
 
+// // ADD THESE NEW HOOKS FOR PROFILE MANAGEMENT
+// export const useUploadProfilePicture = () => {
+//   return useMutation({
+//     mutationFn: async (file) => {
+//       const formData = new FormData();
+//       formData.append('profilePicture', file);
+      
+//       const response = await authApi.uploadProfilePicture(formData);
+//       return response;
+//     },
+//   });
+// };
+
+// export const useDeleteProfilePicture = () => {
+//   return useMutation({
+//     mutationFn: async () => {
+//       const response = await authApi.deleteProfilePicture();
+//       return response;
+//     },
+//   });
+// };
 // ==========================================
 // TRAVEL JOURNAL HOOKS
 // ==========================================
@@ -34,7 +56,7 @@ export const useMyJournals = () => {
   return useQuery({
     queryKey: QUERY_KEYS.TRAVELER.MY_JOURNALS,
     queryFn: () => travelerApi.getMyJournals(),
-    refetchInterval: 5000,
+       staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -43,7 +65,7 @@ export const useJournalDetail = (journalId) => {
     queryKey: QUERY_KEYS.TRAVELER.JOURNAL_DETAIL(journalId),
     queryFn: () => travelerApi.getJournalById(journalId),
     enabled: !!journalId,
-    refetchInterval: 5000,
+     staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -73,20 +95,44 @@ export const useAddJournalEntry = () => {
   });
 };
 
-export const useUpdateJournal = () => {
+export const useUpdateJournalEntry = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, isPublic }) => travelerApi.updateJournal({ id, isPublic }),
+    mutationFn: ({
+      id,
+      entryId,
+      day,
+      title,
+      memory,
+      photos,
+      expenses,
+    }) =>
+      travelerApi.updateJournalEntry({
+        id,
+        entryId,
+        day,
+        title,
+        memory,
+        photos,
+        expenses,
+      }),
+
     onSuccess: (_, variables) => {
+      // Refresh journal detail
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.TRAVELER.JOURNAL_DETAIL(variables.id),
+        queryKey: QUERY_KEYS.TRAVELER.JOURNAL_DETAIL(
+          variables.id
+        ),
       });
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.TRAVELER.MY_JOURNALS });
+
+      // Refresh journal list
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.TRAVELER.MY_JOURNALS,
+      });
     },
   });
 };
-
 export const useDeleteJournalEntry = () => {
   const queryClient = useQueryClient();
 
@@ -134,19 +180,53 @@ export const useCreateTour = () => {
   });
 };
 
-// Generate Cover Image using AI
-// export const useGenerateCoverImage = () => {
-//   return useMutation({
-//     mutationFn: (payload) => travelerApi.generateCoverImage(payload),
-//   });
-// };
 
-// Fetch Public Tours (for showcase / landing page)
-export const usePublicTours = (params) => {
+export const usePublicTours = (params = {}) => {
   return useQuery({
     queryKey: QUERY_KEYS.TRAVELER.PUBLIC_TOURS(params),
     queryFn: () => travelerApi.getPublicTours(params),
-    refetchInterval: 5000,
+  });
+};
+
+
+/* =========================================================
+   INFINITE PUBLIC TOURS
+========================================================= */
+
+export const useInfinitePublicTours = (params = {}) => {
+  return useInfiniteQuery({
+    queryKey: QUERY_KEYS.TRAVELER.PUBLIC_TOURS_INFINITE(params),
+
+    queryFn: ({ pageParam = 1 }) =>
+      travelerApi.getPublicTours({
+        ...params,
+        page: pageParam,
+        limit: 8,
+      }),
+
+    initialPageParam: 1,
+
+    getNextPageParam: (lastPage, allPages) => {
+      const totalDocuments =
+        Number(lastPage?.meta?.totalDocuments || 0);
+
+      const loadedDocuments = allPages.reduce(
+        (total, page) =>
+          total +
+          (Array.isArray(page?.data)
+            ? page.data.length
+            : 0),
+        0
+      );
+
+      if (loadedDocuments >= totalDocuments) {
+        return undefined;
+      }
+
+      return allPages.length + 1;
+    },
+
+    staleTime: 1000 * 60 * 5,
   });
 };
 

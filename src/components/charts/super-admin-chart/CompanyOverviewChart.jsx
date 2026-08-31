@@ -9,11 +9,11 @@ import {
   Cell,
 } from 'recharts';
 
-// Blue & Yellow Color Palette - Matching your theme
+// Updated Color Palette - Yellow/White Theme
 const COMPANY_COLORS = {
-  active: '#F59E0B',    // Amber/Yellow - Primary
-  inactive: '#93C5FD',  // Blue Light
-  suspended: '#2563EB', // Blue Primary
+  active: '#F59E0B',    // Yellow - Primary Brand Color
+  inactive: '#D1D5DB',  // Light Gray - Neutral
+  suspended: '#F87171', // Rose Red - Warning
 };
 
 // Custom Tooltip Component
@@ -26,9 +26,9 @@ const CustomTooltip = ({ active, payload }) => {
       suspended: 'Suspended'
     };
     return (
-      <div className="bg-slate-900 text-white text-xs px-3 py-2 rounded-xl shadow-lg border border-slate-800 font-sans">
-        <p className="font-semibold capitalize text-amber-400">{labels[status] || status}</p>
-        <p className="text-blue-400 font-bold mt-0.5">{count} Registered</p>
+      <div className="bg-white text-slate-900 text-xs px-4 py-2.5 rounded-xl shadow-lg border border-slate-200 font-sans">
+        <p className="font-semibold capitalize text-yellow-600">{labels[status] || status}</p>
+        <p className="text-slate-700 font-bold mt-0.5">{count} Companies</p>
       </div>
     );
   }
@@ -78,7 +78,7 @@ export default function CompanyOverviewChart({ data = [] }) {
               axisLine={false}
               tickLine={false}
               tick={{ 
-                fill: '#0F172A', 
+                fill: '#1E293B', 
                 fontSize: 12, 
                 fontWeight: 600,
                 fontFamily: 'Outfit, system-ui, sans-serif'
@@ -93,7 +93,7 @@ export default function CompanyOverviewChart({ data = [] }) {
               barSize={24}
               label={{
                 position: 'right',
-                fill: '#0F172A',
+                fill: '#1E293B',
                 fontSize: 13,
                 fontWeight: 700,
                 fontFamily: 'Outfit, system-ui, sans-serif',
@@ -104,8 +104,7 @@ export default function CompanyOverviewChart({ data = [] }) {
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COMPANY_COLORS[entry.status] || '#93C5FD'}
-                  className="transition-all duration-300 hover:opacity-80"
+                  fill={COMPANY_COLORS[entry.status] || '#D1D5DB'}
                 />
               ))}
             </Bar>
@@ -114,16 +113,16 @@ export default function CompanyOverviewChart({ data = [] }) {
       </div>
 
       {/* Summary Row */}
-      <div className="grid grid-cols-3 gap-3 pt-4 border-t border-blue-200/40">
+      <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-200/40">
         {chartData.map((item) => {
-          const color = COMPANY_COLORS[item.status] || '#93C5FD';
+          const color = COMPANY_COLORS[item.status] || '#D1D5DB';
           const label = getStatusLabel(item.status);
           const icon = getStatusIcon(item.status);
           
           return (
             <div 
               key={item.status} 
-              className="text-center p-2 rounded-xl bg-blue-50/30 border border-blue-200/30 hover:bg-amber-50/40 transition-colors"
+              className="text-center p-2.5 rounded-xl bg-slate-50 border border-slate-100"
             >
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <span className="text-sm" style={{ color }}>

@@ -35,4 +35,13 @@ export const uploadApi = {
     const response = await api.post("/tours/generate-cover-image", { prompt });
     return response.data;
   },
+   deleteImage: async (public_id) => {
+    const { data } = await api.delete("/upload/image", {
+      data: {
+        public_id,
+      },
+    });
+
+    return data;
+  },
 };

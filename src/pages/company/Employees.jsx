@@ -67,6 +67,8 @@ const getEmployeeName = (employee) => {
 };
 
 const getEmployeeEmail = (employee) => {
+ 
+  
   return employee?.user?.email || employee?.email || "—";
 };
 
@@ -119,7 +121,7 @@ const StatCard = ({
   iconClass,
 }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-500">
@@ -158,12 +160,13 @@ const EmployeeCard = ({
   const phone = getEmployeePhone(employee);
 
   return (
-    <div className="group relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+    <div className="relative rounded-2xl border border-slate-200 bg-white p-5">
       {/* TOP */}
-
+{console.log(employee," data from 163")
+}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-sm font-semibold text-amber-600">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-50 text-sm font-semibold text-yellow-600">
             {employee?.user?.avatar ? (
               <img
                 src={employee.user.avatar}
@@ -192,7 +195,7 @@ const EmployeeCard = ({
           <button
             type="button"
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
             <MoreVertical size={17} />
           </button>
@@ -206,14 +209,14 @@ const EmployeeCard = ({
                 aria-label="Close menu"
               />
 
-              <div className="absolute right-0 top-10 z-20 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
+              <div className="absolute right-0 top-10 z-20 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1">
                 <button
                   type="button"
                   onClick={() => {
                     setMenuOpen(false);
                     onView(employee);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                  className="flex w-full cursor-pointer items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 >
                   <Eye size={15} />
                   View
@@ -225,7 +228,7 @@ const EmployeeCard = ({
                     setMenuOpen(false);
                     onEdit(employee);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                  className="flex w-full cursor-pointer items-center gap-2 px-3 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 >
                   <Edit3 size={15} />
                   Edit
@@ -237,7 +240,7 @@ const EmployeeCard = ({
                     setMenuOpen(false);
                     onDelete(employee);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-red-600 transition hover:bg-red-50"
+                  className="flex w-full cursor-pointer items-center gap-2 px-3 py-2.5 text-left text-sm text-rose-600 hover:bg-rose-50"
                 >
                   <Trash2 size={15} />
                   Delete
@@ -258,7 +261,10 @@ const EmployeeCard = ({
 
       <div className="mt-5 space-y-3">
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Mail size={15} className="shrink-0 text-slate-400" />
+          <Mail
+            size={15}
+            className="shrink-0 text-slate-400"
+          />
 
           <span className="truncate">
             {email}
@@ -266,7 +272,10 @@ const EmployeeCard = ({
         </div>
 
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Phone size={15} className="shrink-0 text-slate-400" />
+          <Phone
+            size={15}
+            className="shrink-0 text-slate-400"
+          />
 
           <span className="truncate">
             {phone}
@@ -301,7 +310,7 @@ const EmployeeCard = ({
         <button
           type="button"
           onClick={() => onView(employee)}
-          className="text-xs font-semibold text-amber-600 transition hover:text-amber-700"
+          className="cursor-pointer text-xs font-semibold text-yellow-600 hover:text-yellow-700"
         >
           View details
         </button>
@@ -383,12 +392,12 @@ const InviteEmployeeModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 py-6 backdrop-blur-sm">
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white">
         {/* HEADER */}
 
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-100 text-yellow-600">
               <Send size={18} />
             </div>
 
@@ -405,7 +414,7 @@ const InviteEmployeeModal = ({
             type="button"
             onClick={onClose}
             disabled={inviteMutation.isPending}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
             <X size={18} />
           </button>
@@ -418,7 +427,7 @@ const InviteEmployeeModal = ({
           className="space-y-5 px-6 py-6"
         >
           {error && (
-            <div className="flex items-start gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="flex items-start gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600">
               <AlertCircle
                 size={16}
                 className="mt-0.5 shrink-0"
@@ -433,7 +442,7 @@ const InviteEmployeeModal = ({
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-700">
               Email Address
-              <span className="ml-1 text-red-500">*</span>
+              <span className="ml-1 text-rose-500">*</span>
             </label>
 
             <input
@@ -442,7 +451,7 @@ const InviteEmployeeModal = ({
               value={form.email}
               onChange={handleChange}
               placeholder="employee@example.com"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -460,7 +469,7 @@ const InviteEmployeeModal = ({
                 value={form.designation}
                 onChange={handleChange}
                 placeholder="Tour Manager"
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
               />
             </div>
 
@@ -475,7 +484,7 @@ const InviteEmployeeModal = ({
                 value={form.department}
                 onChange={handleChange}
                 placeholder="Operations"
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
               />
             </div>
           </div>
@@ -493,7 +502,7 @@ const InviteEmployeeModal = ({
               value={form.phone}
               onChange={handleChange}
               placeholder="+92 300 1234567"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -510,7 +519,7 @@ const InviteEmployeeModal = ({
               onChange={handleChange}
               rows={3}
               placeholder="Employee address"
-              className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -521,7 +530,7 @@ const InviteEmployeeModal = ({
               type="button"
               onClick={onClose}
               disabled={inviteMutation.isPending}
-              className="btn-outline"
+              className="btn-outline cursor-pointer"
             >
               Cancel
             </button>
@@ -529,7 +538,7 @@ const InviteEmployeeModal = ({
             <button
               type="submit"
               disabled={inviteMutation.isPending}
-              className="btn-yellow disabled:pointer-events-none disabled:opacity-50"
+              className="btn-primary cursor-pointer disabled:pointer-events-none disabled:opacity-50"
             >
               {inviteMutation.isPending ? (
                 <>
@@ -573,12 +582,12 @@ const EmployeeDetailsModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white">
         {/* HEADER */}
 
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-sm font-semibold text-amber-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-50 text-sm font-semibold text-yellow-600">
               {employee?.user?.avatar ? (
                 <img
                   src={employee.user.avatar}
@@ -604,7 +613,7 @@ const EmployeeDetailsModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
             <X size={18} />
           </button>
@@ -686,7 +695,7 @@ const EmployeeDetailsModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="btn-outline"
+            className="btn-outline cursor-pointer"
           >
             Close
           </button>
@@ -694,7 +703,7 @@ const EmployeeDetailsModal = ({
           <button
             type="button"
             onClick={() => onEdit(employee)}
-            className="btn-yellow"
+            className="btn-primary cursor-pointer"
           >
             <Edit3
               size={16}
@@ -764,7 +773,7 @@ const EditEmployeeModal = ({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl">
+      <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white">
         {/* HEADER */}
 
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
@@ -782,7 +791,7 @@ const EditEmployeeModal = ({
             type="button"
             onClick={onClose}
             disabled={updateMutation.isPending}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
             <X size={18} />
           </button>
@@ -795,7 +804,7 @@ const EditEmployeeModal = ({
           className="space-y-5 px-6 py-6"
         >
           {error && (
-            <div className="flex items-start gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="flex items-start gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600">
               <AlertCircle
                 size={16}
                 className="mt-0.5 shrink-0"
@@ -833,7 +842,7 @@ const EditEmployeeModal = ({
               value={form.designation}
               onChange={handleChange}
               placeholder="Tour Manager"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -850,7 +859,7 @@ const EditEmployeeModal = ({
               value={form.department}
               onChange={handleChange}
               placeholder="Operations"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -866,7 +875,7 @@ const EditEmployeeModal = ({
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+                className="h-11 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
               >
                 <option value="active">
                   Active
@@ -888,7 +897,7 @@ const EditEmployeeModal = ({
                 name="joiningDate"
                 value={form.joiningDate}
                 onChange={handleChange}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-800 outline-none transition focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
               />
             </div>
           </div>
@@ -900,7 +909,7 @@ const EditEmployeeModal = ({
               type="button"
               onClick={onClose}
               disabled={updateMutation.isPending}
-              className="btn-outline"
+              className="btn-outline cursor-pointer"
             >
               Cancel
             </button>
@@ -908,7 +917,7 @@ const EditEmployeeModal = ({
             <button
               type="submit"
               disabled={updateMutation.isPending}
-              className="btn-yellow disabled:pointer-events-none disabled:opacity-50"
+              className="btn-primary cursor-pointer disabled:pointer-events-none disabled:opacity-50"
             >
               {updateMutation.isPending ? (
                 <>
@@ -951,8 +960,8 @@ const DeleteModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-500">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
           <Trash2 size={20} />
         </div>
 
@@ -973,7 +982,7 @@ const DeleteModal = ({
             type="button"
             onClick={onCancel}
             disabled={isDeleting}
-            className="btn-outline"
+            className="btn-outline cursor-pointer"
           >
             Cancel
           </button>
@@ -982,7 +991,7 @@ const DeleteModal = ({
             type="button"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="inline-flex items-center justify-center rounded-xl bg-red-500 px-5 py-3 font-medium text-white transition hover:bg-red-600 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-rose-500 px-5 py-3 font-medium text-white hover:bg-rose-600 disabled:pointer-events-none disabled:opacity-50"
           >
             {isDeleting ? (
               <>
@@ -1052,6 +1061,7 @@ const Employees = () => {
         ? undefined
         : statusFilter,
   });
+console.log(response," employee response");
 
   // ====================================================
   // MUTATIONS
@@ -1066,6 +1076,7 @@ const Employees = () => {
 
   const employees = response?.data || [];
   const meta = response?.meta || {};
+console.log(employees," data");
 
   // ====================================================
   // STATS
@@ -1092,7 +1103,11 @@ const Employees = () => {
       active,
       inactive,
     };
-  }, [employees, meta.totalDocuments, meta.total]);
+  }, [
+    employees,
+    meta.totalDocuments,
+    meta.total,
+  ]);
 
   // ====================================================
   // SEARCH
@@ -1163,16 +1178,23 @@ const Employees = () => {
   };
 
   // ====================================================
-  // LOADING
+  // INITIAL LOADING ONLY
   // ====================================================
 
-  if (isLoading) {
+  // FIX:
+  // Do NOT replace the whole page when searching,
+  // filtering, changing page, or refreshing.
+  //
+  // The full-page loader is only shown when there
+  // is no response/data yet.
+
+  if (isLoading && !response) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2
             size={30}
-            className="animate-spin text-amber-500"
+            className="animate-spin text-yellow-500"
           />
 
           <p className="text-sm text-slate-500">
@@ -1187,11 +1209,11 @@ const Employees = () => {
   // ERROR
   // ====================================================
 
-  if (isError) {
+  if (isError && !response) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-6">
-        <div className="max-w-md rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">
+        <div className="max-w-md rounded-2xl border border-rose-100 bg-white p-8 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-500">
             <AlertCircle size={24} />
           </div>
 
@@ -1206,7 +1228,7 @@ const Employees = () => {
           <button
             type="button"
             onClick={() => refetch()}
-            className="btn-yellow mt-5"
+            className="btn-primary mt-5 cursor-pointer"
           >
             <RefreshCw
               size={16}
@@ -1225,6 +1247,7 @@ const Employees = () => {
 
   return (
     <div className="space-y-6 pb-10">
+
       {/* ==================================================
           HEADER
       ================================================== */}
@@ -1232,7 +1255,7 @@ const Employees = () => {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-amber-600">
+            <p className="text-sm font-medium text-yellow-600">
               Company Management
             </p>
 
@@ -1253,7 +1276,7 @@ const Employees = () => {
         <button
           type="button"
           onClick={() => setIsInviteOpen(true)}
-          className="btn-yellow self-start sm:self-auto"
+          className="btn-primary self-start cursor-pointer sm:self-auto"
         >
           <Plus
             size={17}
@@ -1272,7 +1295,7 @@ const Employees = () => {
           title="Total Employees"
           value={formatNumber(stats.total)}
           icon={Users}
-          iconClass="bg-amber-50 text-amber-600"
+          iconClass="bg-yellow-50 text-yellow-600"
         />
 
         <StatCard
@@ -1294,8 +1317,9 @@ const Employees = () => {
           TOOLBAR
       ================================================== */}
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
           {/* SEARCH */}
 
           <div className="relative w-full lg:max-w-md">
@@ -1311,14 +1335,14 @@ const Employees = () => {
                 handleSearch(e.target.value)
               }
               placeholder="Search employees, departments..."
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-10 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
 
             {search && (
               <button
                 type="button"
                 onClick={() => handleSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-700"
               >
                 <X size={16} />
               </button>
@@ -1327,62 +1351,94 @@ const Employees = () => {
 
           {/* FILTER + REFRESH */}
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1">
-              <Filter
-                size={15}
-                className="ml-2 mr-1 text-slate-400"
-              />
+          <div className="flex items-center gap-3">
 
-              {[
-                ["all", "All"],
-                ["active", "Active"],
-                ["inactive", "Inactive"],
-              ].map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => {
-                    setStatusFilter(value);
-                    setPage(1);
-                  }}
-                  className={`rounded-lg px-3 py-2 text-xs font-medium transition ${
-                    statusFilter === value
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
+            {/* FIX:
+                Small fetching indicator instead of
+                replacing the whole page.
+            */}
+
+            {isFetching && (
+              <div className="hidden items-center gap-1.5 text-xs text-slate-400 sm:flex">
+                <Loader2
+                  size={13}
+                  className="animate-spin"
+                />
+                Updating...
+              </div>
+            )}
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1">
+                <Filter
+                  size={15}
+                  className="ml-2 mr-1 text-slate-400"
+                />
+
+                {[
+                  ["all", "All"],
+                  ["active", "Active"],
+                  ["inactive", "Inactive"],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => {
+                      setStatusFilter(value);
+                      setPage(1);
+                    }}
+                    className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-medium ${
+                      statusFilter === value
+                        ? "bg-white text-slate-900"
+                        : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-50"
+              >
+                <RefreshCw
+                  size={16}
+                  className={
+                    isFetching
+                      ? "animate-spin"
+                      : ""
+                  }
+                />
+              </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => refetch()}
-              disabled={isFetching}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-800 disabled:opacity-50"
-            >
-              <RefreshCw
-                size={16}
-                className={
-                  isFetching
-                    ? "animate-spin"
-                    : ""
-                }
-              />
-            </button>
           </div>
         </div>
       </div>
 
       {/* ==================================================
-          EMPTY STATE
+          FETCHING OVERLAY / STATUS
+      ================================================== */}
+
+      {isFetching && employees.length > 0 && (
+        <div className="flex items-center gap-2 text-xs text-slate-400">
+          <Loader2
+            size={13}
+            className="animate-spin"
+          />
+          Updating employee list...
+        </div>
+      )}
+
+      {/* ==================================================
+          EMPTY STATE / EMPLOYEE GRID
       ================================================== */}
 
       {employees.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-50 text-yellow-500">
             <Users size={27} />
           </div>
 
@@ -1405,7 +1461,7 @@ const Employees = () => {
                 onClick={() =>
                   setIsInviteOpen(true)
                 }
-                className="btn-yellow mt-6"
+                className="btn-primary mt-6 cursor-pointer"
               >
                 <Send
                   size={16}
@@ -1441,7 +1497,7 @@ const Employees = () => {
       ================================================== */}
 
       {employees.length > 0 && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
             Showing{" "}
             <span className="font-medium text-slate-700">
@@ -1465,12 +1521,12 @@ const Employees = () => {
                   Math.max(1, prev - 1)
                 )
               }
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronLeft size={16} />
             </button>
 
-            <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-slate-900 px-3 text-xs font-semibold text-white">
+            <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-yellow-500 px-3 text-xs font-semibold text-white">
               {page}
             </span>
 
@@ -1485,7 +1541,7 @@ const Employees = () => {
               onClick={() =>
                 setPage((prev) => prev + 1)
               }
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronRight size={16} />
             </button>

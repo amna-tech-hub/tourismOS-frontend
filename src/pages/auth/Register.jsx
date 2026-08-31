@@ -1,81 +1,138 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRegister } from '../../api/queries/useAuth';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Loader2,
+  Phone,
+} from "lucide-react";
+import tourix from "/public/tourixLogo.webp";
+
+import { useRegister } from "../../api/queries/useAuth";
 
 export default function Register() {
+  const navigate = useNavigate();
+  const registerMutation = useRegister();
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'traveler', // Default registration role
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const registerMutation = useRegister();
-  const { loginUser } = useAuth();
-  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (errorMsg) {
+      setErrorMsg("");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMsg('Passwords do not match');
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone ? formData.phone.trim() : "";
+    const password = formData.password;
+    const confirmPassword = formData.confirmPassword;
+
+    if (!name) {
+      setErrorMsg("Please enter your full name.");
       return;
     }
 
-    registerMutation.mutate(
-      {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-      },
-      {
-        onSuccess: (data) => {
-          loginUser(data);
-          if (formData.role === 'company_admin' || formData.role === 'company') {
-            navigate('/company/dashboard');
-          } else {
-            navigate('/traveler/home');
-          }
-        },
-        onError: (err) => {
-          setErrorMsg(err.response?.data?.message || 'Failed to create account. Try again.');
-        },
-      }
-    );
+    if (name.length < 2) {
+      setErrorMsg("Name must be at least 2 characters.");
+      return;
+    }
+
+    if (!email) {
+      setErrorMsg("Please enter your email address.");
+      return;
+    }
+
+    if (!phone) {
+      setErrorMsg("Please enter your phone number.");
+      return;
+    }
+
+    if (!password) {
+      setErrorMsg("Please enter a password.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMsg("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (!confirmPassword) {
+      setErrorMsg("Please confirm your password.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await registerMutation.mutateAsync({
+        name,
+        email,
+        password,
+        phone,
+      });
+
+      navigate("/auth/verify-otp", {
+        state: { email },
+      });
+    } catch (error) {
+      setErrorMsg(
+        error?.response?.data?.message ||
+          "Failed to create account. Please try again."
+      );
+    }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-extrabold font-serif text-slate-900">
-          Create <span className="text-amber-500">Your Account</span>
+    <div className="w-full max-w-sm flex flex-col items-center">
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h2 className="text-3xl font-bold text-white tracking-wide">
+          Get Started
         </h2>
-        <div className="w-12 h-1 bg-amber-500 mx-auto rounded-full"></div>
-        <p className="text-xs text-slate-400 subheading">Fill in your details to get started</p>
+        <p className="text-xs text-white/80 mt-1 font-light">
+          Create an account to begin your journey
+        </p>
       </div>
 
+      {/* Error Message */}
       {errorMsg && (
-        <div className="p-3 text-xs bg-red-50 text-red-600 border border-red-200 rounded-xl font-sans text-center">
+        <div className="w-full p-2.5 mb-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-900 text-xs text-center font-medium">
           {errorMsg}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 font-sans">
+      {/* Register Form */}
+      <form onSubmit={handleSubmit} className="w-full space-y-2.5">
         {/* Full Name */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">👤</span>
           <input
             type="text"
             name="name"
@@ -83,63 +140,81 @@ export default function Register() {
             placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            disabled={registerMutation.isPending}
+            className="w-full px-4 py-2.5 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
+          <User size={15} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600" />
         </div>
 
         {/* Email */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">✉️</span>
           <input
             type="email"
             name="email"
             required
-            placeholder="Email"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            className="w-full pl-11 pr-4 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            disabled={registerMutation.isPending}
+            className="w-full px-4 py-2.5 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
+          <Mail size={15} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600" />
+        </div>
+
+        {/* Phone */}
+        <div className="relative">
+          <input
+            type="text"
+            name="phone"
+            required
+            placeholder="Phone Number"
+            value={formData.phone}
+            onChange={handleChange}
+            disabled={registerMutation.isPending}
+            className="w-full px-4 py-2.5 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
+          />
+          <Phone size={15} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600" />
         </div>
 
         {/* Password */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">🔒</span>
           <input
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             name="password"
             required
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            disabled={registerMutation.isPending}
+            className="w-full px-4 py-2.5 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-3.5 text-xs text-slate-400"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800"
           >
-            {showPassword ? '🙈' : '👁️'}
+            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
         </div>
 
         {/* Confirm Password */}
         <div className="relative">
-          <span className="absolute left-4 top-3.5 text-slate-400">🔒</span>
           <input
-            type={showConfirmPassword ? 'text' : 'password'}
+            type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
             required
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className="w-full pl-11 pr-11 py-3 rounded-full border border-slate-200 text-sm focus:outline-none focus:border-amber-500"
+            disabled={registerMutation.isPending}
+            className="w-full px-4 py-2.5 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
           <button
             type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-4 top-3.5 text-xs text-slate-400"
+            onClick={() => setShowConfirmPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800"
           >
-            {showConfirmPassword ? '🙈' : '👁️'}
+            {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
         </div>
 
@@ -147,30 +222,24 @@ export default function Register() {
         <button
           type="submit"
           disabled={registerMutation.isPending}
-          className="btn-yellow w-full rounded-full py-3.5 flex items-center justify-center gap-2 text-sm font-semibold shadow-amber-500/30"
+          className="w-full py-2.5 rounded-full bg-[#fbbf24] border border-amber-500/40 text-slate-800 font-semibold text-xs hover:bg-amber-300 transition-colors shadow-md flex items-center justify-center gap-2 mt-2"
         >
-          {registerMutation.isPending ? 'Creating Account...' : 'Create Account →'}
+          {registerMutation.isPending ? (
+            <>
+              <Loader2 size={15} className="animate-spin" />
+              Creating Account...
+            </>
+          ) : (
+            "Create Account"
+          )}
         </button>
       </form>
 
-      {/* Social Divider */}
-      <div className="relative flex items-center justify-center">
-        <div className="border-t border-slate-200 w-full"></div>
-        <span className="bg-white px-3 text-[11px] text-slate-400 uppercase tracking-widest absolute font-sans">
-          OR
-        </span>
-      </div>
-
-      {/* Google Sign In */}
-      <button className="w-full py-3 rounded-full border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors">
-        <span className="text-base">🌐</span> Continue with Google
-      </button>
-
-      {/* Login Navigation Link */}
-      <p className="text-center text-xs text-slate-500 font-sans">
-        Already have an account?{' '}
-        <Link to="/auth/login" className="text-amber-600 font-semibold hover:underline">
-          Sign in
+      {/* Login Link */}
+      <p className="mt-4 text-xs text-slate-800">
+        Already have an account?{" "}
+        <Link to="/auth/login" className="font-bold underline hover:text-black">
+          Login
         </Link>
       </p>
     </div>

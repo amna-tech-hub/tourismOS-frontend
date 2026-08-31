@@ -1,15 +1,16 @@
-import Navbar from './Navbar';
-import Footer from './Footer';
-import { Outlet } from 'react-router-dom';
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
-export default function PublicLayout({ children }) {
+export default function PublicLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-amber-200 selection:text-amber-900">
+    <div className="min-h-screen flex flex-col bg-bg-secondary text-text-primary font-sans">
       <Navbar />
+
       <main className="flex-1">
-        
-        <Outlet/>
+        <Outlet />
       </main>
+
       <Footer />
     </div>
   );

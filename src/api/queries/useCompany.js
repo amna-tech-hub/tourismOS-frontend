@@ -42,3 +42,46 @@ export const useCreditHistory = () => {
     refetchInterval: 5000, // Refetch every 5 seconds
   });
 };
+
+// ==========================================
+// COMPANY BOOKING HOOKS
+// ==========================================
+
+// Fetch Company Bookings
+export const useCompanyBookings = (params = {}) => {
+  return useQuery({
+    queryKey: [
+      ...QUERY_KEYS.COMPANY.BOOKINGS,
+      params,
+    ],
+
+    queryFn: () => companyApi.getBookings(params),
+
+    staleTime: 1000 * 60 * 2,
+  });
+};
+
+
+// Update Booking Status
+export const useUpdateBookingStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }) =>
+      companyApi.updateBookingStatus({
+        id,
+        status,
+      }),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.COMPANY.BOOKINGS,
+      });
+
+      // Dashboard numbers can also change
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.COMPANY.DASHBOARD,
+      });
+    },
+  });
+};

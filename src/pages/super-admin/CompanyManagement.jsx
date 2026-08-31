@@ -28,6 +28,7 @@ import {
   FaCalendarAlt,
   FaCoins,
 } from "react-icons/fa";
+import AcceptInvite from "../shared/AcceptInvite";
 
 export default function Company() {
   const [search, setSearch] = useState("");
@@ -126,7 +127,7 @@ export default function Company() {
 
       case "suspended":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold whitespace-nowrap">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100 text-[10px] font-bold whitespace-nowrap">
             <FaBan className="text-[9px] shrink-0" />
             Suspended
           </span>
@@ -145,8 +146,8 @@ export default function Company() {
   const getVerificationBadge = (status = "pending") => {
     const styles = {
       verified: "bg-emerald-50 text-emerald-700 border-emerald-100",
-      pending: "bg-amber-50 text-amber-700 border-amber-100",
-      rejected: "bg-red-50 text-red-700 border-red-100",
+      pending: "bg-yellow-50 text-yellow-700 border-yellow-100",
+      rejected: "bg-rose-50 text-rose-700 border-rose-100",
     };
 
     const icons = {
@@ -170,7 +171,7 @@ export default function Company() {
   const getPlanBadge = (plan = "Starter") => {
     const badgeColors = {
       Starter: "bg-slate-100 text-slate-700 border-slate-200",
-      Pro: "bg-amber-100 text-amber-900 border-amber-200",
+      Pro: "bg-yellow-100 text-yellow-900 border-yellow-200",
       Enterprise: "bg-indigo-100 text-indigo-900 border-indigo-200",
     };
 
@@ -233,7 +234,7 @@ export default function Company() {
         <button
           type="button"
           onClick={() => setIsInviteModalOpen(true)}
-          className="btn-yellow text-xs py-2.5 px-4 gap-2 cursor-pointer inline-flex items-center justify-center w-full sm:w-auto shrink-0"
+          className="btn-primary text-xs py-2.5 px-4 gap-2 cursor-pointer inline-flex items-center justify-center w-full sm:w-auto shrink-0"
         >
           <FaPlus className="text-[10px]" />
           Invite Company
@@ -248,7 +249,7 @@ export default function Company() {
         <div className="bg-bg-card rounded-2xl border border-border-subtle p-4 sm:p-6">
           <div className="min-h-[280px] sm:h-[390px] flex items-center justify-center">
             <div className="text-center text-text-muted">
-              <div className="w-7 h-7 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
+              <div className="w-7 h-7 border-2 border-border-subtle border-t-yellow-500 rounded-full animate-spin mx-auto mb-3" />
 
               <p className="text-xs">
                 Loading company performance...
@@ -266,7 +267,7 @@ export default function Company() {
           SEARCH & FILTERS
       ===================================================== */}
 
-      <div className="bg-bg-card rounded-2xl border border-border-subtle p-3 sm:p-4 shadow-sm">
+      <div className="bg-bg-card rounded-2xl border border-border-subtle p-3 sm:p-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
           {/* Search */}
 
@@ -281,7 +282,7 @@ export default function Company() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-secondary/50 transition-colors"
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white"
             />
           </div>
 
@@ -294,7 +295,7 @@ export default function Company() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full lg:w-auto min-w-0 lg:min-w-[145px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-card text-text-primary cursor-pointer"
+              className="w-full lg:w-auto min-w-0 lg:min-w-[145px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white text-text-primary cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="active">Active</option>
@@ -308,7 +309,7 @@ export default function Company() {
                 setVerificationFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full lg:w-auto min-w-0 lg:min-w-[160px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary bg-bg-card text-text-primary cursor-pointer"
+              className="w-full lg:w-auto min-w-0 lg:min-w-[160px] px-3 py-2.5 text-xs rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white text-text-primary cursor-pointer"
             >
               <option value="">All Verifications</option>
               <option value="verified">Verified</option>
@@ -323,7 +324,7 @@ export default function Company() {
           COMPANIES TABLE
       ===================================================== */}
 
-      <div className="bg-bg-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden">
+      <div className="bg-bg-card rounded-2xl border border-border-subtle overflow-hidden">
         <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <table className="w-full min-w-[950px] text-left text-xs">
             <thead className="bg-bg-secondary text-text-muted font-semibold border-b border-border-subtle uppercase tracking-wider">
@@ -367,7 +368,7 @@ export default function Company() {
                     colSpan="7"
                     className="py-14 text-center text-text-muted"
                   >
-                    <div className="w-7 h-7 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
+                    <div className="w-7 h-7 border-2 border-border-subtle border-t-yellow-500 rounded-full animate-spin mx-auto mb-3" />
 
                     <p className="text-xs">
                       Loading companies directory...
@@ -380,7 +381,7 @@ export default function Company() {
                 <tr>
                   <td
                     colSpan="7"
-                    className="py-14 text-center text-error"
+                    className="py-14 text-center text-rose-500"
                   >
                     <FaExclamationCircle className="mx-auto mb-2 text-lg" />
 
@@ -415,7 +416,7 @@ export default function Company() {
                   return (
                     <tr
                       key={company._id}
-                      className="hover:bg-bg-secondary/80 transition-colors"
+                      className="hover:bg-bg-secondary/50"
                     >
                       {/* Company */}
 
@@ -467,7 +468,7 @@ export default function Company() {
 
                           <div className="w-full h-1.5 bg-bg-tertiary rounded-full overflow-hidden mt-1.5">
                             <div
-                              className="h-full bg-amber-primary rounded-full transition-all duration-300"
+                              className="h-full bg-yellow-500 rounded-full"
                               style={{
                                 width: `${creditPercentage}%`,
                               }}
@@ -502,7 +503,7 @@ export default function Company() {
                             onClick={() =>
                               setSelectedCompanyId(company._id)
                             }
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-border-subtle text-text-muted hover:text-text-primary hover:bg-bg-secondary transition-colors cursor-pointer shrink-0"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-border-subtle text-text-muted hover:text-text-primary hover:bg-bg-secondary cursor-pointer shrink-0"
                           >
                             <FaEye className="text-[11px]" />
                           </button>
@@ -519,7 +520,7 @@ export default function Company() {
                               disabled={
                                 suspendCompanyMutation.isPending
                               }
-                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-yellow-200 text-yellow-600 hover:bg-yellow-50 cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaBan className="text-[11px]" />
                             </button>
@@ -537,7 +538,7 @@ export default function Company() {
                               disabled={
                                 activateCompanyMutation.isPending
                               }
-                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                              className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaCheck className="text-[11px]" />
                             </button>
@@ -554,7 +555,7 @@ export default function Company() {
                             disabled={
                               deleteCompanyMutation.isPending
                             }
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-rose-200 text-rose-500 hover:bg-rose-50 cursor-pointer disabled:opacity-50 shrink-0"
                           >
                             <FaTrash className="text-[11px]" />
                           </button>
@@ -627,7 +628,7 @@ export default function Company() {
 
       {isInviteModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-bg-card rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-5 shadow-xl border border-border-subtle max-h-[90vh] overflow-y-auto">
+          <div className="bg-bg-card rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-5 border border-border-subtle max-h-[90vh] overflow-y-auto">
             {/* Header */}
 
             <div className="flex justify-between items-start gap-3 border-b border-border-light pb-3">
@@ -663,7 +664,7 @@ export default function Company() {
               <div>
                 <label className="block font-semibold mb-1.5 text-text-secondary">
                   Company Name{" "}
-                  <span className="text-error">*</span>
+                  <span className="text-rose-500">*</span>
                 </label>
 
                 <input
@@ -677,7 +678,7 @@ export default function Company() {
                     })
                   }
                   placeholder="e.g. Karakoram Adventures"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white"
                 />
               </div>
 
@@ -686,7 +687,7 @@ export default function Company() {
               <div>
                 <label className="block font-semibold mb-1.5 text-text-secondary">
                   Company Email{" "}
-                  <span className="text-error">*</span>
+                  <span className="text-rose-500">*</span>
                 </label>
 
                 <input
@@ -700,7 +701,7 @@ export default function Company() {
                     })
                   }
                   placeholder="admin@company.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white"
                 />
               </div>
 
@@ -721,7 +722,7 @@ export default function Company() {
                     })
                   }
                   placeholder="03144276663"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white"
                 />
               </div>
 
@@ -742,7 +743,7 @@ export default function Company() {
                     })
                   }
                   placeholder="Rahim Yar Khan, Pakistan"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-amber-primary focus:ring-1 focus:ring-amber-primary transition-colors bg-bg-card"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border-subtle focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 bg-white"
                 />
               </div>
 
@@ -762,7 +763,7 @@ export default function Company() {
                 <button
                   type="submit"
                   disabled={createCompanyMutation.isPending}
-                  className="btn-yellow py-2 px-4 text-xs cursor-pointer w-full sm:w-auto"
+                  className="btn-primary py-2 px-4 text-xs cursor-pointer w-full sm:w-auto disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {createCompanyMutation.isPending
                     ? "Sending..."
@@ -780,7 +781,7 @@ export default function Company() {
 
       {selectedCompanyId && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-bg-card rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-xl border border-border-subtle max-h-[90vh] overflow-y-auto">
+          <div className="bg-bg-card rounded-2xl max-w-3xl w-full p-4 sm:p-6 border border-border-subtle max-h-[90vh] overflow-y-auto">
             {/* Header */}
 
             <div className="flex items-start justify-between gap-3 border-b border-border-light pb-4">
@@ -819,7 +820,7 @@ export default function Company() {
 
             {isStatsLoading ? (
               <div className="py-12 text-center text-text-muted">
-                <div className="w-8 h-8 border-2 border-border-subtle border-t-amber-primary rounded-full animate-spin mx-auto mb-3" />
+                <div className="w-8 h-8 border-2 border-border-subtle border-t-yellow-500 rounded-full animate-spin mx-auto mb-3" />
 
                 <p className="text-xs">
                   Fetching company details...
@@ -889,8 +890,8 @@ export default function Company() {
                     REVENUE BREAKDOWN
                 ================================================= */}
 
-                <div className="bg-amber-50/40 border border-amber-200/50 p-3 sm:p-4 rounded-xl mt-3">
-                  <h4 className="text-xs font-semibold text-amber-800 mb-3 flex items-center gap-1.5">
+                <div className="bg-yellow-50/40 border border-yellow-200/50 p-3 sm:p-4 rounded-xl mt-3">
+                  <h4 className="text-xs font-semibold text-yellow-800 mb-3 flex items-center gap-1.5">
                     <FaCoins className="text-[10px]" />
                     Revenue Breakdown
                   </h4>
@@ -898,7 +899,7 @@ export default function Company() {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
                     {/* Gross Sales */}
 
-                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-yellow-100/50 min-w-0">
                       <span className="block text-text-muted mb-0.5">
                         Gross Sales
                       </span>
@@ -914,12 +915,12 @@ export default function Company() {
 
                     {/* Commission */}
 
-                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-yellow-100/50 min-w-0">
                       <span className="block text-text-muted mb-0.5">
                         Commission
                       </span>
 
-                      <span className="font-bold text-amber-600 break-words">
+                      <span className="font-bold text-yellow-600 break-words">
                         - PKR{" "}
                         {(
                           companyStats?.stats?.revenue
@@ -930,7 +931,7 @@ export default function Company() {
 
                     {/* Net Earnings */}
 
-                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-yellow-100/50 min-w-0">
                       <span className="block text-text-muted mb-0.5">
                         Net Earnings
                       </span>
@@ -946,7 +947,7 @@ export default function Company() {
 
                     {/* Average */}
 
-                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-amber-100/50 min-w-0">
+                    <div className="bg-white/60 rounded-lg p-2.5 text-center border border-yellow-100/50 min-w-0">
                       <span className="block text-text-muted mb-0.5">
                         Avg / Booking
                       </span>
@@ -992,7 +993,7 @@ export default function Company() {
                     <div className="bg-bg-secondary border border-border-subtle p-3 sm:p-4 rounded-xl space-y-2 mt-3">
                       <div className="flex flex-col gap-1.5 sm:flex-row sm:justify-between sm:items-center text-xs">
                         <span className="font-semibold text-text-secondary flex items-center gap-1.5">
-                          <FaCheckCircle className="text-amber-500 text-[10px] shrink-0" />
+                          <FaCheckCircle className="text-yellow-500 text-[10px] shrink-0" />
 
                           <span>
                             AI Credits ·{" "}
@@ -1002,7 +1003,7 @@ export default function Company() {
                           </span>
                         </span>
 
-                        <span className="font-bold text-amber-600">
+                        <span className="font-bold text-yellow-600">
                           {remaining.toLocaleString()} /{" "}
                           {total.toLocaleString()} remaining
                         </span>
@@ -1010,7 +1011,7 @@ export default function Company() {
 
                       <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-amber-500 h-full rounded-full transition-all duration-300"
+                          className="bg-yellow-500 h-full rounded-full"
                           style={{
                             width: `${percentage}%`,
                           }}
@@ -1048,7 +1049,7 @@ export default function Company() {
 
                 <div className="border-t border-border-light pt-4 mt-4">
                   <h4 className="font-serif font-bold text-text-primary text-sm mb-4 flex items-center gap-1.5">
-                    <FaBuilding className="text-amber-500 text-xs" />
+                    <FaBuilding className="text-yellow-500 text-xs" />
                     Company Information
                   </h4>
 
@@ -1148,6 +1149,7 @@ export default function Company() {
               </button>
             </div>
           </div>
+          
         </div>
       )}
     </div>

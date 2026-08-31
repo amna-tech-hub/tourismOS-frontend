@@ -2,6 +2,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  keepPreviousData,
 } from "@tanstack/react-query";
 
 import { companyEmployeeApi } from "../endpoints/companyEmployee.api";
@@ -14,8 +15,15 @@ import { QUERY_KEYS } from "../../constants/queryKeys";
 export const useCompanyEmployees = (params = {}) => {
   return useQuery({
     queryKey: QUERY_KEYS.COMPANY.EMPLOYEES_LIST(params),
-    queryFn: () => companyEmployeeApi.getEmployees(params),
+
+    queryFn: () =>
+      companyEmployeeApi.getEmployees(params),
+
     staleTime: 1000 * 60 * 5,
+
+    // Keep the current employees visible while
+    // search / filter / pagination is fetching.
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -25,10 +33,14 @@ export const useCompanyEmployees = (params = {}) => {
 
 export const useCompanyEmployee = (employeeId) => {
   return useQuery({
-    queryKey: QUERY_KEYS.COMPANY.EMPLOYEE_DETAIL(employeeId),
+    queryKey:
+      QUERY_KEYS.COMPANY.EMPLOYEE_DETAIL(employeeId),
+
     queryFn: () =>
       companyEmployeeApi.getEmployeeById(employeeId),
+
     enabled: !!employeeId,
+
     staleTime: 1000 * 60 * 5,
   });
 };
@@ -69,9 +81,10 @@ export const useUpdateEmployee = () => {
     onSuccess: (_, variables) => {
       // Refresh employee detail
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.COMPANY.EMPLOYEE_DETAIL(
-          variables.id
-        ),
+        queryKey:
+          QUERY_KEYS.COMPANY.EMPLOYEE_DETAIL(
+            variables.id
+          ),
       });
 
       // Refresh employee lists

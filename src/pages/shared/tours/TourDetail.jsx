@@ -50,6 +50,7 @@ import {
 import { useCreateBooking, usePaymentRedirection } from "../../../api/queries/useBooking";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-hot-toast";
+import MyMap from "../../../components/MyMap";
 
 /* =========================================================
    HELPERS
@@ -232,14 +233,21 @@ const DisasterItem = ({ label, active, icon: Icon }) => {
 /* =========================================================
    ITINERARY DAY
 ========================================================= */
-
 const ItineraryDay = ({ day, safety }) => {
   const [open, setOpen] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+
+  // Correctly extracts from day.coordinates: { latitude: ..., longitude: ... }
+  const lat = day?.latitude;
+  const lng = day?.longitude;
+// TEMPORARY DEBUG LOG
+ 
   const safetyConfig = safety?.safety ? getSafetyConfig(safety.safety.status) : null;
   const SafetyIcon = safetyConfig?.icon || ShieldCheck;
 
   return (
     <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow">
+      {/* Header Button */}
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -273,8 +281,39 @@ const ItineraryDay = ({ day, safety }) => {
         </div>
       </button>
 
+      {/* Accordion Content */}
       {open && (
         <div className="border-t border-slate-100 p-6 space-y-6 bg-yellow-50/20">
+          
+          {/* Map Section */}
+          {lat && lng && (
+            <div className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-yellow-500" />
+                  <span className="text-sm font-bold text-slate-900">
+                    Location Map ({day.location})
+                  </span>
+                </div>
+                
+                <button
+                  type="button"
+                  onClick={() => setShowMap(!showMap)}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-yellow-400 text-slate-900 font-semibold hover:bg-yellow-500 transition-colors cursor-pointer"
+                >
+                  {showMap ? "Hide Map" : "View Map"}
+                </button>
+              </div>
+
+              {showMap && (
+                <div className="mt-4 rounded-xl overflow-hidden border border-slate-200">
+                  <MyMap lat={lat} lng={lng} locationName={day.location}/>
+                </div>
+              )}
+            </div>
+
+          )}
+
           {/* Description */}
           {day.description && (
             <div className="bg-white rounded-xl p-4 border border-slate-100">
@@ -288,7 +327,7 @@ const ItineraryDay = ({ day, safety }) => {
           {day.activities?.length > 0 && (
             <div>
               <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
-               <ActivityIcon className="w-4 h-4 text-yellow-500" />
+                <ActivityIcon className="w-4 h-4 text-yellow-500" />
                 Activities
               </h5>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -300,7 +339,7 @@ const ItineraryDay = ({ day, safety }) => {
                   return (
                     <div
                       key={index}
-                      className="flex items-center gap-3.5 p-3.5 rounded-xl bg-white! transition-colors shadow-sm"
+                      className="flex items-center gap-3.5 p-3.5 rounded-xl bg-white transition-colors shadow-sm"
                     >
                       {imageUrl ? (
                         <img
@@ -309,7 +348,7 @@ const ItineraryDay = ({ day, safety }) => {
                           className="w-24 h-24 rounded-xl object-cover shrink-0"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-slate-100">
                           <MapPin className="w-6 h-6 text-yellow-400" />
                         </div>
                       )}
@@ -326,7 +365,6 @@ const ItineraryDay = ({ day, safety }) => {
           {/* Weather & Safety */}
           {safety && (
             <div className="space-y-4">
-              {/* Weather */}
               {safety.weather && (
                 <div>
                   <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
@@ -337,7 +375,6 @@ const ItineraryDay = ({ day, safety }) => {
                 </div>
               )}
 
-              {/* Disasters */}
               {safety.disasters && (
                 <div>
                   <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
@@ -353,7 +390,6 @@ const ItineraryDay = ({ day, safety }) => {
                 </div>
               )}
 
-              {/* Safety Reason */}
               {safety.safety && safety.safety.reasons?.length > 0 && (
                 <div className={`rounded-xl border p-4 ${safetyConfig.bg} ${safetyConfig.border}`}>
                   <div className="flex items-start gap-3">
@@ -882,6 +918,7 @@ export default function TourDetail() {
   const dailySafety = data?.dailySafety || data?.data?.dailySafety || null;
 
   const reviews = useMemo(() => getReviews(reviewsData), [reviewsData]);
+console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
 
   // Check if current user has already reviewed this tour
   const userHasReviewed = useMemo(() => {
@@ -1450,6 +1487,7 @@ const [showReviewForm, setShowReviewForm] = useState(false);
     </div>
   </div>
 </section>
+
       {/* Booking Modal */}
       <BookingModal
         tour={selectedTour}

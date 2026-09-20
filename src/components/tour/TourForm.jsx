@@ -10,15 +10,26 @@ import {
   X,
 } from "lucide-react";
 
+// =========================================================
+// COMPANY ADMIN HOOKS
+// =========================================================
 import {
   useCreateTour,
   useUpdateTour,
 } from "../../api/queries/useTraveler";
 
+// =========================================================
+// EMPLOYEE HOOKS
+// =========================================================
+import {
+  useCreateMyTour,
+  useUpdateMyTour,
+} from "../../api/queries/useEmployee";
+
 import {
   useGenerateCoverImage,
   useUploadSingleImage,
-  useUploadMultipleImages, // ← Added this
+  useUploadMultipleImages,
   useDeleteImage,
 } from "../../api/queries/useUpload";
 
@@ -34,7 +45,16 @@ const TourForm = ({
   // EDIT MODE
   editMode = false,
   tourId = null,
+
+  // ROLE
+  userRole = "company_admin",
 }) => {
+  // =========================================================
+  // ROLE DETECTION
+  // =========================================================
+
+  const isEmployee = userRole === "employee";
+
   // =========================================================
   // STATE
   // =========================================================
@@ -47,13 +67,29 @@ const TourForm = ({
   const [removedImageIds, setRemovedImageIds] = useState([]);
 
   // =========================================================
-  // MUTATIONS
+  // MUTATIONS - ROLE BASED
   // =========================================================
 
-  const createTourMutation = useCreateTour();
-  const updateTourMutation = useUpdateTour();
+  // Company admin mutations
+  const createCompanyTourMutation = useCreateTour();
+  const updateCompanyTourMutation = useUpdateTour();
+
+  // Employee mutations
+  const createEmployeeTourMutation = useCreateMyTour();
+  const updateEmployeeTourMutation = useUpdateMyTour();
+
+  // Pick the correct ones based on role
+  const createTourMutation = isEmployee
+    ? createEmployeeTourMutation
+    : createCompanyTourMutation;
+
+  const updateTourMutation = isEmployee
+    ? updateEmployeeTourMutation
+    : updateCompanyTourMutation;
+
+  // Shared image mutations (same for both roles)
   const uploadSingleImageMutation = useUploadSingleImage();
-  const uploadMultipleImagesMutation = useUploadMultipleImages(); // ← Added
+  const uploadMultipleImagesMutation = useUploadMultipleImages();
   const generateCoverImageMutation = useGenerateCoverImage();
   const deleteImageMutation = useDeleteImage();
 
@@ -97,23 +133,23 @@ const TourForm = ({
 
   const getMultipleImageData = (response) => {
     const images = response?.data?.images || response?.data || response || [];
-    
-    // Handle both array and object responses
+
     if (Array.isArray(images)) {
-      return images.map(img => ({
+      return images.map((img) => ({
         url: img?.url || img?.imageUrl || img?.secure_url || "",
         public_id: img?.public_id || img?.publicId || "",
       }));
     }
-    
-    // If it's a single image response wrapped
+
     if (images?.url) {
-      return [{
-        url: images.url,
-        public_id: images.public_id || "",
-      }];
+      return [
+        {
+          url: images.url,
+          public_id: images.public_id || "",
+        },
+      ];
     }
-    
+
     return [];
   };
 
@@ -237,8 +273,7 @@ const TourForm = ({
 
     setFormError("");
 
-    // Validate files
-    const validFiles = files.filter(file => {
+    const validFiles = files.filter((file) => {
       if (!file.type.startsWith("image/")) {
         setFormError(`"${file.name}" is not a valid image file.`);
         return false;
@@ -312,8 +347,8 @@ const TourForm = ({
         throw new Error("Image size must be less than 5MB.");
       }
 
-      // Get the old image public_id if it exists
-      const currentActivity = tourFormData.itinerary?.[dayIndex]?.activities?.[activityIndex];
+      const currentActivity =
+        tourFormData.itinerary?.[dayIndex]?.activities?.[activityIndex];
       const oldPublicId = currentActivity?.image?.public_id;
 
       const response = await uploadSingleImageMutation.mutateAsync(file);
@@ -323,7 +358,6 @@ const TourForm = ({
         throw new Error("Server did not return an image URL.");
       }
 
-      // Mark old image for deletion if it exists and is different
       if (oldPublicId && oldPublicId !== imageData.public_id) {
         setRemovedImageIds((previous) => {
           if (previous.includes(oldPublicId)) return previous;
@@ -334,7 +368,7 @@ const TourForm = ({
       setTourFormData((previous) => {
         const updated = [...(previous.itinerary || [])];
         const activities = [...(updated[dayIndex]?.activities || [])];
-        
+
         activities[activityIndex] = {
           ...activities[activityIndex],
           image: {
@@ -342,12 +376,12 @@ const TourForm = ({
             public_id: imageData.public_id,
           },
         };
-        
+
         updated[dayIndex] = {
           ...updated[dayIndex],
           activities,
         };
-        
+
         return {
           ...previous,
           itinerary: updated,
@@ -366,7 +400,8 @@ const TourForm = ({
   };
 
   const handleRemoveActivityImage = (dayIndex, activityIndex) => {
-    const currentActivity = tourFormData.itinerary?.[dayIndex]?.activities?.[activityIndex];
+    const currentActivity =
+      tourFormData.itinerary?.[dayIndex]?.activities?.[activityIndex];
     const publicId = currentActivity?.image?.public_id;
 
     if (publicId) {
@@ -379,7 +414,7 @@ const TourForm = ({
     setTourFormData((previous) => {
       const updated = [...(previous.itinerary || [])];
       const activities = [...(updated[dayIndex]?.activities || [])];
-      
+
       activities[activityIndex] = {
         ...activities[activityIndex],
         image: {
@@ -387,12 +422,12 @@ const TourForm = ({
           public_id: null,
         },
       };
-      
+
       updated[dayIndex] = {
         ...updated[dayIndex],
         activities,
       };
-      
+
       return {
         ...previous,
         itinerary: updated,
@@ -453,7 +488,7 @@ const TourForm = ({
   const addActivity = (dayIndex) => {
     setTourFormData((previous) => {
       const updated = [...(previous.itinerary || [])];
-      
+
       updated[dayIndex] = {
         ...updated[dayIndex],
         activities: [
@@ -467,7 +502,7 @@ const TourForm = ({
           },
         ],
       };
-      
+
       return {
         ...previous,
         itinerary: updated,
@@ -479,17 +514,17 @@ const TourForm = ({
     setTourFormData((previous) => {
       const updated = [...(previous.itinerary || [])];
       const activities = [...(updated[dayIndex].activities || [])];
-      
+
       activities[activityIndex] = {
         ...activities[activityIndex],
         title: value,
       };
-      
+
       updated[dayIndex] = {
         ...updated[dayIndex],
         activities,
       };
-      
+
       return {
         ...previous,
         itinerary: updated,
@@ -501,22 +536,21 @@ const TourForm = ({
     setTourFormData((previous) => {
       const updated = [...(previous.itinerary || [])];
       const activityToRemove = updated[dayIndex].activities?.[activityIndex];
-      
-      // Mark activity image for deletion
+
       if (activityToRemove?.image?.public_id) {
         setRemovedImageIds((prev) => {
           if (prev.includes(activityToRemove.image.public_id)) return prev;
           return [...prev, activityToRemove.image.public_id];
         });
       }
-      
+
       updated[dayIndex] = {
         ...updated[dayIndex],
         activities: updated[dayIndex].activities.filter(
           (_, index) => index !== activityIndex
         ),
       };
-      
+
       return {
         ...previous,
         itinerary: updated,
@@ -644,9 +678,6 @@ const TourForm = ({
         "Some Cloudinary images could not be deleted:",
         failedDeletes
       );
-      console.warn(
-        `${failedDeletes.length} image(s) could not be removed from Cloudinary.`
-      );
     }
 
     setRemovedImageIds([]);
@@ -705,16 +736,24 @@ const TourForm = ({
               url: "",
               public_id: "",
             },
-        images: (tourFormData.images || []).filter(img => img.url && img.public_id),
+        images: (tourFormData.images || []).filter(
+          (img) => img.url && img.public_id
+        ),
       };
 
       if (editMode) {
+        // =====================================================
+        // UPDATE - Role based endpoint
+        // =====================================================
         await updateTourMutation.mutateAsync({
           id: tourId,
-          ...payload,
+          data: payload,
         });
         await deleteRemovedImages();
       } else {
+        // =====================================================
+        // CREATE - Role based endpoint
+        // =====================================================
         await createTourMutation.mutateAsync(payload);
       }
 
@@ -751,10 +790,11 @@ const TourForm = ({
   // DEFAULT AI IMAGE PROMPT
   // =========================================================
 
-  const defaultImagePrompt =
-    `Scenic landscape banner of ${tourFormData.to || "the destination"}, traveling from ${
-      tourFormData.from || "the departure location"
-    }, vibrant color photography, high details`;
+  const defaultImagePrompt = `Scenic landscape banner of ${
+    tourFormData.to || "the destination"
+  }, traveling from ${
+    tourFormData.from || "the departure location"
+  }, vibrant color photography, high details`;
 
   // =========================================================
   // UI
@@ -913,7 +953,9 @@ const TourForm = ({
               <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
                 <ImageIcon className="w-8 h-8 mb-2" />
                 <p className="text-xs font-medium">No cover image selected</p>
-                <p className="text-[10px] mt-1">Upload an image or generate one with AI</p>
+                <p className="text-[10px] mt-1">
+                  Upload an image or generate one with AI
+                </p>
               </div>
             )}
           </div>
@@ -939,7 +981,9 @@ const TourForm = ({
                 ) : (
                   <ImageIcon className="w-3.5 h-3.5" />
                 )}
-                {uploadSingleImageMutation.isPending ? "Uploading..." : "Upload Image"}
+                {uploadSingleImageMutation.isPending
+                  ? "Uploading..."
+                  : "Upload Image"}
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -966,7 +1010,7 @@ const TourForm = ({
         </div>
       </section>
 
-      {/* GALLERY IMAGES - NEW SECTION */}
+      {/* GALLERY IMAGES */}
       <section className="space-y-5">
         <SectionHeader
           title="Tour Gallery"
@@ -996,7 +1040,9 @@ const TourForm = ({
               ) : (
                 <Plus className="w-3.5 h-3.5" />
               )}
-              {uploadMultipleImagesMutation.isPending ? "Uploading..." : "Add Images"}
+              {uploadMultipleImagesMutation.isPending
+                ? "Uploading..."
+                : "Add Images"}
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -1010,7 +1056,10 @@ const TourForm = ({
           {tourFormData.images?.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {tourFormData.images.map((image, index) => (
-                <div key={index} className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square">
+                <div
+                  key={index}
+                  className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square"
+                >
                   <img
                     src={image.url}
                     alt={`Gallery ${index + 1}`}
@@ -1030,7 +1079,9 @@ const TourForm = ({
           ) : (
             <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center">
               <ImageIcon className="w-8 h-8 mx-auto text-slate-300 mb-2" />
-              <p className="text-xs font-medium text-slate-500">No gallery images yet</p>
+              <p className="text-xs font-medium text-slate-500">
+                No gallery images yet
+              </p>
               <p className="text-[10px] text-slate-400 mt-1">
                 Upload images to show more of the tour experience
               </p>
@@ -1102,15 +1153,22 @@ const TourForm = ({
         ) : (
           <div className="space-y-4">
             {tourFormData.itinerary.map((dayItem, dayIndex) => (
-              <div key={dayIndex} className="rounded-2xl border border-slate-200 overflow-hidden">
+              <div
+                key={dayIndex}
+                className="rounded-2xl border border-slate-200 overflow-hidden"
+              >
                 <div className="flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-slate-200">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold">
                       {dayItem.day}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-800">Day {dayItem.day}</p>
-                      <p className="text-[10px] text-slate-400">Plan activities for this day</p>
+                      <p className="text-xs font-bold text-slate-800">
+                        Day {dayItem.day}
+                      </p>
+                      <p className="text-[10px] text-slate-400">
+                        Plan activities for this day
+                      </p>
                     </div>
                   </div>
                   <button
@@ -1127,7 +1185,9 @@ const TourForm = ({
                     <Field label="Day Title">
                       <input
                         value={dayItem.title || ""}
-                        onChange={(e) => updateDay(dayIndex, "title", e.target.value)}
+                        onChange={(e) =>
+                          updateDay(dayIndex, "title", e.target.value)
+                        }
                         placeholder="e.g. Explore Karimabad"
                         className={inputClass}
                       />
@@ -1136,7 +1196,9 @@ const TourForm = ({
                     <Field label="Location">
                       <input
                         value={dayItem.location || ""}
-                        onChange={(e) => updateDay(dayIndex, "location", e.target.value)}
+                        onChange={(e) =>
+                          updateDay(dayIndex, "location", e.target.value)
+                        }
                         placeholder="e.g. Karimabad, Hunza"
                         className={inputClass}
                       />
@@ -1147,7 +1209,9 @@ const TourForm = ({
                     <textarea
                       rows={3}
                       value={dayItem.description || ""}
-                      onChange={(e) => updateDay(dayIndex, "description", e.target.value)}
+                      onChange={(e) =>
+                        updateDay(dayIndex, "description", e.target.value)
+                      }
                       placeholder="Describe what travelers will experience..."
                       className={`${inputClass} resize-none`}
                     />
@@ -1156,7 +1220,9 @@ const TourForm = ({
                   <div className="pt-2">
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <p className="text-xs font-bold text-slate-700">Activities</p>
+                        <p className="text-xs font-bold text-slate-700">
+                          Activities
+                        </p>
                         <p className="text-[10px] text-slate-400">
                           Add the main activities planned for this day.
                         </p>
@@ -1173,15 +1239,26 @@ const TourForm = ({
                     <div className="space-y-3">
                       {dayItem.activities?.length === 0 ? (
                         <div className="rounded-xl border border-dashed border-slate-200 p-4 text-center">
-                          <p className="text-[11px] text-slate-400">No activities added yet.</p>
+                          <p className="text-[11px] text-slate-400">
+                            No activities added yet.
+                          </p>
                         </div>
                       ) : (
                         dayItem.activities.map((activity, activityIndex) => {
-                          const title = typeof activity === "object" ? activity?.title || "" : activity || "";
-                          const image = typeof activity === "object" ? activity?.image : null;
+                          const title =
+                            typeof activity === "object"
+                              ? activity?.title || ""
+                              : activity || "";
+                          const image =
+                            typeof activity === "object"
+                              ? activity?.image
+                              : null;
 
                           return (
-                            <div key={activityIndex} className="flex items-start gap-2">
+                            <div
+                              key={activityIndex}
+                              className="flex items-start gap-2"
+                            >
                               <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0 mt-2">
                                 {activityIndex + 1}
                               </div>
@@ -1192,21 +1269,26 @@ const TourForm = ({
                                     type="text"
                                     value={title}
                                     onChange={(e) =>
-                                      updateActivity(dayIndex, activityIndex, e.target.value)
+                                      updateActivity(
+                                        dayIndex,
+                                        activityIndex,
+                                        e.target.value
+                                      )
                                     }
                                     placeholder="e.g. Visit Altit Fort"
                                     className={`${inputClass} flex-1`}
                                   />
                                   <button
                                     type="button"
-                                    onClick={() => removeActivity(dayIndex, activityIndex)}
+                                    onClick={() =>
+                                      removeActivity(dayIndex, activityIndex)
+                                    }
                                     className="p-2 text-slate-400 hover:text-red-500 shrink-0"
                                   >
                                     <X className="w-4 h-4" />
                                   </button>
                                 </div>
 
-                                {/* Activity Image Upload */}
                                 <div className="flex items-center gap-2 pl-1">
                                   {image?.url ? (
                                     <div className="relative group">
@@ -1217,7 +1299,12 @@ const TourForm = ({
                                       />
                                       <button
                                         type="button"
-                                        onClick={() => handleRemoveActivityImage(dayIndex, activityIndex)}
+                                        onClick={() =>
+                                          handleRemoveActivityImage(
+                                            dayIndex,
+                                            activityIndex
+                                          )
+                                        }
                                         className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition"
                                       >
                                         <X className="w-3 h-3" />
@@ -1233,7 +1320,11 @@ const TourForm = ({
                                         accept="image/png,image/jpeg,image/jpg,image/webp"
                                         className="hidden"
                                         onChange={(e) =>
-                                          handleActivityImageUpload(dayIndex, activityIndex, e)
+                                          handleActivityImageUpload(
+                                            dayIndex,
+                                            activityIndex,
+                                            e
+                                          )
                                         }
                                       />
                                     </label>
@@ -1313,9 +1404,14 @@ const TourForm = ({
         ) : (
           <div className="space-y-3">
             {tourFormData.faqs.map((faq, index) => (
-              <div key={index} className="rounded-2xl border border-slate-200 p-5">
+              <div
+                key={index}
+                className="rounded-2xl border border-slate-200 p-5"
+              >
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-xs font-bold text-slate-700">Question {index + 1}</p>
+                  <p className="text-xs font-bold text-slate-700">
+                    Question {index + 1}
+                  </p>
                   <button
                     type="button"
                     onClick={() => removeFaq(index)}
@@ -1330,7 +1426,9 @@ const TourForm = ({
                     <input
                       type="text"
                       value={faq.question || ""}
-                      onChange={(e) => updateFaq(index, "question", e.target.value)}
+                      onChange={(e) =>
+                        updateFaq(index, "question", e.target.value)
+                      }
                       placeholder="e.g. What should I bring?"
                       className={inputClass}
                     />
@@ -1340,7 +1438,9 @@ const TourForm = ({
                     <textarea
                       rows={3}
                       value={faq.answer || ""}
-                      onChange={(e) => updateFaq(index, "answer", e.target.value)}
+                      onChange={(e) =>
+                        updateFaq(index, "answer", e.target.value)
+                      }
                       placeholder="Write a helpful answer..."
                       className={`${inputClass} resize-none`}
                     />

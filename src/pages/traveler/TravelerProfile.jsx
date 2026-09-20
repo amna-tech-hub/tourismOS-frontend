@@ -1015,7 +1015,7 @@ const TravelerProfile = () => {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-amber-600 tracking-wide">
+            <p className="text-sm font-semibold text-yellow-400 tracking-wide">
               My Account
             </p>
 

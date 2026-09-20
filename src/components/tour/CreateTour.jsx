@@ -121,6 +121,9 @@ const CreateTour = ({
 
   // Edit mode
   editTour = null,
+
+  // Role: "company_admin" | "employee"
+  userRole = "company_admin",
 }) => {
   // ==========================================================
   // EDIT MODE
@@ -357,6 +360,7 @@ const CreateTour = ({
                   handleAIGeneratedTour
                 }
                 onBack={handleBack}
+                userRole={userRole}
               />
             )}
 
@@ -384,6 +388,7 @@ const CreateTour = ({
                 editTour?.id ||
                 null
               }
+              userRole={userRole}
             />
           )}
 

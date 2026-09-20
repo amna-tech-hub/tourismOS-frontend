@@ -52,10 +52,10 @@ const getImageUrl = (image) => {
 /* =========================================================
    BOOKING MODAL COMPONENT (Inline for simplicity)
 ========================================================= */
-const BookingModal = ({ 
-  tour, 
-  isOpen, 
-  onClose, 
+const BookingModal = ({
+  tour,
+  isOpen,
+  onClose,
   onConfirm,
   isProcessing,
   error: externalError
@@ -68,13 +68,13 @@ const BookingModal = ({
   useEffect(() => {
     if (externalError) {
       console.log('External error received:', externalError);
-      
-      const errorMessage = 
+
+      const errorMessage =
         externalError?.response?.data?.message ||
         externalError?.response?.data?.error?.message ||
         externalError?.message ||
         "Unable to create your booking. Please try again.";
-      
+
       setError(errorMessage);
     } else {
       setError("");
@@ -96,14 +96,14 @@ const BookingModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     setError("");
-    
+
     if (!travelDate) {
       setError("Please select a travel date");
       return;
     }
-    
+
     if (!participants || participants < 1) {
       setError("Please enter at least 1 traveler.");
       return;
@@ -304,11 +304,6 @@ const Home = () => {
   const [sort, setSort] = useState("newest");
 
   /* =======================================================
-     FILTER VISIBILITY
-  ======================================================= */
-  const [showFilters, setShowFilters] = useState(true);
-
-  /* =======================================================
      DEBOUNCED SEARCH
   ======================================================= */
   useEffect(() => {
@@ -413,7 +408,7 @@ const Home = () => {
         unique.set(key, {
           name: destinationName,
           image: getImageUrl(tour?.coverImage),
-          tour: tour // Store the full tour object
+          tour: tour
         });
       }
     });
@@ -501,35 +496,35 @@ const Home = () => {
   const handleConfirmBooking = async (bookingData) => {
     try {
       console.log(bookingData);
-      
+
       const cleanBookingData = {
         tourId: bookingData.tourId,
         participants: Number(bookingData.participants),
         travelDate: bookingData.travelDate,
         provider: bookingData.provider || 'stripe',
       };
-      
+
       const response = await createBookingMutation.mutateAsync(cleanBookingData);
-      
+
       toast.success("Booking created! Redirecting to payment...");
-      
+
       const result = await redirectToPayment(response);
-      
+
       if (result?.success && result?.method === 'manual') {
         toast.success("Booking confirmed successfully!");
         navigate(`/dashboard/bookings`);
       }
-      
+
       setIsModalOpen(false);
       setSelectedTour(null);
-      
+
     } catch (error) {
       console.error('Full error object:', error);
-      
-      const errorMessage = error?.response?.data?.message || 
-                           error?.message || 
+
+      const errorMessage = error?.response?.data?.message ||
+                           error?.message ||
                            "Booking failed";
-      
+
       toast.error(errorMessage);
     }
   };
@@ -549,7 +544,6 @@ const Home = () => {
   ======================================================= */
   const handleDestinationClick = (destination) => {
     if (!destination?.tour?._id) {
-      // If no tour associated, search by destination name
       if (destination?.name) {
         setSearchInput(destination.name);
         setSearch(destination.name);
@@ -561,7 +555,6 @@ const Home = () => {
       return;
     }
 
-    // Navigate to the specific tour detail
     navigate(`/tours/${destination.tour._id}`);
   };
 
@@ -629,22 +622,9 @@ const Home = () => {
             />
           </div>
 
-          {/* FILTER HEADER */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setShowFilters((previous) => !previous)}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-text-secondary hover:text-brand-primary transition cursor-pointer"
-            >
-              <SlidersHorizontal size={16} />
-              Tour Filters
-              <ChevronDown
-                size={15}
-                className={`transition-transform ${showFilters ? "rotate-180" : ""}`}
-              />
-            </button>
-
-            {hasActiveFilters && (
+          {/* FILTER HEADER - only the Clear filters button, no toggle */}
+          {hasActiveFilters && (
+            <div className="flex justify-end">
               <button
                 type="button"
                 onClick={clearFilters}
@@ -653,98 +633,99 @@ const Home = () => {
                 <X size={14} />
                 Clear filters
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* FILTERS */}
-          {showFilters && (
-            <div className="mt-4 pt-4 border-t border-border-subtle">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {/* PROVIDER */}
-                <div>
-                  <label className="block text-xs font-semibold text-text-secondary mb-1.5">
-                    Tour Provider
-                  </label>
-                  <div className="relative">
-                    <Building2
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                    <select
-                      value={provider}
-                      onChange={handleProviderChange}
-                      className="input-primary pl-10 pr-10 appearance-none cursor-pointer"
-                    >
-                      <option value="all">All Tours</option>
-                      <option value="platform">TourismOS Tours</option>
-                      <option value="company">Company Tours</option>
-                    </select>
-                    <ChevronDown
-                      size={15}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                  </div>
+          {/* FILTERS - always visible */}
+          <div className="mt-4 pt-4 border-t border-border-subtle">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {/* PROVIDER */}
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5">
+                  Tour Provider
+                </label>
+                <div className="relative">
+                  <Building2
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
+                  />
+                  <select
+                    value={provider}
+                    onChange={handleProviderChange}
+                    style={{ color: "#f59e0b" }}
+                    className="input-primary pl-10 pr-10 appearance-none cursor-pointer font-semibold"
+                  >
+                    <option value="all" style={{ color: "#f59e0b" }}>All Tours</option>
+                    <option value="platform" style={{ color: "#f59e0b" }}>TourismOS Tours</option>
+                    <option value="company" style={{ color: "#f59e0b" }}>Company Tours</option>
+                  </select>
+                  <ChevronDown
+                    size={15}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                  />
                 </div>
+              </div>
 
-                {/* COMPANY */}
-                <div>
-                  <label className="block text-xs font-semibold text-text-secondary mb-1.5">
-                    Travel Company
-                  </label>
-                  <div className="relative">
-                    <Building2
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                    <select
-                      value={companyId}
-                      onChange={handleCompanyChange}
-                      disabled={companies.length === 0}
-                      className="input-primary pl-10 pr-10 appearance-none cursor-pointer disabled:bg-bg-tertiary"
-                    >
-                      <option value="">All Companies</option>
-                      {companies.map((company) => (
-                        <option key={company._id} value={company._id}>
-                          {company.companyName}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={15}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                  </div>
+              {/* COMPANY */}
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5">
+                  Travel Company
+                </label>
+                <div className="relative">
+                  <Building2
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
+                  />
+                  <select
+                    value={companyId}
+                    onChange={handleCompanyChange}
+                    disabled={companies.length === 0}
+                    style={{ color: "#f59e0b" }}
+                    className="input-primary pl-10 pr-10 appearance-none cursor-pointer disabled:bg-bg-tertiary font-semibold"
+                  >
+                    <option value="" style={{ color: "#f59e0b" }}>All Companies</option>
+                    {companies.map((company) => (
+                      <option key={company._id} value={company._id} style={{ color: "#f59e0b" }}>
+                        {company.companyName}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={15}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                  />
                 </div>
+              </div>
 
-                {/* SORT */}
-                <div>
-                  <label className="block text-xs font-semibold text-text-secondary mb-1.5">
-                    Sort Tours
-                  </label>
-                  <div className="relative">
-                    <ArrowUpDown
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                    <select
-                      value={sort}
-                      onChange={handleSortChange}
-                      className="input-primary pl-10 pr-10 appearance-none cursor-pointer"
-                    >
-                      <option value="newest">Newest</option>
-                      <option value="popular">Most Popular</option>
-                      <option value="price-low">Price: Low to High</option>
-                      <option value="price-high">Price: High to Low</option>
-                    </select>
-                    <ChevronDown
-                      size={15}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
-                    />
-                  </div>
+              {/* SORT */}
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5">
+                  Sort Tours
+                </label>
+                <div className="relative">
+                  <ArrowUpDown
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
+                  />
+                  <select
+                    value={sort}
+                    onChange={handleSortChange}
+                    style={{ color: "#f59e0b" }}
+                    className="input-primary pl-10 pr-10 appearance-none cursor-pointer font-semibold"
+                  >
+                    <option value="newest" style={{ color: "#f59e0b" }}>Newest</option>
+                    <option value="popular" style={{ color: "#f59e0b" }}>Most Popular</option>
+                    <option value="price-low" style={{ color: "#f59e0b" }}>Price: Low to High</option>
+                    <option value="price-high" style={{ color: "#f59e0b" }}>Price: High to Low</option>
+                  </select>
+                  <ChevronDown
+                    size={15}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                  />
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
@@ -880,8 +861,8 @@ const Home = () => {
       ===================================================== */}
       {destinations.length > 0 && (
         <section className="border-none">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-            <div className="mb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
+            <div className="mb-6">
               <div className="flex items-center gap-2 mb-2">
                 <Globe2 size={18} className="text-brand-primary" />
                 <span className="text-sm font-semibold text-brand-primary">
@@ -938,36 +919,7 @@ const Home = () => {
       {/* =====================================================
           PROVIDER CTA
       ===================================================== */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-brand-primary px-6 py-12 sm:px-10 lg:px-14">
-          <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white/10 blur-3xl" />
-
-          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-semibold">
-                <Building2 size={14} />
-                For travel companies
-              </div>
-              <h2 className="mt-4 text-3xl sm:text-4xl font-semibold text-white">
-                Have an unforgettable experience to share?
-              </h2>
-              <p className="mt-3 text-sm sm:text-base text-white/80 leading-6">
-                Join TourismOS and showcase your tours
-                to travelers looking for their next adventure.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className="btn-primary shrink-0 gap-2 bg-white text-brand-primary hover:bg-white/90 shadow-lg shadow-brand-primary/20"
-            >
-              Become a Provider
-              <ArrowRight size={17} />
-            </button>
-          </div>
-        </div>
-      </section>
-
+      
       {/* =====================================================
           BOOKING MODAL
       ===================================================== */}

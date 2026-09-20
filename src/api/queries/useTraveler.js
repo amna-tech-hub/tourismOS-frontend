@@ -12,7 +12,7 @@ export const useTravelerProfile = () => {
   return useQuery({
     queryKey: QUERY_KEYS.TRAVELER.PROFILE,
     queryFn: () => authApi.getProfile(),
-    refetchInterval: 5000,
+ 
   });
 };
 
@@ -245,7 +245,7 @@ export const useTourById = (tourId) => {
     queryKey: QUERY_KEYS.TRAVELER.TOUR_BY_ID(tourId),
     queryFn: () => travelerApi.getTourById(tourId),
     enabled: !!tourId,
-    refetchInterval: 5000,
+  
   });
 };
 
@@ -255,7 +255,7 @@ export const useTourDetails = (tourId) => {
     queryKey: QUERY_KEYS.TRAVELER.TOUR_DETAILS(tourId),
     queryFn: () => travelerApi.getTourDetails(tourId),
     enabled: !!tourId,
-    refetchInterval: 5000,
+   
   });
 };
 

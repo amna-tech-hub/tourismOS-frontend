@@ -46,10 +46,6 @@ updateJournalEntry: async ({
     return data;
   },
 
-  // updateJournal: async ({ id, ...payload }) => {
-  //   const { data } = await api.patch(`/travel-journals/${id}`, payload);
-  //   return data;
-  // },
 
   deleteJournalEntry: async ({ id, entryId }) => {
     const { data } = await api.delete(`/travel-journals/${id}/entries/${entryId}`);

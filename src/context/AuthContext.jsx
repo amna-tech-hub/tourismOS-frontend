@@ -71,28 +71,39 @@ const handleForegroundNotification = useCallback(
 useForegroundNotifications(
   handleForegroundNotification
 );
+// ==========================================
+// CHECK HTTP-ONLY SESSION
+// ==========================================
 
-  // ==========================================
-  // CHECK HTTP-ONLY SESSION
-  // ==========================================
+const {
+  data: authData,
+  isLoading: isCheckingAuth,
+  isError: isAuthError,
+} = useCurrentAuthUser();
 
-  const {
-    data: authData,
-    isLoading: isCheckingAuth,
-  } = useCurrentAuthUser();
+const logoutMutation = useLogout();
 
-  const logoutMutation = useLogout();
+// ==========================================
+// SYNC SERVER USER
+// ==========================================
 
-  // ==========================================
-  // SYNC SERVER USER
-  // ==========================================
+useEffect(() => {
+  if (authData?.user) {
+    setUser(authData.user);
+    userService.setUser(authData.user);
+  }
+}, [authData]);
 
-  useEffect(() => {
-    if (authData?.user) {
-      setUser(authData.user);
-      userService.setUser(authData.user);
-    }
-  }, [authData]);
+// ==========================================
+// CLEAR USER IF SESSION IS INVALID
+// ==========================================
+
+useEffect(() => {
+  if (isAuthError) {
+    setUser(null);
+    userService.removeUser();
+  }
+}, [isAuthError]);
 
   // ==========================================
   // LOGIN

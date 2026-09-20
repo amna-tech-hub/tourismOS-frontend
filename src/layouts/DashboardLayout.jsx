@@ -14,7 +14,8 @@ import {
   FaSignOutAlt,
   FaBars,
   FaCircle,
-  FaCog
+  FaCog,
+  FaStar
 } from 'react-icons/fa';
 import { TypeOutline } from 'lucide-react';
 // Import the logo
@@ -46,11 +47,14 @@ export default function DashboardLayout({ portalType = 'super-admin' }) {
         { label: 'Company Profile', path: '/company/profile', icon: <FaBuilding className="text-base" /> },
       ];
     }
-    return [
-      { label: 'Dashboard', path: '/employee/dashboard', icon: <FaChartPie className="text-base" /> },
-      { label: 'Tours', path: '/employee/tours', icon: <FaMountain className="text-base" /> },
-      { label: 'Bookings', path: '/employee/bookings', icon: <FaTicketAlt className="text-base" /> },
-    ];
+  // In DashboardLayout.jsx — employee section
+return [
+  { label: 'Dashboard', path: '/employee/dashboard', icon: <FaChartPie className="text-base" /> },
+  { label: 'Tours', path: '/employee/tours', icon: <FaMountain className="text-base" /> },
+  { label: 'Bookings', path: '/employee/bookings', icon: <FaTicketAlt className="text-base" /> },
+  { label: 'Reviews', path: '/employee/reviews', icon: <FaStar className="text-base" /> },
+  { label: 'Profile', path: '/employee/profile', icon: <FaUserTie className="text-base" /> },
+];
   };
 
   const navItems = getNavItems();

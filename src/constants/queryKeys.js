@@ -21,7 +21,6 @@ export const QUERY_KEYS = {
     employeeId,
   ],
   },
-
   SUPER_ADMIN: {
     // Companies
     COMPANIES: (params) => ['super-admin', 'companies', params],
@@ -49,7 +48,6 @@ export const QUERY_KEYS = {
     DASHBOARD_ANALYSIS: ['admin', 'dashboard', 'platform-analysis'],
     TOUR_ANALYTICS: ['super-admin', 'tours', 'analytics'],
   },
-
   TRAVELER: {
     // Auth & Profile
     PROFILE: ['traveler', 'profile'],
@@ -80,7 +78,30 @@ UPDATE_JOURNAL: (id) => ["update-journal", id],
     // Tour Reviews
     TOUR_REVIEWS: (tourId) => ['traveler', 'reviews', 'tour', tourId],
   },
-  
+  EMPLOYEE: {
+    // ----- Tours -----
+    TOURS: ["employee", "tours"],
+    TOURS_LIST: (params) => ["employee", "tours", "list", params],
+    TOUR_DETAIL: (id) => ["employee", "tours", "detail", id],
+
+    // ----- Dashboard -----
+    DASHBOARD: ["employee", "dashboard"],
+
+    // ----- Bookings -----
+    BOOKINGS: ["employee", "bookings"],
+    BOOKINGS_LIST: (params) => ["employee", "bookings", "list", params],
+    BOOKING_DETAIL: (id) => ["employee", "bookings", "detail", id],
+    BOOKING_STATS: ["employee", "bookings", "stats"],
+
+    // ----- Reviews -----
+    REVIEWS: ["employee", "reviews"],
+    REVIEWS_LIST: (params) => ["employee", "reviews", "list", params],
+    RATING_STATS: ["employee", "reviews", "stats"],
+
+    // ----- Profile -----
+    PROFILE: ["employee", "profile"],
+    COMPANY: ["employee", "company"],
+  },
  NOTIFICATION_KEYS : {
   ALL: ["notifications"],
   UNREAD_COUNT: ["notifications", "unread-count"],

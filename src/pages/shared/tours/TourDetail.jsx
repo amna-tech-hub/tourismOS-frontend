@@ -1,6 +1,6 @@
-// TourDetail.jsx - Updated with consistent UI theme and booking functionality
+// TourDetail.jsx - Wrapped roadmap, separated info cards, white bg everywhere
 
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -8,10 +8,7 @@ import {
   CalendarDays,
   CheckCircle2,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Clock3,
-  HelpCircle,
   Info,
   MapPin,
   MessageSquare,
@@ -29,18 +26,13 @@ import {
   Waves,
   Flame,
   Activity,
-  Sparkles,
-  Building2,
-  User,
-  Banknote,
-  Globe2,
   Calendar,
   CreditCard,
   X,
   Loader2,
   ActivityIcon,
 } from "lucide-react";
-import { PenSquare, ThumbsUp, MessageCircle } from 'lucide-react';
+import { PenSquare } from 'lucide-react';
 
 import {
   useCheckTourSafety,
@@ -93,7 +85,7 @@ const getSafetyConfig = (status) => {
         label: "Safe to Travel",
         icon: CheckCircle2,
         color: "text-emerald-600",
-        bg: "bg-emerald-50",
+        bg: "bg-white",
         border: "border-emerald-200",
         badge: "bg-emerald-100 text-emerald-700",
         dot: "bg-emerald-500",
@@ -103,7 +95,7 @@ const getSafetyConfig = (status) => {
         label: "Travel With Caution",
         icon: AlertTriangle,
         color: "text-yellow-600",
-        bg: "bg-yellow-50",
+        bg: "bg-white",
         border: "border-yellow-200",
         badge: "bg-yellow-100 text-yellow-700",
         dot: "bg-yellow-500",
@@ -113,7 +105,7 @@ const getSafetyConfig = (status) => {
         label: "Travel Not Recommended",
         icon: ShieldAlert,
         color: "text-rose-600",
-        bg: "bg-rose-50",
+        bg: "bg-white",
         border: "border-rose-200",
         badge: "bg-rose-100 text-rose-700",
         dot: "bg-rose-500",
@@ -123,7 +115,7 @@ const getSafetyConfig = (status) => {
         label: "Safety Information",
         icon: Info,
         color: "text-slate-600",
-        bg: "bg-slate-50",
+        bg: "bg-white",
         border: "border-slate-200",
         badge: "bg-slate-100 text-slate-700",
         dot: "bg-slate-500",
@@ -161,9 +153,9 @@ const Stars = ({ value = 0, size = 16 }) => {
 const SafetyBadge = ({ status }) => {
   const config = getSafetyConfig(status);
   const Icon = config.icon;
-  
+
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${config.bg} ${config.border} border`}>
+    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white ${config.border} border`}>
       <Icon className={`w-4 h-4 ${config.color}`} />
       <span className={`text-xs font-semibold ${config.color}`}>
         {config.label}
@@ -191,7 +183,7 @@ const WeatherCard = ({ weather }) => {
       {items.map((item) => {
         const Icon = item.icon;
         return (
-          <div key={item.label} className="bg-white rounded-xl border border-slate-200 p-3">
+          <div key={item.label} className="bg-white p-3">
             <div className="flex items-center gap-2 text-slate-500 mb-2">
               <Icon className="w-4 h-4" />
               <span className="text-xs font-medium">{item.label}</span>
@@ -210,13 +202,11 @@ const WeatherCard = ({ weather }) => {
 
 const DisasterItem = ({ label, active, icon: Icon }) => {
   return (
-    <div className={`flex items-center justify-between p-3 rounded-xl border ${
-      active ? "bg-rose-50 border-rose-200" : "bg-emerald-50 border-emerald-200"
+    <div className={`flex items-center justify-between p-3 rounded-xl border bg-white ${
+      active ? "border-rose-200" : "border-emerald-200"
     }`}>
       <div className="flex items-center gap-2">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-          active ? "bg-rose-100" : "bg-emerald-100"
-        }`}>
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-white`}>
           <Icon className={`w-4 h-4 ${active ? "text-rose-500" : "text-emerald-500"}`} />
         </div>
         <span className="text-sm font-medium text-slate-700">{label}</span>
@@ -237,21 +227,18 @@ const ItineraryDay = ({ day, safety }) => {
   const [open, setOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
-  // Correctly extracts from day.coordinates: { latitude: ..., longitude: ... }
   const lat = day?.latitude;
   const lng = day?.longitude;
-// TEMPORARY DEBUG LOG
- 
+
   const safetyConfig = safety?.safety ? getSafetyConfig(safety.safety.status) : null;
   const SafetyIcon = safetyConfig?.icon || ShieldCheck;
 
   return (
-    <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white hover:shadow-md transition-shadow">
-      {/* Header Button */}
+    <div className="bg-white">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 hover:bg-yellow-50/30 transition-colors text-left"
+        className="w-full flex items-center justify-between py-5 hover:bg-yellow-50/30 transition-colors text-left bg-white"
       >
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-300 to-yellow-400 text-white flex items-center justify-center font-bold text-lg shrink-0">
@@ -281,13 +268,11 @@ const ItineraryDay = ({ day, safety }) => {
         </div>
       </button>
 
-      {/* Accordion Content */}
       {open && (
-        <div className="border-t border-slate-100 p-6 space-y-6 bg-yellow-50/20">
-          
-          {/* Map Section */}
+        <div className="pl-16 pr-4 pb-6 space-y-6 bg-white">
+
           {lat && lng && (
-            <div className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+            <div className="bg-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-yellow-500" />
@@ -295,7 +280,7 @@ const ItineraryDay = ({ day, safety }) => {
                     Location Map ({day.location})
                   </span>
                 </div>
-                
+
                 <button
                   type="button"
                   onClick={() => setShowMap(!showMap)}
@@ -306,26 +291,23 @@ const ItineraryDay = ({ day, safety }) => {
               </div>
 
               {showMap && (
-                <div className="mt-4 rounded-xl overflow-hidden border border-slate-200">
+                <div className="mt-4 rounded-xl overflow-hidden">
                   <MyMap lat={lat} lng={lng} locationName={day.location}/>
                 </div>
               )}
             </div>
-
           )}
 
-          {/* Description */}
           {day.description && (
-            <div className="bg-white rounded-xl p-4 border border-slate-100">
+            <div className="bg-white">
               <p className="text-sm leading-7 text-slate-600">
                 {day.description}
               </p>
             </div>
           )}
 
-          {/* Activities */}
           {day.activities?.length > 0 && (
-            <div>
+            <div className="bg-white">
               <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
                 <ActivityIcon className="w-4 h-4 text-yellow-500" />
                 Activities
@@ -339,7 +321,7 @@ const ItineraryDay = ({ day, safety }) => {
                   return (
                     <div
                       key={index}
-                      className="flex items-center gap-3.5 p-3.5 rounded-xl bg-white transition-colors shadow-sm"
+                      className="flex items-center gap-3.5 p-3.5 rounded-xl bg-white"
                     >
                       {imageUrl ? (
                         <img
@@ -348,7 +330,7 @@ const ItineraryDay = ({ day, safety }) => {
                           className="w-24 h-24 rounded-xl object-cover shrink-0"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-slate-100">
+                        <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-white">
                           <MapPin className="w-6 h-6 text-yellow-400" />
                         </div>
                       )}
@@ -362,11 +344,10 @@ const ItineraryDay = ({ day, safety }) => {
             </div>
           )}
 
-          {/* Weather & Safety */}
           {safety && (
-            <div className="space-y-4">
+            <div className="space-y-4 bg-white">
               {safety.weather && (
-                <div>
+                <div className="bg-white">
                   <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
                     <CloudSun className="w-4 h-4 text-blue-500" />
                     Weather Conditions
@@ -376,7 +357,7 @@ const ItineraryDay = ({ day, safety }) => {
               )}
 
               {safety.disasters && (
-                <div>
+                <div className="bg-white">
                   <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-emerald-500" />
                     Safety Alerts
@@ -391,9 +372,9 @@ const ItineraryDay = ({ day, safety }) => {
               )}
 
               {safety.safety && safety.safety.reasons?.length > 0 && (
-                <div className={`rounded-xl border p-4 ${safetyConfig.bg} ${safetyConfig.border}`}>
+                <div className={`rounded-xl border p-4 bg-white ${safetyConfig.border}`}>
                   <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${safetyConfig.bg}`}>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white`}>
                       <SafetyIcon className={`w-5 h-5 ${safetyConfig.color}`} />
                     </div>
                     <div>
@@ -420,99 +401,6 @@ const ItineraryDay = ({ day, safety }) => {
 };
 
 /* =========================================================
-   REVIEW SLIDER
-========================================================= */
-
-const ReviewSlider = ({ reviews }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const reviewsPerPage = 2;
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalPages);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
-  };
-
-  const visibleReviews = reviews.slice(
-    currentIndex * reviewsPerPage,
-    (currentIndex + 1) * reviewsPerPage
-  );
-
-  if (reviews.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-slate-700">No reviews yet</h3>
-        <p className="text-sm text-slate-500 mt-1">Be the first to share your experience!</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative">
-      <div className="grid md:grid-cols-2 gap-4">
-        {visibleReviews.map((review) => {
-          const reviewer = review?.user?.name || review?.userName || review?.name || "Traveler";
-          const rating = Number(review?.rating || 0);
-          const text = review?.comment || review?.review || "";
-
-          return (
-            <div key={review?._id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-semibold text-slate-900">{reviewer}</p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <Stars value={rating} size={14} />
-                    <span className="text-xs text-slate-500">{rating.toFixed(1)}</span>
-                  </div>
-                </div>
-                {review?.createdAt && (
-                  <span className="text-xs text-slate-400 shrink-0">
-                    {new Date(review.createdAt).toLocaleDateString()}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-slate-600 leading-7 mt-4">{text}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3 mt-6">
-          <button
-            onClick={prevSlide}
-            className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 text-slate-600" />
-          </button>
-          <div className="flex gap-1.5">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                  index === currentIndex ? "bg-yellow-400" : "bg-slate-300"
-                }`}
-              />
-            ))}
-          </div>
-          <button
-            onClick={nextSlide}
-            className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-          >
-            <ChevronRight className="w-5 h-5 text-slate-600" />
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-/* =========================================================
    REVIEW FORM
 ========================================================= */
 
@@ -527,13 +415,12 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isCheckingAuth) return;
-    
-    // Check if user has already reviewed this tour
+
     if (userHasReviewed) {
       toast.success("You've already reviewed this tour! You can only add one review per tour.");
       return;
     }
-    
+
     if (!isAuthenticated) {
       navigate("/auth/register", {
         state: {
@@ -557,20 +444,18 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
       setTimeout(() => setSubmitted(false), 3000);
     } catch (error) {
       console.error("Create Review Error:", error);
-      // Check if error is because user already reviewed
-      if (error?.response?.data?.message?.includes("already reviewed") || 
+      if (error?.response?.data?.message?.includes("already reviewed") ||
           error?.response?.data?.message?.includes("You have already reviewed")) {
         toast.success("You've already reviewed this tour! You can only add one review per tour.");
       }
     }
   };
 
-  // If user has already reviewed, show a message instead of the form
   if (userHasReviewed && !submitted) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-white text-yellow-600 flex items-center justify-center">
             <MessageSquare size={19} />
           </div>
           <div>
@@ -578,7 +463,7 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
             <p className="text-sm text-slate-500">You can only add one review per tour</p>
           </div>
         </div>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
+        <div className="bg-white rounded-xl p-4 text-center">
           <CheckCircle2 className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
           <p className="font-semibold text-yellow-700">You've Already Reviewed This Tour!</p>
           <p className="text-sm text-yellow-600 mt-1">Thank you for sharing your experience. You can only submit one review per tour.</p>
@@ -588,9 +473,9 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+    <div className="bg-white">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-white text-yellow-600 flex items-center justify-center">
           <MessageSquare size={19} />
         </div>
         <div>
@@ -600,7 +485,7 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
       </div>
 
       {submitted ? (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
+        <div className="bg-white rounded-xl p-4 text-center">
           <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
           <p className="font-semibold text-emerald-700">Review Submitted!</p>
           <p className="text-sm text-emerald-600">Thank you for sharing your experience.</p>
@@ -644,7 +529,7 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
               onChange={(e) => setComment(e.target.value)}
               rows={4}
               placeholder="Share your experience with this tour..."
-              className="w-full mt-2 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors resize-none text-sm"
+              className="w-full mt-2 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors resize-none text-sm bg-white"
             />
           </div>
 
@@ -669,10 +554,10 @@ const ReviewForm = ({ tourId, isAuthenticated, isCheckingAuth, userHasReviewed }
    BOOKING MODAL
 ========================================================= */
 
-const BookingModal = ({ 
-  tour, 
-  isOpen, 
-  onClose, 
+const BookingModal = ({
+  tour,
+  isOpen,
+  onClose,
   onConfirm,
   isProcessing,
   error: externalError
@@ -684,7 +569,7 @@ const BookingModal = ({
 
   useEffect(() => {
     if (externalError) {
-      const errorMessage = 
+      const errorMessage =
         externalError?.response?.data?.message ||
         externalError?.response?.data?.error?.message ||
         externalError?.message ||
@@ -711,12 +596,12 @@ const BookingModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-    
+
     if (!travelDate) {
       setError("Please select a travel date");
       return;
     }
-    
+
     if (!participants || participants < 1) {
       setError("Please enter at least 1 traveler.");
       return;
@@ -738,8 +623,7 @@ const BookingModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+        <div className="flex items-center justify-between p-6 bg-white">
           <div>
             <h2 className="text-xl font-semibold text-slate-900">Book Tour</h2>
             <p className="text-sm text-slate-500 mt-1 line-clamp-1">{tour.title}</p>
@@ -753,10 +637,9 @@ const BookingModal = ({
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white">
           {error && (
-            <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3">
+            <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-white px-4 py-3">
               <AlertTriangle size={18} className="text-rose-500 mt-0.5 shrink-0" />
               <div>
                 <p className="text-sm font-medium text-rose-700">Booking unavailable</p>
@@ -765,8 +648,7 @@ const BookingModal = ({
             </div>
           )}
 
-          {/* Tour Price Display */}
-          <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600">Price per person</span>
               <span className="text-lg font-bold text-slate-900">
@@ -775,8 +657,7 @@ const BookingModal = ({
             </div>
           </div>
 
-          {/* Participants */}
-          <div>
+          <div className="bg-white">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               <Users size={16} className="inline mr-2" />
               Number of Travelers
@@ -791,7 +672,7 @@ const BookingModal = ({
                 setParticipants(isNaN(value) ? "" : Math.max(1, value));
                 setError("");
               }}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition bg-white"
               required
             />
             {tour.maxParticipants && (
@@ -801,8 +682,7 @@ const BookingModal = ({
             )}
           </div>
 
-          {/* Travel Date */}
-          <div>
+          <div className="bg-white">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               <Calendar size={16} className="inline mr-2" />
               Travel Date
@@ -815,13 +695,12 @@ const BookingModal = ({
                 setError("");
               }}
               min={new Date().toISOString().split("T")[0]}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition bg-white"
               required
             />
           </div>
 
-          {/* Payment Provider */}
-          <div>
+          <div className="bg-white">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               <CreditCard size={16} className="inline mr-2" />
               Payment Method
@@ -829,7 +708,7 @@ const BookingModal = ({
             <select
               value={provider}
               onChange={(e) => setProvider(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 outline-none transition bg-white"
             >
               <option value="stripe">Stripe (Credit/Debit Card)</option>
               <option value="jazzcash">JazzCash</option>
@@ -837,8 +716,7 @@ const BookingModal = ({
             </select>
           </div>
 
-          {/* Total */}
-          <div className="border-t border-slate-100 pt-4">
+          <div className="pt-4 bg-white">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-slate-700">Total Amount</span>
               <span className="text-2xl font-bold text-yellow-600">
@@ -847,13 +725,12 @@ const BookingModal = ({
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-2 bg-white">
             <button
               type="button"
               onClick={onClose}
               disabled={isProcessing}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition disabled:opacity-50"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-white transition disabled:opacity-50 bg-white"
             >
               Cancel
             </button>
@@ -887,11 +764,9 @@ export default function TourDetail() {
   const { id: tourId } = useParams();
   const { isAuthenticated, isCheckingAuth, user } = useAuth();
 
-  // Booking state
   const [selectedTour, setSelectedTour] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Booking hooks
   const createBookingMutation = useCreateBooking();
   const { redirectToPayment, isProcessing: isPaymentProcessing } = usePaymentRedirection();
 
@@ -918,13 +793,11 @@ export default function TourDetail() {
   const dailySafety = data?.dailySafety || data?.data?.dailySafety || null;
 
   const reviews = useMemo(() => getReviews(reviewsData), [reviewsData]);
-console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
 
-  // Check if current user has already reviewed this tour
   const userHasReviewed = useMemo(() => {
     if (!user || !reviews.length) return false;
-    return reviews.some(review => 
-      review.user?._id === user._id || 
+    return reviews.some(review =>
+      review.user?._id === user._id ||
       review.userId === user._id ||
       review.user === user._id
     );
@@ -938,6 +811,7 @@ console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
     const all = [coverImage, ...images].filter(Boolean);
     return [...new Set(all)];
   }, [tour, coverImage]);
+
   const safetySummary = useMemo(() => {
     if (!dailySafety?.length) return { safe: 0, warning: 0, danger: 0 };
     return dailySafety.reduce(
@@ -951,10 +825,6 @@ console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
       { safe: 0, warning: 0, danger: 0 }
     );
   }, [dailySafety]);
-
-  // =========================================================
-  // BOOKING HANDLERS (same as Home page)
-  // =========================================================
 
   const handleBook = (tour) => {
     if (!isAuthenticated) {
@@ -978,25 +848,25 @@ console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
         travelDate: bookingData.travelDate,
         provider: bookingData.provider || 'stripe',
       };
-      
+
       const response = await createBookingMutation.mutateAsync(cleanBookingData);
-      
+
       toast.success("Booking created! Redirecting to payment...");
-      
+
       const result = await redirectToPayment(response);
-      
+
       if (result?.success && result?.method === 'manual') {
         toast.success("Booking confirmed successfully!");
         navigate(`/dashboard/bookings`);
       }
-      
+
       setIsModalOpen(false);
       setSelectedTour(null);
-      
+
     } catch (error) {
       console.error('Booking error:', error);
-      const errorMessage = error?.response?.data?.message || 
-                           error?.message || 
+      const errorMessage = error?.response?.data?.message ||
+                           error?.message ||
                            "Booking failed";
       toast.error(errorMessage);
     }
@@ -1008,17 +878,14 @@ console.log(data,"data",tour,"tour",dailySafety,"dailysafety");
       setSelectedTour(null);
     }
   };
-const [showReviewForm, setShowReviewForm] = useState(false);
+
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const isProcessing = createBookingMutation.isPending || isPaymentProcessing;
 
-  // =========================================================
-  // RENDER
-  // =========================================================
-
   if (isPending) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="animate-pulse space-y-8">
             <div className="h-6 w-32 bg-slate-200 rounded" />
@@ -1042,15 +909,15 @@ const [showReviewForm, setShowReviewForm] = useState(false);
 
   if (isError || !tour) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
-        <div className="bg-white rounded-3xl p-10 text-center max-w-lg shadow-sm border border-slate-100">
+      <div className="min-h-screen bg-white flex items-center justify-center px-6">
+        <div className="bg-white rounded-3xl p-10 text-center max-w-lg">
           <Info size={38} className="mx-auto text-yellow-500 mb-4" />
           <h1 className="text-2xl font-bold text-slate-900">Tour Unavailable</h1>
           <p className="text-slate-600 mt-2">
             {error?.response?.data?.message || "We couldn't load this tour. Please try again."}
           </p>
           <button
-            onClick={() => navigate("/tours")}
+            onClick={() => navigate("/")}
             className="mt-6 px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
           >
             Browse Tours
@@ -1061,432 +928,483 @@ const [showReviewForm, setShowReviewForm] = useState(false);
   }
 
   const rating = Number(tour.ratingsAverage || 0);
+
   return (
-    <div className="min-h-screen bg-slate-50 max-w-7xl mx-auto  pb-10 px-4 sm:px-6 md:px-7 px-4 sm:px-6 lg:px-8 py-6 my-4 space-y-7">
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors"
-        >
-          <ArrowLeft size={17} />
-          Back to tours
-        </button>
-      </div>
+    <div className="w-full min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-9 pb-16 bg-white">
 
- <section className="mx-auto px-2 sm:px-3 lg:px-4">
-  <div className="grid lg:grid-cols-2 gap-10">
-    {/* Left Column - Details */}
-    <div className="space-y-5">
-      {/* Title with first letter capitalized */}
-      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
-        {tour.title.charAt(0).toUpperCase() + tour.title.slice(1)}
-      </h1>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-5">
-        <div>
-          <Clock3 size={22} className="text-yellow-400" />
-          <p className="text-xs text-slate-500 mt-2">Duration</p>
-          <p className="font-semibold text-slate-900 text-lg mt-0.5">
-            {tour.duration} {Number(tour.duration) === 1 ? "day" : "days"}
-          </p>
-        </div>
-        <div>
-          <CalendarDays size={22} className="text-yellow-400" />
-          <p className="text-xs text-slate-500 mt-2">Best Time</p>
-          <p className="font-semibold text-slate-900 text-lg mt-0.5">
-            {tour.bestTimeToVisit || "Anytime"}
-          </p>
-        </div>
-        <div>
-          <Users size={22} className="text-yellow-400" />
-          <p className="text-xs text-slate-500 mt-2">Group Size</p>
-          <p className="font-semibold text-slate-900 text-lg mt-0.5">
-            Up to {tour.maxParticipants || "—"}
-          </p>
-        </div>
-      </div>
-
-      {/* Rating & Reviews */}
-      <div className="flex flex-wrap items-center gap-4 pt-1">
-        <div className="flex items-center gap-2">
-          <Stars value={rating} size={20} />
-          <span className="font-semibold text-slate-900">{rating.toFixed(1)}</span>
-        </div>
-        <span className="text-slate-500 text-sm">
-          {tour.ratingsQuantity || 0} {tour.ratingsQuantity === 1 ? "review" : "reviews"}
-        </span>
-        <span className="w-px h-5 bg-slate-300" />
-        <span className="text-sm text-slate-500">
-          {tour.maxParticipants || 0} max travelers
-        </span>
-      </div>
-
-      {/* Price & Book */}
-      <div className="pt-2">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm text-slate-500">Tour Price</p>
-            <p className="text-3xl font-bold text-slate-900">
-              {formatCurrency(tour.price)}
-            </p>
-            <p className="text-sm text-slate-500">per traveler</p>
-          </div>
+        {/* Back Button */}
+        <div className="mt-6 bg-white">
           <button
-            onClick={() => handleBook(tour)}
-            className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap"
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center mt-8 text-sm text-slate-500 hover:text-slate-700 transition-colors"
           >
-            Book Now
-            <ArrowRight size={18} />
+            <ArrowLeft size={17} />
+            Back to tours
           </button>
         </div>
-        <div className="flex items-center gap-2 mt-4 text-sm text-slate-500">
-          <ShieldCheck size={17} className="text-yellow-400" />
-          Secure booking
-        </div>
+
+        <section className="mt-4 bg-white">
+          <div className="grid lg:grid-cols-2 gap-10">
+
+            {/* LEFT COLUMN */}
+            <div className="bg-white rounded-2xl border border-slate-100  ">
+
+              {/* TITLE */}
+              <div className="bg-white">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                  {tour.title.charAt(0).toUpperCase() + tour.title.slice(1)}
+                </h1>
+
+                
+              </div>
+   {/* PRICE + BOOKING */}
+             <div className="bg-white">
+  <div className="flex flex-col gap-5">
+    {/* Price + Max Travelers on one line */}
+    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+      <div>
+        <span className="text-sm text-slate-800">Tour Price{"  "} </span>
+        <span className="text-2xl  text-yellow-400 mt-1">
+          {formatCurrency(tour.price)}
+        </span>
+        <span className="text-sm text-slate-800 mt-1">{" "}per traveler</span>
       </div>
 
-      {/* Description */}
-      <div className="pt-4 border-t border-slate-200/60">
-        <h2 className="text-xl font-bold text-slate-900 mb-3">About This Tour</h2>
-        <p className="text-slate-600 leading-8">{tour.description}</p>
-      </div>
     </div>
 
-    {/* Right Column - Gallery */}
-    <div>
-      {/* Check if there are 3 or more thumbnails */}
-      {galleryImages.length >= 4 ? (
-        // 3 or more thumbnails - Side layout
-        <div className="flex gap-3">
-          {/* Main Image */}
-          {coverImage ? (
-            <div className="relative flex-1 h-[420px] lg:h-[500px] rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
-              <img
-                src={coverImage}
-                alt={tour.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="relative flex-1 h-[420px] lg:h-[500px] rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border-2 border-dashed border-slate-300">
-              <div className="text-center text-slate-400">
-                <MapPin size={48} className="mx-auto mb-2" />
-                <p className="text-sm">No cover image</p>
-              </div>
-            </div>
+  
+  </div>
+</div>
+              {/* TOUR ROADMAP */}
+              {tour.itinerary?.length > 0 && (
+                <div className="mt-1 bg-white">
+                  <div className="mb-5 bg-white">
+                   
+                    <p className="text-lg text-slate-800 mt-1">
+                      Your journey at a glance
+                    </p>
+                  </div>
+
+               {/* DESKTOP / TABLET ROADMAP - wraps automatically */}
+<div className="hidden sm:block bg-white">
+  <div className="flex flex-wrap gap-y-8">
+    {tour.itinerary.map((day, index) => {
+      const ITEMS_PER_ROW = 4;
+      const isLastInRow = (index + 1) % ITEMS_PER_ROW === 0;
+      const isVeryLast = index === tour.itinerary.length - 1;
+      const showLine = !isLastInRow && !isVeryLast;
+
+      return (
+        <div
+          key={day._id || day.day}
+          className="relative flex flex-col items-center"
+          style={{ width: "25%" }}
+        >
+          {/* Connecting line: hidden on last item of each row and on very last item */}
+          {showLine && (
+            <div className="absolute top-6 left-1/2 w-full border-t-2 border-dashed border-yellow-300" />
           )}
 
-          {/* Thumbnails Stack */}
-          <div className="flex flex-col gap-3 w-24 lg:w-28">
-            {galleryImages.slice(1, 5).map((image, index) => (
-              <div
-                key={index}
-                className="relative flex-1 rounded-xl overflow-hidden bg-slate-100 shadow-sm"
-              >
-                <img
-                  src={image}
-                  alt={`Gallery ${index + 2}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
+          <div className="relative z-10 w-12 h-12 rounded-full bg-yellow-400 border-4 border-white shadow-sm flex items-center justify-center">
+            <span className="text-sm font-bold text-white">
+              {day.day}
+            </span>
           </div>
-        </div>
-      ) : galleryImages.length >= 2 ? (
-        // 1-2 thumbnails - Bottom layout
-        <div className="space-y-3">
-          {/* Main Image */}
-          {coverImage ? (
-            <div className="relative h-[320px] lg:h-[400px] rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
-              <img
-                src={coverImage}
-                alt={tour.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="relative h-[320px] lg:h-[400px] rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border-2 border-dashed border-slate-300">
-              <div className="text-center text-slate-400">
-                <MapPin size={48} className="mx-auto mb-2" />
-                <p className="text-sm">No cover image</p>
-              </div>
-            </div>
-          )}
 
-          {/* Thumbnails Grid at Bottom */}
-          <div className="grid grid-cols-2 gap-3">
-            {galleryImages.slice(1, 3).map((image, index) => (
-              <div
-                key={index}
-                className="relative h-[80px] lg:h-[100px] rounded-xl overflow-hidden bg-slate-100 shadow-sm"
-              >
-                <img
-                  src={image}
-                  alt={`Gallery ${index + 2}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
+          <div className="text-center mt-3 px-1">
+            <div className="flex justify-center items-center gap-1">
+              <MapPin size={15} className="text-yellow-500 shrink-0" />
+              <h3 className="font-semibold text-slate-900 text-sm">
+                {day.location || "Location"}
+              </h3>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Day {day.day}
+            </p>
           </div>
         </div>
-      ) : (
-        // Only cover image - No thumbnails
-        <div>
-          {coverImage ? (
-            <div className="relative h-[420px] lg:h-[500px] rounded-2xl overflow-hidden bg-slate-100 shadow-sm">
-              <img
-                src={coverImage}
-                alt={tour.title}
-                className="w-full h-full object-cover"
-              />
+      );
+    })}
+  </div>
+</div>
+
+{/* MOBILE ROADMAP */}
+<div className="sm:hidden bg-white">
+  <div className="relative">
+    <div className="absolute left-[23px] top-6 bottom-6 border-l-2 border-dashed border-yellow-300" />
+    <div className="space-y-6">
+      {tour.itinerary.map((day) => (
+        <div
+          key={day._id || day.day}
+          className="relative flex items-center gap-4"
+        >
+          <div className="relative z-10 shrink-0 w-12 h-12 rounded-full bg-yellow-400 border-4 border-white shadow-sm flex items-center justify-center">
+            <span className="text-sm font-bold text-white">
+              {day.day}
+            </span>
+          </div>
+          <div>
+            <p className="text-xs text-slate-500">
+              Day {day.day}
+            </p>
+            <div className="flex items-center gap-1 mt-0.5">
+              <MapPin size={15} className="text-yellow-500" />
+              <h3 className="font-semibold text-slate-900">
+                {day.location || "Location"}
+              </h3>
             </div>
-          ) : (
-            <div className="relative h-[420px] lg:h-[500px] rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border-2 border-dashed border-slate-300">
-              <div className="text-center text-slate-400">
-                <MapPin size={48} className="mx-auto mb-2" />
-                <p className="text-sm">No cover image</p>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-      )}
+      ))}
     </div>
   </div>
-</section>
+</div>
+                </div>
+              )}
 
-      {/* Itinerary with Safety */}
-      {Array.isArray(tour.itinerary) && tour.itinerary.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900">Itinerary & Safety</h2>
-              <p className="text-sm text-slate-500 mt-1">Daily plan with real-time safety updates</p>
+           <div className="flex flex-wrap items-center gap-3 mt-4">
+                  <div className="flex items-center gap-2">
+                    <Stars value={rating} size={20} className="text-yellow-400"/>
+                    <span className="font-semibold text-slate-900">
+                      {rating.toFixed(1)}
+                    </span>
+                  </div>
+                  <span className="w-px h-5" />
+                  <span className="text-sm text-slate-500">
+                  </span>
+                </div>
+  {/* Book Now button on next line */}
+    <button
+      onClick={() => handleBook(tour)}
+      className="px-6 py-2.5 mt-3 bg-gradient-to-r from-yellow-400 to-yellow-400 text-white font-semibold rounded-xl hover:shadow-lg transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start"
+    >
+      Book Now
+      <ArrowRight size={18} />
+    </button>
+              {/* ABOUT TOUR */}
+              <div className="pt-2 mt-6 bg-white ">
+                <h1 className="text-xl font-bold text-slate-900 mb-3">
+                  About This Tour
+                </h1>
+                <p className="text-slate-600 leading-8">
+                  {tour.description}
+                </p>
+              </div>
+
             </div>
-            {dailySafety?.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2">
-                {safetySummary.safe > 0 && (
-                  <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    {safetySummary.safe} Safe
-                  </span>
-                )}
-                {safetySummary.warning > 0 && (
-                  <span className="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5" />
-                    {safetySummary.warning} Warning
-                  </span>
-                )}
-                {safetySummary.danger > 0 && (
-                  <span className="px-3 py-1.5 bg-rose-100 text-rose-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    {safetySummary.danger} Danger
-                  </span>
-                )}
+
+            {/* RIGHT COLUMN - GALLERY */}
+            <div className="bg-white">
+              {galleryImages.length >= 4 ? (
+                <div className="flex gap-3">
+                  {coverImage ? (
+                    <div className="relative flex-1 h-[420px] lg:h-[500px] rounded-2xl overflow-hidden bg-white shadow-sm">
+                      <img
+                        src={coverImage}
+                        alt={tour.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative flex-1 h-[420px] lg:h-[500px] rounded-2xl bg-white flex items-center justify-center">
+                      <div className="text-center text-slate-400">
+                        <MapPin size={48} className="mx-auto mb-2" />
+                        <p className="text-sm">No cover image</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3 w-24 lg:w-28">
+                    {galleryImages.slice(1, 5).map((image, index) => (
+                      <div
+                        key={index}
+                        className="relative flex-1 rounded-xl overflow-hidden bg-white shadow-sm"
+                      >
+                        <img
+                          src={image}
+                          alt={`Gallery ${index + 2}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : galleryImages.length >= 2 ? (
+                <div className="space-y-3 bg-white">
+                  {coverImage ? (
+                    <div className="relative h-[320px] lg:h-[400px] rounded-2xl overflow-hidden bg-white shadow-sm">
+                      <img
+                        src={coverImage}
+                        alt={tour.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative h-[320px] lg:h-[400px] rounded-2xl bg-white flex items-center justify-center">
+                      <div className="text-center text-slate-400">
+                        <MapPin size={48} className="mx-auto mb-2" />
+                        <p className="text-sm">No cover image</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {galleryImages.slice(1, 3).map((image, index) => (
+                      <div
+                        key={index}
+                        className="relative h-[80px] lg:h-[100px] rounded-xl overflow-hidden bg-white shadow-sm"
+                      >
+                        <img
+                          src={image}
+                          alt={`Gallery ${index + 2}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white">
+                  {coverImage ? (
+                    <div className="relative h-[420px] lg:h-[500px] rounded-2xl overflow-hidden bg-white shadow-sm">
+                      <img
+                        src={coverImage}
+                        alt={tour.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative h-[420px] lg:h-[500px] rounded-2xl bg-white flex items-center justify-center">
+                      <div className="text-center text-slate-400">
+                        <MapPin size={48} className="mx-auto mb-2" />
+                        <p className="text-sm">No cover image</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+          </div>
+        </section>
+
+        {/* Itinerary with Safety */}
+        {Array.isArray(tour.itinerary) && tour.itinerary.length > 0 && (
+          <section className="py-8 bg-white">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 bg-white">
+              <div className="bg-white">
+                <h2 className="text-2xl font-bold text-slate-900">Itinerary & Safety</h2>
+                <p className="text-sm text-slate-500 mt-1">Daily plan with real-time safety updates</p>
+              </div>
+              {dailySafety?.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
+                  {safetySummary.safe > 0 && (
+                    <span className="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      {safetySummary.safe} Safe
+                    </span>
+                  )}
+                  {safetySummary.warning > 0 && (
+                    <span className="px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full flex items-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      {safetySummary.warning} Warning
+                    </span>
+                  )}
+                  {safetySummary.danger > 0 && (
+                    <span className="px-3 py-1.5 bg-rose-100 text-rose-700 text-xs font-semibold rounded-full flex items-center gap-1">
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                      {safetySummary.danger} Danger
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4 bg-white">
+              {tour.itinerary.map((day) => {
+                const safety = dailySafety?.find((item) => item.day === day.day);
+                return <ItineraryDay key={day._id || day.day} day={day} safety={safety} />;
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Travel Information */}
+        <section className="py-8 bg-white">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 bg-white">
+            {Array.isArray(tour.travelTips) && tour.travelTips.length > 0 && (
+              <div className="bg-white rounded-2xl border border-slate-100 p-6">
+                <div className="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center">
+                  <CheckCircle2 size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mt-4">Travel Tips</h3>
+                <ul className="space-y-2 mt-3">
+                  {tour.travelTips.map((tip, index) => (
+                    <li key={index} className="flex gap-2 text-sm text-slate-600">
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {Array.isArray(tour.importantNotes) && tour.importantNotes.length > 0 && (
+              <div className="bg-white rounded-2xl border border-slate-100 p-6">
+                <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                  <Info size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mt-4">Important Notes</h3>
+                <ul className="space-y-2 mt-3">
+                  {tour.importantNotes.map((note, index) => (
+                    <li key={index} className="flex gap-2 text-sm text-slate-600">
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {tour.budgetBreakdown && (
+              <div className="bg-white rounded-2xl border border-slate-100 p-6">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <WalletCards size={20} />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mt-4">Budget Breakdown</h3>
+                <div className="space-y-2 mt-3">
+                  {Object.entries(tour.budgetBreakdown).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between gap-4">
+                      <span className="text-sm text-slate-500 capitalize">{key}</span>
+                      <span className="text-sm font-semibold text-slate-900">{formatCurrency(value)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
+        </section>
 
-          <div className="space-y-4">
-            {tour.itinerary.map((day) => {
-              const safety = dailySafety?.find((item) => item.day === day.day);
-              return <ItineraryDay key={day._id || day.day} day={day} safety={safety} />;
-            })}
+        {/* FAQ */}
+        {Array.isArray(tour.faqs) && tour.faqs.length > 0 && (
+          <section className="max-w-4xl mx-auto py-8 bg-white">
+            <div className="text-center mb-8 bg-white">
+              <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+              <p className="text-sm text-slate-500 mt-1">Everything you need to know</p>
+            </div>
+            <div className="space-y-3 bg-white">
+              {tour.faqs.map((faq, index) => (
+                <details
+                  key={faq._id || index}
+                  className="bg-white rounded-2xl border border-slate-100 overflow-hidden group"
+                >
+                  <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-yellow-50/30 transition-colors bg-white">
+                    <span className="font-semibold text-slate-800">{faq.question}</span>
+                    <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" />
+                  </summary>
+                  <div className="px-5 pb-5 pt-2 bg-white">
+                    <p className="text-slate-600 leading-7">{faq.answer}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Reviews Section */}
+        <section className="py-8 bg-white">
+          <div className="space-y-6 bg-white">
+            <div className="flex items-center justify-between bg-white">
+              <div className="bg-white">
+                <h2 className="text-2xl font-bold text-slate-900">Traveler Reviews</h2>
+                <p className="text-sm text-slate-500 mt-1">
+                  {tour.ratingsQuantity || 0} {tour.ratingsQuantity === 1 ? "review" : "reviews"}
+                </p>
+              </div>
+
+              {isAuthenticated && (
+                <button
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 text-sm"
+                >
+                  {showReviewForm ? (
+                    <>
+                      <X size={18} />
+                      Close
+                    </>
+                  ) : (
+                    <>
+                      <PenSquare size={18} />
+                      Write Review
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {showReviewForm && (
+              <div className="max-w-2xl bg-white rounded-2xl border border-slate-100 p-6">
+                <ReviewForm
+                  tourId={tourId}
+                  isAuthenticated={isAuthenticated}
+                  isCheckingAuth={isCheckingAuth}
+                  userHasReviewed={userHasReviewed}
+                />
+              </div>
+            )}
+
+            <div className="bg-white">
+              {reviewsLoading ? (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="bg-white rounded-2xl border border-slate-100 p-6 animate-pulse">
+                      <div className="h-4 bg-slate-200 rounded w-1/3" />
+                      <div className="h-4 bg-slate-200 rounded w-1/4 mt-2" />
+                      <div className="h-16 bg-slate-200 rounded mt-4" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {reviews.map((review, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-2xl border border-slate-100 p-6"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-semibold text-sm">
+                            {review.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-slate-900 text-sm">
+                              {review.user?.name || 'Anonymous'}
+                            </p>
+                            <p className="text-xs text-slate-400">
+                              {review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              }) : ''}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Stars value={review.rating} size={16} />
+                        </div>
+                      </div>
+
+                      <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
+                        {review.comment || 'No comment provided.'}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </section>
-      )}
 
-      {/* Travel Information */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Travel Tips */}
-          {Array.isArray(tour.travelTips) && tour.travelTips.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center">
-                <CheckCircle2 size={20} />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mt-4">Travel Tips</h3>
-              <ul className="space-y-2 mt-3">
-                {tour.travelTips.map((tip, index) => (
-                  <li key={index} className="flex gap-2 text-sm text-slate-600">
-                    <span>{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Important Notes */}
-          {Array.isArray(tour.importantNotes) && tour.importantNotes.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                <Info size={20} />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mt-4">Important Notes</h3>
-              <ul className="space-y-2 mt-3">
-                {tour.importantNotes.map((note, index) => (
-                  <li key={index} className="flex gap-2 text-sm text-slate-600 " >
-                    <span>{note}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Budget Breakdown */}
-          {tour.budgetBreakdown && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <WalletCards size={20} />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 mt-4">Budget Breakdown</h3>
-              <div className="space-y-2 mt-3">
-                {Object.entries(tour.budgetBreakdown).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between gap-4">
-                    <span className="text-sm text-slate-500 capitalize">{key}</span>
-                    <span className="text-sm font-semibold text-slate-900">{formatCurrency(value)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      {Array.isArray(tour.faqs) && tour.faqs.length > 0 && (
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
-            <p className="text-sm text-slate-500 mt-1">Everything you need to know</p>
-          </div>
-          <div className="space-y-3">
-            {tour.faqs.map((faq, index) => (
-              <details
-                key={faq._id || index}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm group"
-              >
-                <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-4 hover:bg-yellow-50/30 transition-colors">
-                  <span className="font-semibold text-slate-800">{faq.question}</span>
-                  <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0" />
-                </summary>
-                <div className="px-5 pb-5 pt-2 border-t border-slate-100">
-                  <p className="text-slate-600 leading-7">{faq.answer}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
-      )}
-
-
-{/* -------------------- */}
-{/* Reviews Section */}
-<section className="mx-auto px-2 sm:px-3 lg:px-4 py-8">
-  <div className="space-y-6">
-    {/* Section Header */}
-    <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-900">Traveler Reviews</h2>
-        <p className="text-sm text-slate-500 mt-1">
-          {tour.ratingsQuantity || 0} {tour.ratingsQuantity === 1 ? "review" : "reviews"}
-        </p>
       </div>
-      
-      {isAuthenticated && (
-        <button
-          onClick={() => setShowReviewForm(!showReviewForm)}
-          className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 text-sm"
-        >
-          {showReviewForm ? (
-            <>
-              <X size={18} />
-              Close
-            </>
-          ) : (
-            <>
-              <PenSquare size={18} />
-              Write Review
-            </>
-          )}
-        </button>
-      )}
-    </div>
-
-    {/* Review Form - Collapsible */}
-    {showReviewForm && (
-      <div className="max-w-2xl bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
-        <ReviewForm
-          tourId={tourId}
-          isAuthenticated={isAuthenticated}
-          isCheckingAuth={isCheckingAuth}
-          userHasReviewed={userHasReviewed}
-        />
-      </div>
-    )}
-
-    {/* Reviews */}
-    <div>
-      {reviewsLoading ? (
-        <div className="grid md:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
-              <div className="h-4 bg-slate-200 rounded w-1/3" />
-              <div className="h-4 bg-slate-200 rounded w-1/4 mt-2" />
-              <div className="h-16 bg-slate-200 rounded mt-4" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-4">
-          {reviews.map((review, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
-              {/* Review Header */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-semibold text-sm">
-                    {review.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 text-sm">
-                      {review.user?.name || 'Anonymous'}
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      {review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      }) : ''}
-                    </p>
-                  </div>
-                </div>
-                {/* Rating Stars */}
-                <div className="flex items-center gap-1">
-                  <Stars value={review.rating} size={16} />
-                </div>
-              </div>
-
-              {/* Review Content */}
-              <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
-                {review.comment || 'No comment provided.'}
-              </p>
-
-              {/* Review Footer - Optional */}
-              <div className="mt-3 pt-3 border-t border-slate-100">
-               
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-</section>
 
       {/* Booking Modal */}
       <BookingModal

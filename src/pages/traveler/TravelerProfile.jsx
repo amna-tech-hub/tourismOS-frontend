@@ -88,10 +88,7 @@ const getInitials = (name) => {
     return parts[0].charAt(0).toUpperCase();
   }
 
-  return (
-    parts[0].charAt(0) +
-    parts[parts.length - 1].charAt(0)
-  ).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
 // ======================================================
@@ -111,9 +108,7 @@ const getCloudinaryPublicId = (url) => {
       return "";
     }
 
-    let publicPath = url.substring(
-      uploadIndex + uploadPart.length
-    );
+    let publicPath = url.substring(uploadIndex + uploadPart.length);
 
     const parts = publicPath.split("/");
 
@@ -127,10 +122,7 @@ const getCloudinaryPublicId = (url) => {
 
     return publicPath;
   } catch (error) {
-    console.error(
-      "Failed to extract Cloudinary public ID:",
-      error
-    );
+    console.error("Failed to extract Cloudinary public ID:", error);
 
     return "";
   }
@@ -148,10 +140,7 @@ const normalizeProfilePicture = (profilePicture) => {
     };
   }
 
-  if (
-    typeof profilePicture === "object" &&
-    !Array.isArray(profilePicture)
-  ) {
+  if (typeof profilePicture === "object" && !Array.isArray(profilePicture)) {
     const url =
       profilePicture.url ||
       profilePicture.imageUrl ||
@@ -187,21 +176,12 @@ const normalizeProfilePicture = (profilePicture) => {
 // ======================================================
 
 const getImageData = (response) => {
-  const data =
-    response?.data?.image ||
-    response?.data ||
-    response;
+  const data = response?.data?.image || response?.data || response;
 
-  const url =
-    data?.url ||
-    data?.imageUrl ||
-    data?.secure_url ||
-    "";
+  const url = data?.url || data?.imageUrl || data?.secure_url || "";
 
   const public_id =
-    data?.public_id ||
-    data?.publicId ||
-    getCloudinaryPublicId(url);
+    data?.public_id || data?.publicId || getCloudinaryPublicId(url);
 
   return {
     url,
@@ -268,9 +248,11 @@ const StatCard = ({
   };
 
   return (
-    <div className={`stat-card group relative overflow-hidden rounded-2xl border ${bgColors[color]} p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}>
+    <div
+      className={`stat-card group relative overflow-hidden rounded-2xl border ${bgColors[color]} p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+    >
       <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full bg-gradient-to-br from-amber-200/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       <div className="flex items-start justify-between gap-3">
         <div
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${colors[color]} shadow-sm`}
@@ -290,9 +272,7 @@ const StatCard = ({
           {value}
         </p>
 
-        <p className="mt-1 text-sm font-medium text-slate-500">
-          {label}
-        </p>
+        <p className="mt-1 text-sm font-medium text-slate-500">{label}</p>
       </div>
     </div>
   );
@@ -321,16 +301,14 @@ const FormField = ({
       >
         {label}
 
-        {required && (
-          <span className="ml-1 text-rose-400">*</span>
-        )}
+        {required && <span className="ml-1 text-rose-400">*</span>}
       </label>
 
       <div className="relative">
         {Icon && (
           <Icon
             size={17}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors duration-200 group-focus-within:text-amber-500"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors duration-200 group-focus-within:text-yellow-400"
           />
         )}
 
@@ -390,13 +368,9 @@ const TextareaField = ({
 // ======================================================
 
 const StatusBadge = ({ status }) => {
-  const normalizedStatus = String(
-    status || ""
-  ).toLowerCase();
+  const normalizedStatus = String(status || "").toLowerCase();
 
-  const isVerified =
-    normalizedStatus === "verified" ||
-    status === true;
+  const isVerified = normalizedStatus === "verified" || status === true;
 
   return (
     <span
@@ -412,9 +386,7 @@ const StatusBadge = ({ status }) => {
         <AlertCircle size={13} strokeWidth={2.5} />
       )}
 
-      {isVerified
-        ? "Verified"
-        : "Not Verified"}
+      {isVerified ? "Verified" : "Not Verified"}
     </span>
   );
 };
@@ -423,7 +395,12 @@ const StatusBadge = ({ status }) => {
 // SECTION HEADER
 // ======================================================
 
-const SectionHeader = ({ icon: Icon, title, subtitle, iconColor = "amber" }) => {
+const SectionHeader = ({
+  icon: Icon,
+  title,
+  subtitle,
+  iconColor = "amber",
+}) => {
   const colorMap = {
     amber: "from-amber-100 to-amber-50 text-amber-600",
     blue: "from-blue-100 to-blue-50 text-blue-600",
@@ -433,16 +410,14 @@ const SectionHeader = ({ icon: Icon, title, subtitle, iconColor = "amber" }) => 
 
   return (
     <div className="gradient-header px-5 md:px-7 py-4 flex items-center gap-3 rounded-t-2xl border-b border-slate-100/80">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[iconColor] || colorMap.amber} shadow-sm`}>
+      <div
+        className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[iconColor] || colorMap.amber} shadow-sm`}
+      >
         <Icon size={18} strokeWidth={1.8} />
       </div>
       <div>
-        <h2 className="text-lg font-semibold text-slate-800">
-          {title}
-        </h2>
-        <p className="mt-0.5 text-sm text-slate-500">
-          {subtitle}
-        </p>
+        <h2 className="text-lg font-semibold text-slate-800">{title}</h2>
+        <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>
       </div>
     </div>
   );
@@ -467,42 +442,28 @@ const TravelerProfile = () => {
     bio: "",
   });
 
-  const [profilePicture, setProfilePicture] =
-    useState({
-      url: "",
-      public_id: "",
-    });
+  const [profilePicture, setProfilePicture] = useState({
+    url: "",
+    public_id: "",
+  });
 
-  const [newPublicId, setNewPublicId] =
-    useState("");
+  const [newPublicId, setNewPublicId] = useState("");
 
-  const [profileError, setProfileError] =
-    useState("");
+  const [profileError, setProfileError] = useState("");
 
   // ====================================================
   // PROFILE QUERY
   // ====================================================
 
-  const {
-    data: response,
-    isLoading,
-    isError,
-    refetch,
-  } = useTravelerProfile();
+  const { data: response, isLoading, isError, refetch } = useTravelerProfile();
 
   // ====================================================
   // API DATA
   // ====================================================
 
-  const user =
-    response?.data?.user ||
-    response?.data ||
-    response ||
-    {};
+  const user = response?.data?.user || response?.data || response || {};
 
-  const userId =
-    user?._id ||
-    user?.id;
+  const userId = user?._id || user?.id;
 
   // ====================================================
   // USER STATS QUERY
@@ -519,33 +480,24 @@ const TravelerProfile = () => {
   // EXTRACT METRICS
   // ====================================================
 
-  const metrics =
-    statsResponse?.data?.metrics ||
-    statsResponse?.metrics ||
-    {};
+  const metrics = statsResponse?.data?.metrics || statsResponse?.metrics || {};
 
   // ====================================================
   // MUTATIONS
   // ====================================================
 
-  const updateProfileMutation =
-    useUpdateTravelerProfile();
+  const updateProfileMutation = useUpdateTravelerProfile();
 
-  const uploadSingleImageMutation =
-    useUploadSingleImage();
+  const uploadSingleImageMutation = useUploadSingleImage();
 
-  const deleteImageMutation =
-    useDeleteImage();
+  const deleteImageMutation = useDeleteImage();
 
   // ====================================================
   // SYNC FORM WITH API DATA
   // ====================================================
 
   useEffect(() => {
-    if (
-      !user ||
-      Object.keys(user).length === 0
-    ) {
+    if (!user || Object.keys(user).length === 0) {
       return;
     }
 
@@ -553,16 +505,11 @@ const TravelerProfile = () => {
       name: user.name || "",
       email: user.email || "",
       phone: user.phone || "",
-      gender:
-        user.gender || "prefer_not_to_say",
+      gender: user.gender || "prefer_not_to_say",
       bio: user.bio || "",
     });
 
-    setProfilePicture(
-      normalizeProfilePicture(
-        user.profilePicture
-      )
-    );
+    setProfilePicture(normalizeProfilePicture(user.profilePicture));
   }, [response]);
 
   // ====================================================
@@ -570,10 +517,7 @@ const TravelerProfile = () => {
   // ====================================================
 
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
+    const { name, value } = event.target;
 
     setFormData((prev) => ({
       ...prev,
@@ -590,16 +534,11 @@ const TravelerProfile = () => {
       name: user.name || "",
       email: user.email || "",
       phone: user.phone || "",
-      gender:
-        user.gender || "prefer_not_to_say",
+      gender: user.gender || "prefer_not_to_say",
       bio: user.bio || "",
     });
 
-    setProfilePicture(
-      normalizeProfilePicture(
-        user.profilePicture
-      )
-    );
+    setProfilePicture(normalizeProfilePicture(user.profilePicture));
 
     setNewPublicId("");
     setProfileError("");
@@ -610,24 +549,17 @@ const TravelerProfile = () => {
   // DELETE CLOUDINARY IMAGE
   // ====================================================
 
-  const deleteCloudinaryImage = async (
-    publicId
-  ) => {
+  const deleteCloudinaryImage = async (publicId) => {
     if (!publicId) {
       return;
     }
 
     try {
-      await deleteImageMutation.mutateAsync(
-        publicId
-      );
+      await deleteImageMutation.mutateAsync(publicId);
 
       return true;
     } catch (error) {
-      console.error(
-        "Failed to delete Cloudinary image:",
-        error
-      );
+      console.error("Failed to delete Cloudinary image:", error);
 
       throw error;
     }
@@ -637,11 +569,8 @@ const TravelerProfile = () => {
   // PROFILE PICTURE UPLOAD
   // ====================================================
 
-  const handleProfilePictureUpload = async (
-    event
-  ) => {
-    const file =
-      event.target.files?.[0];
+  const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files?.[0];
 
     if (!file) {
       return;
@@ -651,69 +580,42 @@ const TravelerProfile = () => {
 
     try {
       if (!file.type.startsWith("image/")) {
-        throw new Error(
-          "Please select a valid image file."
-        );
+        throw new Error("Please select a valid image file.");
       }
 
-      if (
-        file.size >
-        5 * 1024 * 1024
-      ) {
-        throw new Error(
-          "Profile picture size must be less than 5MB."
-        );
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Profile picture size must be less than 5MB.");
       }
 
-      const response =
-        await uploadSingleImageMutation.mutateAsync(
-          file
-        );
+      const response = await uploadSingleImageMutation.mutateAsync(file);
 
-      const imageData =
-        getImageData(response);
+      const imageData = getImageData(response);
 
       if (!imageData.url) {
-        throw new Error(
-          "Server did not return an image URL."
-        );
+        throw new Error("Server did not return an image URL.");
       }
 
-      if (
-        newPublicId &&
-        newPublicId !== imageData.public_id
-      ) {
+      if (newPublicId && newPublicId !== imageData.public_id) {
         try {
-          await deleteCloudinaryImage(
-            newPublicId
-          );
+          await deleteCloudinaryImage(newPublicId);
         } catch (error) {
-          console.error(
-            "Failed to delete previous temporary image:",
-            error
-          );
+          console.error("Failed to delete previous temporary image:", error);
         }
       }
 
       setProfilePicture({
         url: imageData.url,
-        public_id:
-          imageData.public_id || "",
+        public_id: imageData.public_id || "",
       });
 
-      setNewPublicId(
-        imageData.public_id || ""
-      );
+      setNewPublicId(imageData.public_id || "");
     } catch (error) {
-      console.error(
-        "Failed to upload profile picture:",
-        error
-      );
+      console.error("Failed to upload profile picture:", error);
 
       setProfileError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to upload profile picture."
+          "Failed to upload profile picture.",
       );
     } finally {
       event.target.value = "";
@@ -724,40 +626,37 @@ const TravelerProfile = () => {
   // REMOVE PROFILE PICTURE
   // ====================================================
 
-  const handleRemoveProfilePicture =
-    async () => {
-      setProfileError("");
+  const handleRemoveProfilePicture = async () => {
+    setProfileError("");
 
-      if (newPublicId) {
-        try {
-          await deleteCloudinaryImage(
-            newPublicId
-          );
+    if (newPublicId) {
+      try {
+        await deleteCloudinaryImage(newPublicId);
 
-          setNewPublicId("");
+        setNewPublicId("");
 
-          setProfilePicture({
-            url: "",
-            public_id: "",
-          });
+        setProfilePicture({
+          url: "",
+          public_id: "",
+        });
 
-          return;
-        } catch (error) {
-          setProfileError(
-            error?.response?.data?.message ||
-              error?.message ||
-              "Failed to remove profile picture."
-          );
+        return;
+      } catch (error) {
+        setProfileError(
+          error?.response?.data?.message ||
+            error?.message ||
+            "Failed to remove profile picture.",
+        );
 
-          return;
-        }
+        return;
       }
+    }
 
-      setProfilePicture({
-        url: "",
-        public_id: "",
-      });
-    };
+    setProfilePicture({
+      url: "",
+      public_id: "",
+    });
+  };
 
   // ====================================================
   // CANCEL EDIT
@@ -768,14 +667,9 @@ const TravelerProfile = () => {
 
     if (newPublicId) {
       try {
-        await deleteCloudinaryImage(
-          newPublicId
-        );
+        await deleteCloudinaryImage(newPublicId);
       } catch (error) {
-        console.error(
-          "Failed to clean up newly uploaded picture:",
-          error
-        );
+        console.error("Failed to clean up newly uploaded picture:", error);
       }
     }
 
@@ -785,16 +679,11 @@ const TravelerProfile = () => {
       name: user.name || "",
       email: user.email || "",
       phone: user.phone || "",
-      gender:
-        user.gender || "prefer_not_to_say",
+      gender: user.gender || "prefer_not_to_say",
       bio: user.bio || "",
     });
 
-    setProfilePicture(
-      normalizeProfilePicture(
-        user.profilePicture
-      )
-    );
+    setProfilePicture(normalizeProfilePicture(user.profilePicture));
 
     setIsEditing(false);
   };
@@ -808,10 +697,7 @@ const TravelerProfile = () => {
 
     setProfileError("");
 
-    const oldPicture =
-      normalizeProfilePicture(
-        user.profilePicture
-      );
+    const oldPicture = normalizeProfilePicture(user.profilePicture);
 
     try {
       await updateProfileMutation.mutateAsync({
@@ -822,29 +708,21 @@ const TravelerProfile = () => {
 
         profilePicture: {
           url: profilePicture.url || null,
-          public_id:
-            profilePicture.public_id || null,
+          public_id: profilePicture.public_id || null,
         },
       });
 
       const pictureChanged =
-        oldPicture.url !==
-          profilePicture.url ||
-        oldPicture.public_id !==
-          profilePicture.public_id;
+        oldPicture.url !== profilePicture.url ||
+        oldPicture.public_id !== profilePicture.public_id;
 
-      if (
-        pictureChanged &&
-        oldPicture.public_id
-      ) {
+      if (pictureChanged && oldPicture.public_id) {
         try {
-          await deleteCloudinaryImage(
-            oldPicture.public_id
-          );
+          await deleteCloudinaryImage(oldPicture.public_id);
         } catch (deleteError) {
           console.error(
             "Profile updated but old picture cleanup failed:",
-            deleteError
+            deleteError,
           );
         }
       }
@@ -854,25 +732,13 @@ const TravelerProfile = () => {
 
       await refetch();
     } catch (error) {
-      console.error(
-        "Update Profile Error:",
-        error
-      );
+      console.error("Update Profile Error:", error);
 
-      if (
-        newPublicId &&
-        newPublicId !==
-          oldPicture.public_id
-      ) {
+      if (newPublicId && newPublicId !== oldPicture.public_id) {
         try {
-          await deleteCloudinaryImage(
-            newPublicId
-          );
+          await deleteCloudinaryImage(newPublicId);
         } catch (cleanupError) {
-          console.error(
-            "Failed to clean up new picture:",
-            cleanupError
-          );
+          console.error("Failed to clean up new picture:", cleanupError);
         }
       }
 
@@ -881,7 +747,7 @@ const TravelerProfile = () => {
       setProfileError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to update profile."
+          "Failed to update profile.",
       );
     }
   };
@@ -898,7 +764,7 @@ const TravelerProfile = () => {
             <div className="absolute inset-0 rounded-full bg-amber-200/30 blur-xl animate-pulse" />
             <Loader2
               size={36}
-              className="relative animate-spin text-amber-500"
+              className="relative animate-spin text-yellow-400"
             />
           </div>
           <p className="text-sm font-medium text-slate-600">
@@ -926,8 +792,7 @@ const TravelerProfile = () => {
           </h2>
 
           <p className="mt-2 text-sm text-slate-500">
-            Something went wrong while loading
-            your profile.
+            Something went wrong while loading your profile.
           </p>
 
           <button
@@ -935,11 +800,7 @@ const TravelerProfile = () => {
             onClick={() => refetch()}
             className="btn-primary mt-6"
           >
-            <RefreshCw
-              size={16}
-              className="mr-2"
-            />
-
+            <RefreshCw size={16} className="mr-2" />
             Try Again
           </button>
         </div>
@@ -951,55 +812,38 @@ const TravelerProfile = () => {
   // PROFILE VALUES
   // ====================================================
 
-  const userName =
-    user.name || "Traveler";
+  const userName = user.name || "Traveler";
 
-  const userEmail =
-    user.email || "—";
+  const userEmail = user.email || "—";
 
-  const userPhone =
-    user.phone || "—";
+  const userPhone = user.phone || "—";
 
-  const userGender =
-    user.gender ||
-    "prefer_not_to_say";
+  const userGender = user.gender || "prefer_not_to_say";
 
   const userBio =
-    user.bio ||
-    "No bio added yet. Update your profile to add a bio.";
+    user.bio || "No bio added yet. Update your profile to add a bio.";
 
-  const isVerified =
-    user.emailVerified || false;
+  const isVerified = user.emailVerified || false;
 
-  const createdAt =
-    user.createdAt;
+  const createdAt = user.createdAt;
 
-  const savedProfilePicture =
-    normalizeProfilePicture(
-      user.profilePicture
-    );
+  const savedProfilePicture = normalizeProfilePicture(user.profilePicture);
 
   // ====================================================
   // TRAVELER STATS
   // ====================================================
 
-  const totalReviews =
-    metrics.totalReviews || 0;
+  const totalReviews = metrics.totalReviews || 0;
 
-  const averageRating =
-    metrics.averageRating || 0;
+  const averageRating = metrics.averageRating || 0;
 
-  const totalBookings =
-    metrics.totalBookings || 0;
+  const totalBookings = metrics.totalBookings || 0;
 
-  const completedBookings =
-    metrics.completedBookings || 0;
+  const completedBookings = metrics.completedBookings || 0;
 
-  const destinationsVisited =
-    metrics.destinationsVisited || 0;
+  const destinationsVisited = metrics.destinationsVisited || 0;
 
-  const totalSpent =
-    metrics.totalSpent || 0;
+  const totalSpent = metrics.totalSpent || 0;
 
   // ====================================================
   // RENDER
@@ -1007,7 +851,6 @@ const TravelerProfile = () => {
 
   return (
     <div className="max-w-7xl mx-auto  pb-10 px-4 sm:px-6 md:px-7 px-4 sm:px-6 lg:px-8 py-6 my-4 space-y-7">
-
       {/* ==================================================
           HEADER
       ================================================== */}
@@ -1029,8 +872,7 @@ const TravelerProfile = () => {
           </h1>
 
           <p className="mt-1 max-w-xl text-sm text-slate-500">
-            Manage your personal information
-            and view your travel activity.
+            Manage your personal information and view your travel activity.
           </p>
         </div>
 
@@ -1040,11 +882,7 @@ const TravelerProfile = () => {
             onClick={handleEdit}
             className="btn-primary self-start sm:self-auto shadow-amber-200/40 hover:shadow-amber-300/50 transition-all duration-300"
           >
-            <Edit3
-              size={17}
-              className="mr-2"
-            />
-
+            <Edit3 size={17} className="mr-2" />
             Edit Profile
           </button>
         )}
@@ -1056,7 +894,7 @@ const TravelerProfile = () => {
 
       <div className="card relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
         <div className="h-24 md:h-28 bg-gradient-to-r from-amber-100 via-amber-50/80 to-white/90" />
-        
+
         <div className="px-5 md:px-7 pb-6 -mt-10 relative z-10">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="flex items-end gap-4">
@@ -1076,7 +914,11 @@ const TravelerProfile = () => {
                 </div>
                 {isVerified && (
                   <div className="absolute -bottom-1 -right-1 bg-emerald-400 rounded-full p-1.5 border-2 border-white shadow-sm">
-                    <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
+                    <CheckCircle2
+                      size={12}
+                      className="text-white"
+                      strokeWidth={3}
+                    />
                   </div>
                 )}
               </div>
@@ -1090,9 +932,7 @@ const TravelerProfile = () => {
                   <StatusBadge status={isVerified} />
                 </div>
 
-                <p className="mt-0.5 text-sm text-slate-500">
-                  {userEmail}
-                </p>
+                <p className="mt-0.5 text-sm text-slate-500">{userEmail}</p>
               </div>
             </div>
 
@@ -1113,14 +953,13 @@ const TravelerProfile = () => {
           onSubmit={handleSubmit}
           className="card overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm"
         >
-          <SectionHeader 
-            icon={Edit3} 
-            title="Edit Profile Information" 
+          <SectionHeader
+            icon={Edit3}
+            title="Edit Profile Information"
             subtitle="Update your personal information."
           />
 
           <div className="grid grid-cols-1 gap-5 p-5 md:p-7 md:grid-cols-2">
-
             {/* PROFILE PICTURE */}
 
             <div className="md:col-span-2">
@@ -1137,7 +976,11 @@ const TravelerProfile = () => {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <User size={34} className="text-slate-300" strokeWidth={1.5} />
+                    <User
+                      size={34}
+                      className="text-slate-300"
+                      strokeWidth={1.5}
+                    />
                   )}
                 </div>
 
@@ -1167,8 +1010,8 @@ const TravelerProfile = () => {
                       {uploadSingleImageMutation.isPending
                         ? "Uploading..."
                         : profilePicture.url
-                        ? "Change Picture"
-                        : "Upload Picture"}
+                          ? "Change Picture"
+                          : "Upload Picture"}
 
                       <input
                         type="file"
@@ -1197,10 +1040,11 @@ const TravelerProfile = () => {
 
                   {profileError && (
                     <div className="mt-3 flex items-start gap-2 rounded-xl border border-rose-200/60 bg-rose-50/60 px-3 py-2.5">
-                      <AlertCircle size={14} className="mt-0.5 shrink-0 text-rose-500" />
-                      <p className="text-xs text-rose-600">
-                        {profileError}
-                      </p>
+                      <AlertCircle
+                        size={14}
+                        className="mt-0.5 shrink-0 text-rose-500"
+                      />
+                      <p className="text-xs text-rose-600">{profileError}</p>
                     </div>
                   )}
                 </div>
@@ -1321,7 +1165,6 @@ const TravelerProfile = () => {
         </form>
       ) : (
         <>
-
           {/* ==================================================
               PERSONAL INFORMATION + ACCOUNT SUMMARY
           ================================================== */}
@@ -1329,50 +1172,33 @@ const TravelerProfile = () => {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Personal Info */}
             <div className="card lg:col-span-2 overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
-              <SectionHeader 
-                icon={User} 
-                title="Personal Information" 
+              <SectionHeader
+                icon={User}
+                title="Personal Information"
                 subtitle="Your basic personal information."
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-5 md:p-7">
-                <InfoItem
-                  icon={User}
-                  label="Full Name"
-                  value={userName}
-                />
+                <InfoItem icon={User} label="Full Name" value={userName} />
 
-                <InfoItem
-                  icon={Mail}
-                  label="Email"
-                  value={userEmail}
-                />
+                <InfoItem icon={Mail} label="Email" value={userEmail} />
 
-                <InfoItem
-                  icon={Phone}
-                  label="Phone"
-                  value={userPhone}
-                />
+                <InfoItem icon={Phone} label="Phone" value={userPhone} />
 
                 <InfoItem
                   icon={Users}
                   label="Gender"
-                  value={userGender
-                    .split("_")
-                    .join(" ")
-                    .toUpperCase()}
+                  value={userGender.split("_").join(" ").toUpperCase()}
                 />
 
                 <div className="sm:col-span-2">
                   <InfoItem
                     icon={CheckCircle2}
                     label="Email Verification"
-                    value={
-                      isVerified
-                        ? "Verified"
-                        : "Not Verified"
+                    value={isVerified ? "Verified" : "Not Verified"}
+                    valueColor={
+                      isVerified ? "text-emerald-600" : "text-amber-600"
                     }
-                    valueColor={isVerified ? "text-emerald-600" : "text-amber-600"}
                   />
                 </div>
               </div>
@@ -1380,9 +1206,9 @@ const TravelerProfile = () => {
 
             {/* Account Summary */}
             <div className="card overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
-              <SectionHeader 
-                icon={CalendarDays} 
-                title="Account Summary" 
+              <SectionHeader
+                icon={CalendarDays}
+                title="Account Summary"
                 subtitle="Quick account overview."
                 iconColor="slate"
               />
@@ -1403,12 +1229,10 @@ const TravelerProfile = () => {
                 <InfoItem
                   icon={CheckCircle2}
                   label="Status"
-                  value={
-                    isVerified
-                      ? "Active"
-                      : "Pending Verification"
+                  value={isVerified ? "Active" : "Pending Verification"}
+                  valueColor={
+                    isVerified ? "text-emerald-600" : "text-amber-600"
                   }
-                  valueColor={isVerified ? "text-emerald-600" : "text-amber-600"}
                 />
               </div>
             </div>
@@ -1433,7 +1257,7 @@ const TravelerProfile = () => {
             {statsLoading ? (
               <div className="flex min-h-[140px] items-center justify-center rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-sm shadow-sm">
                 <div className="flex items-center gap-3 text-sm text-slate-500">
-                  <Loader2 size={20} className="animate-spin text-amber-500" />
+                  <Loader2 size={20} className="animate-spin text-yellow-400" />
                   Loading travel statistics...
                 </div>
               </div>
@@ -1441,13 +1265,17 @@ const TravelerProfile = () => {
               <div className="rounded-2xl border border-amber-200/60 bg-amber-50/60 p-5 shadow-sm">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+                    <AlertCircle
+                      size={18}
+                      className="mt-0.5 shrink-0 text-amber-600"
+                    />
                     <div>
                       <p className="text-sm font-semibold text-amber-800">
                         Unable to load travel statistics
                       </p>
                       <p className="mt-0.5 text-xs text-amber-700">
-                        Your profile is available, but your activity statistics could not be loaded.
+                        Your profile is available, but your activity statistics
+                        could not be loaded.
                       </p>
                     </div>
                   </div>
@@ -1503,11 +1331,7 @@ const TravelerProfile = () => {
                 <StatCard
                   icon={Star}
                   label="Average Rating"
-                  value={
-                    averageRating > 0
-                      ? `${averageRating}/5`
-                      : "—"
-                  }
+                  value={averageRating > 0 ? `${averageRating}/5` : "—"}
                   color="orange"
                   description={
                     totalReviews > 0
@@ -1524,9 +1348,9 @@ const TravelerProfile = () => {
           ================================================== */}
 
           <div className="card overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
-            <SectionHeader 
-              icon={Ticket} 
-              title="Booking Activity" 
+            <SectionHeader
+              icon={Ticket}
+              title="Booking Activity"
               subtitle="Overview of your tour bookings."
             />
 
@@ -1574,9 +1398,9 @@ const TravelerProfile = () => {
           ================================================== */}
 
           <div className="card overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
-            <SectionHeader 
-              icon={User} 
-              title="About Me" 
+            <SectionHeader
+              icon={User}
+              title="About Me"
               subtitle="A little about yourself."
             />
 
@@ -1586,10 +1410,8 @@ const TravelerProfile = () => {
               </p>
             </div>
           </div>
-
         </>
       )}
-
     </div>
   );
 };

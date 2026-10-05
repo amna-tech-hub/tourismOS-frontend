@@ -1,7 +1,10 @@
 // src/pages/BookingDetails.jsx
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useBookingDetails, useCancelBooking } from "../../api/queries/useBooking";
+import {
+  useBookingDetails,
+  useCancelBooking,
+} from "../../api/queries/useBooking";
 import {
   Loader2,
   AlertCircle,
@@ -29,8 +32,10 @@ const BookingDetails = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[450px]">
-        <Loader2 size={40} className="animate-spin text-amber-500 mb-3" />
-        <p className="text-sm font-medium text-slate-500">Loading booking details...</p>
+        <Loader2 size={40} className="animate-spin text-yellow-400 mb-3" />
+        <p className="text-sm font-medium text-slate-500">
+          Loading booking details...
+        </p>
       </div>
     );
   }
@@ -41,7 +46,9 @@ const BookingDetails = () => {
         <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <AlertCircle size={24} />
         </div>
-        <h2 className="text-lg font-bold text-slate-900 mb-1">Booking Not Found</h2>
+        <h2 className="text-lg font-bold text-slate-900 mb-1">
+          Booking Not Found
+        </h2>
         <p className="text-xs text-slate-500 mb-6">
           We couldn't retrieve the details for this reservation.
         </p>
@@ -93,8 +100,8 @@ const BookingDetails = () => {
             isCancelled
               ? "bg-red-50 text-red-600 border border-red-100"
               : isCompleted
-              ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
-              : "bg-amber-50 text-amber-700 border border-amber-200/60"
+                ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                : "bg-amber-50 text-amber-700 border border-amber-200/60"
           }`}
         >
           {isCancelled ? (
@@ -128,7 +135,7 @@ const BookingDetails = () => {
         {/* Details Grid */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div className="p-2.5 rounded-xl bg-white text-amber-500 shadow-sm border border-slate-100 shrink-0">
+            <div className="p-2.5 rounded-xl bg-white text-yellow-400 shadow-sm border border-slate-100 shrink-0">
               <Compass size={20} />
             </div>
             <div>
@@ -140,7 +147,7 @@ const BookingDetails = () => {
           </div>
 
           <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div className="p-2.5 rounded-xl bg-white text-amber-500 shadow-sm border border-slate-100 shrink-0">
+            <div className="p-2.5 rounded-xl bg-white text-yellow-400 shadow-sm border border-slate-100 shrink-0">
               <Calendar size={20} />
             </div>
             <div>
@@ -159,23 +166,26 @@ const BookingDetails = () => {
           </div>
 
           <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div className="p-2.5 rounded-xl bg-white text-amber-500 shadow-sm border border-slate-100 shrink-0">
+            <div className="p-2.5 rounded-xl bg-white text-yellow-400 shadow-sm border border-slate-100 shrink-0">
               <Users size={20} />
             </div>
             <div>
               <p className="text-xs font-medium text-slate-400">Participants</p>
               <p className="text-sm font-semibold text-slate-800 mt-0.5">
-                {data.participants} {data.participants === 1 ? "Person" : "People"}
+                {data.participants}{" "}
+                {data.participants === 1 ? "Person" : "People"}
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/80 border border-slate-100">
-            <div className="p-2.5 rounded-xl bg-white text-amber-500 shadow-sm border border-slate-100 shrink-0">
+            <div className="p-2.5 rounded-xl bg-white text-yellow-400 shadow-sm border border-slate-100 shrink-0">
               <CreditCard size={20} />
             </div>
             <div>
-              <p className="text-xs font-medium text-slate-400">Payment Status</p>
+              <p className="text-xs font-medium text-slate-400">
+                Payment Status
+              </p>
               <p className="text-sm font-semibold text-slate-800 capitalize mt-0.5">
                 {data.paymentStatus || "Pending"}
               </p>
@@ -187,7 +197,9 @@ const BookingDetails = () => {
         <div className="mx-6 mb-6 p-4 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
           <div>
             <p className="text-xs font-medium text-slate-400">Total Charged</p>
-            <p className="text-xl font-bold text-amber-400">{formattedAmount}</p>
+            <p className="text-xl font-bold text-amber-400">
+              {formattedAmount}
+            </p>
           </div>
           <span className="text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300 font-medium border border-slate-700">
             Inclusive of taxes
@@ -224,11 +236,13 @@ const BookingDetails = () => {
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-slate-900">Cancel Reservation?</h3>
+              <h3 className="text-base font-bold text-slate-900">
+                Cancel Reservation?
+              </h3>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                 Are you sure you want to cancel this booking for{" "}
-                <strong className="text-slate-700">{data.tour?.title}</strong>? This action
-                cannot be reversed.
+                <strong className="text-slate-700">{data.tour?.title}</strong>?
+                This action cannot be reversed.
               </p>
             </div>
 

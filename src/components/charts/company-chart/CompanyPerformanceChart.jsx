@@ -10,9 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-export default function CompanyPerformanceChart({
-  data = [],
-}) {
+export default function CompanyPerformanceChart({ data = [] }) {
   if (!data || data.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-6">
@@ -22,8 +20,7 @@ export default function CompanyPerformanceChart({
           </h3>
 
           <p className="text-[11px] text-slate-400 mt-1">
-            Compare tours published, drafts and reviews
-            across companies.
+            Compare tours published, drafts and reviews across companies.
           </p>
         </div>
 
@@ -44,17 +41,13 @@ export default function CompanyPerformanceChart({
 
     totalTours: company.totalTours || 0,
 
-    publishedTours:
-      company.publishedTours || 0,
+    publishedTours: company.publishedTours || 0,
 
-    draftTours:
-      company.draftTours || 0,
+    draftTours: company.draftTours || 0,
 
-    reviews:
-      company.totalReviews || 0,
+    reviews: company.totalReviews || 0,
 
-    rating:
-      company.averageRating || 0,
+    rating: company.averageRating || 0,
   }));
 
   return (
@@ -68,8 +61,7 @@ export default function CompanyPerformanceChart({
           </h3>
 
           <p className="text-[11px] text-slate-400 mt-1">
-            Compare tour activity and customer reviews
-            across the top companies.
+            Compare tour activity and customer reviews across the top companies.
           </p>
         </div>
 
@@ -81,10 +73,7 @@ export default function CompanyPerformanceChart({
       {/* Chart */}
 
       <div className="w-full h-[360px]">
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-        >
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             margin={{
@@ -95,10 +84,7 @@ export default function CompanyPerformanceChart({
             }}
             barGap={4}
           >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              vertical={false}
-            />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
 
             <XAxis
               dataKey="name"
@@ -181,22 +167,15 @@ export default function CompanyPerformanceChart({
                     {company.totalReviews || 0}
                   </p>
 
-                  <p className="text-[9px] text-slate-400">
-                    Reviews
-                  </p>
+                  <p className="text-[9px] text-slate-400">Reviews</p>
                 </div>
 
                 <div className="text-right">
-                  <p className="text-sm font-bold text-amber-500">
-                    ★{" "}
-                    {Number(
-                      company.averageRating || 0
-                    ).toFixed(1)}
+                  <p className="text-sm font-bold text-yellow-400">
+                    ★ {Number(company.averageRating || 0).toFixed(1)}
                   </p>
 
-                  <p className="text-[9px] text-slate-400">
-                    Rating
-                  </p>
+                  <p className="text-[9px] text-slate-400">Rating</p>
                 </div>
               </div>
             </div>

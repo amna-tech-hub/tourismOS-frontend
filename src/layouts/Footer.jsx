@@ -14,7 +14,7 @@ export default function Footer() {
             className="w-8 h-8 rounded-xl object-cover"
           />
           <span className="font-serif text-lg font-bold text-slate-900">
-            AI Tourism<span className="text-amber-500">OS</span>
+            AI Tourism<span className="text-yellow-400">OS</span>
           </span>
         </Link>
 

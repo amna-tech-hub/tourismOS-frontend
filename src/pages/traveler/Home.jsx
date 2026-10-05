@@ -25,7 +25,10 @@ import { registerFcmToken } from "../../services/notification.service";
 import Hero from "../../components/user/Hero";
 import TourCard from "../shared/tours/TourCard";
 import { useInfinitePublicTours } from "../../api/queries/useTraveler";
-import { useCreateBooking, usePaymentRedirection } from "../../api/queries/useBooking";
+import {
+  useCreateBooking,
+  usePaymentRedirection,
+} from "../../api/queries/useBooking";
 
 /* =========================================================
    CONSTANTS
@@ -40,13 +43,7 @@ const TOURS_PER_PAGE = 8;
 const getImageUrl = (image) => {
   if (!image) return "";
   if (typeof image === "string") return image;
-  return (
-    image.url ||
-    image.secure_url ||
-    image.src ||
-    image.image?.url ||
-    ""
-  );
+  return image.url || image.secure_url || image.src || image.image?.url || "";
 };
 
 /* =========================================================
@@ -58,7 +55,7 @@ const BookingModal = ({
   onClose,
   onConfirm,
   isProcessing,
-  error: externalError
+  error: externalError,
 }) => {
   const [participants, setParticipants] = useState(1);
   const [travelDate, setTravelDate] = useState("");
@@ -67,7 +64,7 @@ const BookingModal = ({
 
   useEffect(() => {
     if (externalError) {
-      console.log('External error received:', externalError);
+      console.log("External error received:", externalError);
 
       const errorMessage =
         externalError?.response?.data?.message ||
@@ -109,8 +106,13 @@ const BookingModal = ({
       return;
     }
 
-    if (tour.maxParticipants && Number(participants) > Number(tour.maxParticipants)) {
-      setError(`This tour allows a maximum of ${tour.maxParticipants} travelers.`);
+    if (
+      tour.maxParticipants &&
+      Number(participants) > Number(tour.maxParticipants)
+    ) {
+      setError(
+        `This tour allows a maximum of ${tour.maxParticipants} travelers.`,
+      );
       return;
     }
 
@@ -118,7 +120,7 @@ const BookingModal = ({
       tourId: tour._id,
       participants: Number(participants),
       travelDate,
-      provider
+      provider,
     });
   };
 
@@ -129,7 +131,9 @@ const BookingModal = ({
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
           <div>
             <h2 className="text-xl font-semibold text-slate-900">Book Tour</h2>
-            <p className="text-sm text-slate-500 mt-1 line-clamp-1">{tour.title}</p>
+            <p className="text-sm text-slate-500 mt-1 line-clamp-1">
+              {tour.title}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -146,7 +150,9 @@ const BookingModal = ({
             <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
               <AlertCircle size={18} className="text-red-500 mt-0.5 shrink-0" />
               <div>
-                <p className="text-sm font-medium text-red-700">Booking unavailable</p>
+                <p className="text-sm font-medium text-red-700">
+                  Booking unavailable
+                </p>
                 <p className="text-sm text-red-600 mt-0.5">{error}</p>
               </div>
             </div>
@@ -226,7 +232,9 @@ const BookingModal = ({
 
           <div className="border-t border-slate-100 pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-slate-700">Total Amount</span>
+              <span className="text-sm font-medium text-slate-700">
+                Total Amount
+              </span>
               <span className="text-2xl font-bold text-amber-600">
                 {new Intl.NumberFormat("en-PK", {
                   style: "currency",
@@ -288,7 +296,8 @@ const Home = () => {
      BOOKING HOOKS
   ======================================================= */
   const createBookingMutation = useCreateBooking();
-  const { redirectToPayment, isProcessing: isPaymentProcessing } = usePaymentRedirection();
+  const { redirectToPayment, isProcessing: isPaymentProcessing } =
+    usePaymentRedirection();
 
   /* =======================================================
      SEARCH
@@ -326,7 +335,7 @@ const Home = () => {
       sort,
       order: "desc",
     }),
-    [search, provider, companyId, sort]
+    [search, provider, companyId, sort],
   );
 
   /* =======================================================
@@ -389,7 +398,7 @@ const Home = () => {
     });
 
     return Array.from(uniqueCompanies.values()).sort((a, b) =>
-      a.companyName.localeCompare(b.companyName)
+      a.companyName.localeCompare(b.companyName),
     );
   }, [tours]);
 
@@ -400,7 +409,8 @@ const Home = () => {
     const unique = new Map();
 
     tours.forEach((tour) => {
-      const destinationName = typeof tour?.to === "string" ? tour.to.trim() : "";
+      const destinationName =
+        typeof tour?.to === "string" ? tour.to.trim() : "";
       if (!destinationName) return;
 
       const key = destinationName.toLowerCase();
@@ -408,7 +418,7 @@ const Home = () => {
         unique.set(key, {
           name: destinationName,
           image: getImageUrl(tour?.coverImage),
-          tour: tour
+          tour: tour,
         });
       }
     });
@@ -420,10 +430,7 @@ const Home = () => {
      ACTIVE FILTERS
   ======================================================= */
   const hasActiveFilters =
-    searchInput.trim() ||
-    provider !== "all" ||
-    companyId ||
-    sort !== "newest";
+    searchInput.trim() || provider !== "all" || companyId || sort !== "newest";
 
   /* =======================================================
      CLEAR FILTERS
@@ -501,29 +508,28 @@ const Home = () => {
         tourId: bookingData.tourId,
         participants: Number(bookingData.participants),
         travelDate: bookingData.travelDate,
-        provider: bookingData.provider || 'stripe',
+        provider: bookingData.provider || "stripe",
       };
 
-      const response = await createBookingMutation.mutateAsync(cleanBookingData);
+      const response =
+        await createBookingMutation.mutateAsync(cleanBookingData);
 
       toast.success("Booking created! Redirecting to payment...");
 
       const result = await redirectToPayment(response);
 
-      if (result?.success && result?.method === 'manual') {
+      if (result?.success && result?.method === "manual") {
         toast.success("Booking confirmed successfully!");
         navigate(`/dashboard/bookings`);
       }
 
       setIsModalOpen(false);
       setSelectedTour(null);
-
     } catch (error) {
-      console.error('Full error object:', error);
+      console.error("Full error object:", error);
 
-      const errorMessage = error?.response?.data?.message ||
-                           error?.message ||
-                           "Booking failed";
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Booking failed";
 
       toast.error(errorMessage);
     }
@@ -568,7 +574,6 @@ const Home = () => {
   ======================================================= */
   return (
     <main className="min-h-screen bg-bg-secondary">
-
       {/* =====================================================
           HERO
       ===================================================== */}
@@ -594,8 +599,8 @@ const Home = () => {
                   Find your perfect tour
                 </h2>
                 <p className="section-description mt-1">
-                  Search and filter tours from TourismOS
-                  and trusted travel companies.
+                  Search and filter tours from TourismOS and trusted travel
+                  companies.
                 </p>
               </div>
 
@@ -655,13 +660,19 @@ const Home = () => {
                     style={{ color: "#f59e0b" }}
                     className="input-primary pl-10 pr-10 appearance-none cursor-pointer font-semibold"
                   >
-                    <option value="all" style={{ color: "#f59e0b" }}>All Tours</option>
-                    <option value="platform" style={{ color: "#f59e0b" }}>TourismOS Tours</option>
-                    <option value="company" style={{ color: "#f59e0b" }}>Company Tours</option>
+                    <option value="all" style={{ color: "#f59e0b" }}>
+                      All Tours
+                    </option>
+                    <option value="platform" style={{ color: "#f59e0b" }}>
+                      TourismOS Tours
+                    </option>
+                    <option value="company" style={{ color: "#f59e0b" }}>
+                      Company Tours
+                    </option>
                   </select>
                   <ChevronDown
                     size={15}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 pointer-events-none"
                   />
                 </div>
               </div>
@@ -683,16 +694,22 @@ const Home = () => {
                     style={{ color: "#f59e0b" }}
                     className="input-primary pl-10 pr-10 appearance-none cursor-pointer disabled:bg-bg-tertiary font-semibold"
                   >
-                    <option value="" style={{ color: "#f59e0b" }}>All Companies</option>
+                    <option value="" style={{ color: "#f59e0b" }}>
+                      All Companies
+                    </option>
                     {companies.map((company) => (
-                      <option key={company._id} value={company._id} style={{ color: "#f59e0b" }}>
+                      <option
+                        key={company._id}
+                        value={company._id}
+                        style={{ color: "#f59e0b" }}
+                      >
                         {company.companyName}
                       </option>
                     ))}
                   </select>
                   <ChevronDown
                     size={15}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 pointer-events-none"
                   />
                 </div>
               </div>
@@ -713,14 +730,22 @@ const Home = () => {
                     style={{ color: "#f59e0b" }}
                     className="input-primary pl-10 pr-10 appearance-none cursor-pointer font-semibold"
                   >
-                    <option value="newest" style={{ color: "#f59e0b" }}>Newest</option>
-                    <option value="popular" style={{ color: "#f59e0b" }}>Most Popular</option>
-                    <option value="price-low" style={{ color: "#f59e0b" }}>Price: Low to High</option>
-                    <option value="price-high" style={{ color: "#f59e0b" }}>Price: High to Low</option>
+                    <option value="newest" style={{ color: "#f59e0b" }}>
+                      Newest
+                    </option>
+                    <option value="popular" style={{ color: "#f59e0b" }}>
+                      Most Popular
+                    </option>
+                    <option value="price-low" style={{ color: "#f59e0b" }}>
+                      Price: Low to High
+                    </option>
+                    <option value="price-high" style={{ color: "#f59e0b" }}>
+                      Price: High to Low
+                    </option>
                   </select>
                   <ChevronDown
                     size={15}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 pointer-events-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 pointer-events-none"
                   />
                 </div>
               </div>
@@ -746,8 +771,8 @@ const Home = () => {
               Featured tours
             </h2>
             <p className="section-description max-w-xl">
-              Handpicked experiences from our platform
-              and trusted travel companies.
+              Handpicked experiences from our platform and trusted travel
+              companies.
             </p>
           </div>
 
@@ -764,9 +789,7 @@ const Home = () => {
             <div className="w-12 h-12 mx-auto rounded-xl bg-error-soft flex items-center justify-center">
               <AlertCircle size={22} className="text-error" />
             </div>
-            <h3 className="mt-4 text-lg font-semibold">
-              Unable to load tours
-            </h3>
+            <h3 className="mt-4 text-lg font-semibold">Unable to load tours</h3>
             <p className="mt-1 text-sm text-text-muted">
               Something went wrong while loading tours.
             </p>
@@ -799,9 +822,7 @@ const Home = () => {
             <div className="w-14 h-14 mx-auto rounded-2xl bg-brand-soft flex items-center justify-center">
               <Compass size={25} className="text-brand-primary" />
             </div>
-            <h3 className="mt-4 text-xl font-semibold">
-              No tours found
-            </h3>
+            <h3 className="mt-4 text-xl font-semibold">No tours found</h3>
             <p className="mt-1 text-sm text-text-muted">
               Try adjusting your search or filters.
             </p>
@@ -873,8 +894,8 @@ const Home = () => {
                 Where will you go next?
               </h2>
               <p className="section-description">
-                Explore destinations travelers are discovering
-                through TourismOS.
+                Explore destinations travelers are discovering through
+                TourismOS.
               </p>
             </div>
 
@@ -919,7 +940,7 @@ const Home = () => {
       {/* =====================================================
           PROVIDER CTA
       ===================================================== */}
-      
+
       {/* =====================================================
           BOOKING MODAL
       ===================================================== */}
@@ -931,7 +952,6 @@ const Home = () => {
         isProcessing={isProcessing}
         error={createBookingMutation.error}
       />
-
     </main>
   );
 };

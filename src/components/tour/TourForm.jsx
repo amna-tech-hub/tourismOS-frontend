@@ -13,10 +13,7 @@ import {
 // =========================================================
 // COMPANY ADMIN HOOKS
 // =========================================================
-import {
-  useCreateTour,
-  useUpdateTour,
-} from "../../api/queries/useTraveler";
+import { useCreateTour, useUpdateTour } from "../../api/queries/useTraveler";
 
 // =========================================================
 // EMPLOYEE HOOKS
@@ -218,7 +215,7 @@ const TourForm = ({
       setFormError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to upload image."
+          "Failed to upload image.",
       );
     } finally {
       event.target.value = "";
@@ -258,7 +255,7 @@ const TourForm = ({
       setFormError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to generate image."
+          "Failed to generate image.",
       );
     }
   };
@@ -288,7 +285,8 @@ const TourForm = ({
     if (validFiles.length === 0) return;
 
     try {
-      const response = await uploadMultipleImagesMutation.mutateAsync(validFiles);
+      const response =
+        await uploadMultipleImagesMutation.mutateAsync(validFiles);
       const newImages = getMultipleImageData(response);
 
       if (newImages.length === 0) {
@@ -304,7 +302,7 @@ const TourForm = ({
       setFormError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to upload images."
+          "Failed to upload images.",
       );
     } finally {
       event.target.value = "";
@@ -392,7 +390,7 @@ const TourForm = ({
       setFormError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to upload activity image."
+          "Failed to upload activity image.",
       );
     } finally {
       event.target.value = "";
@@ -547,7 +545,7 @@ const TourForm = ({
       updated[dayIndex] = {
         ...updated[dayIndex],
         activities: updated[dayIndex].activities.filter(
-          (_, index) => index !== activityIndex
+          (_, index) => index !== activityIndex,
         ),
       };
 
@@ -584,7 +582,7 @@ const TourForm = ({
     setTourFormData((previous) => ({
       ...previous,
       travelTips: (previous.travelTips || []).filter(
-        (_, itemIndex) => itemIndex !== index
+        (_, itemIndex) => itemIndex !== index,
       ),
     }));
   };
@@ -615,7 +613,7 @@ const TourForm = ({
     setTourFormData((previous) => ({
       ...previous,
       importantNotes: (previous.importantNotes || []).filter(
-        (_, itemIndex) => itemIndex !== index
+        (_, itemIndex) => itemIndex !== index,
       ),
     }));
   };
@@ -668,15 +666,17 @@ const TourForm = ({
     const uniqueImageIds = [...new Set(removedImageIds)];
     const results = await Promise.allSettled(
       uniqueImageIds.map((publicId) =>
-        deleteImageMutation.mutateAsync(publicId)
-      )
+        deleteImageMutation.mutateAsync(publicId),
+      ),
     );
 
-    const failedDeletes = results.filter((result) => result.status === "rejected");
+    const failedDeletes = results.filter(
+      (result) => result.status === "rejected",
+    );
     if (failedDeletes.length > 0) {
       console.error(
         "Some Cloudinary images could not be deleted:",
-        failedDeletes
+        failedDeletes,
       );
     }
 
@@ -737,7 +737,7 @@ const TourForm = ({
               public_id: "",
             },
         images: (tourFormData.images || []).filter(
-          (img) => img.url && img.public_id
+          (img) => img.url && img.public_id,
         ),
       };
 
@@ -762,12 +762,12 @@ const TourForm = ({
     } catch (error) {
       console.error(
         editMode ? "Failed to update tour:" : "Failed to create tour:",
-        error
+        error,
       );
       setFormError(
         error?.response?.data?.message ||
           error?.message ||
-          (editMode ? "Failed to update tour." : "Failed to create tour.")
+          (editMode ? "Failed to update tour." : "Failed to create tour."),
       );
     } finally {
       setSubmittingStatus(null);
@@ -1272,7 +1272,7 @@ const TourForm = ({
                                       updateActivity(
                                         dayIndex,
                                         activityIndex,
-                                        e.target.value
+                                        e.target.value,
                                       )
                                     }
                                     placeholder="e.g. Visit Altit Fort"
@@ -1302,7 +1302,7 @@ const TourForm = ({
                                         onClick={() =>
                                           handleRemoveActivityImage(
                                             dayIndex,
-                                            activityIndex
+                                            activityIndex,
                                           )
                                         }
                                         className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition"
@@ -1312,7 +1312,7 @@ const TourForm = ({
                                     </div>
                                   ) : (
                                     <label className="cursor-pointer">
-                                      <div className="w-16 h-16 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 hover:border-amber-400 hover:text-amber-500 transition">
+                                      <div className="w-16 h-16 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 hover:border-amber-400 hover:text-yellow-400 transition">
                                         <ImageIcon className="w-5 h-5" />
                                       </div>
                                       <input
@@ -1323,7 +1323,7 @@ const TourForm = ({
                                           handleActivityImageUpload(
                                             dayIndex,
                                             activityIndex,
-                                            e
+                                            e,
                                           )
                                         }
                                       />

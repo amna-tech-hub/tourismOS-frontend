@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  X,
-  BookOpen,
-  Calendar,
-  MapPin,
-  Loader2,
-  Check,
-} from "lucide-react";
+import { X, BookOpen, Calendar, MapPin, Loader2, Check } from "lucide-react";
 
 const CreateJournalModal = ({
   bookings = [],
@@ -16,7 +9,7 @@ const CreateJournalModal = ({
   error,
 }) => {
   const [selectedBookingId, setSelectedBookingId] = useState(
-    bookings[0]?._id || ""
+    bookings[0]?._id || "",
   );
 
   const handleSubmit = (e) => {
@@ -34,12 +27,11 @@ const CreateJournalModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-              <BookOpen size={20} className="text-amber-500" />
+              <BookOpen size={20} className="text-yellow-400" />
             </div>
 
             <div>
@@ -65,7 +57,6 @@ const CreateJournalModal = ({
 
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-5">
-
           <p className="text-sm font-medium text-slate-700 mb-3">
             Select your trip
           </p>
@@ -86,7 +77,6 @@ const CreateJournalModal = ({
                   }`}
                 >
                   <div className="flex items-center gap-3 p-3">
-
                     {/* Tour Image */}
                     {booking.tour?.coverImage ? (
                       <img
@@ -96,10 +86,7 @@ const CreateJournalModal = ({
                       />
                     ) : (
                       <div className="w-16 h-16 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                        <MapPin
-                          size={20}
-                          className="text-slate-400"
-                        />
+                        <MapPin size={20} className="text-slate-400" />
                       </div>
                     )}
 
@@ -122,13 +109,14 @@ const CreateJournalModal = ({
                         <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
                           <Calendar size={13} />
 
-                          {new Date(
-                            booking.travelDate
-                          ).toLocaleDateString("en-PK", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
+                          {new Date(booking.travelDate).toLocaleDateString(
+                            "en-PK",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}
                         </div>
                       )}
                     </div>
@@ -172,10 +160,7 @@ const CreateJournalModal = ({
             >
               {isProcessing ? (
                 <>
-                  <Loader2
-                    size={16}
-                    className="mr-2 animate-spin"
-                  />
+                  <Loader2 size={16} className="mr-2 animate-spin" />
                   Creating...
                 </>
               ) : (

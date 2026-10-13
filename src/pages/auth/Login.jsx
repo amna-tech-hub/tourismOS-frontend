@@ -4,7 +4,7 @@ import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLogin } from "../../api/queries/useAuth";
 import { useAuth } from "../../context/AuthContext";
 
-// Demo accounts shown on the login page (click-to-autofill)
+// Demo accounts shown on the login page (click-to-autofill + login)
 const DEMO_ACCOUNTS = [
   {
     label: "Company Dashboard",
@@ -31,6 +31,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loadingDemoLabel, setLoadingDemoLabel] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,10 +56,36 @@ export default function Login() {
     }
   };
 
-  // Autofill helper for demo buttons
-  const handleDemoFill = (account) => {
+  // One-click demo: fill the form AND submit immediately
+  const handleDemoFill = async (account) => {
     setFormData({ email: account.email, password: account.password });
     setErrorMsg("");
+    setLoadingDemoLabel(account.label);
+
+    try {
+      const response = await loginMutation.mutateAsync({
+        email: account.email,
+        password: account.password,
+      });
+
+      const user = response?.user || response?.data?.user;
+
+      if (!user) {
+        setErrorMsg("Demo login succeeded, but user information was missing.");
+        setLoadingDemoLabel("");
+        return;
+      }
+
+      loginUser(response);
+      redirectUser(user);
+      // No need to clear loadingDemoLabel — the page will unmount on redirect.
+    } catch (error) {
+      setErrorMsg(
+        error?.response?.data?.message ||
+          "Demo login failed. Please try the manual login."
+      );
+      setLoadingDemoLabel("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -168,7 +195,7 @@ export default function Login() {
           disabled={loginMutation.isPending}
           className="w-full py-3 rounded-full bg-[#fbbf24] border border-amber-500/40 text-slate-800 font-semibold text-sm hover:bg-amber-300 transition-colors shadow-md flex items-center justify-center gap-2"
         >
-          {loginMutation.isPending ? (
+          {loginMutation.isPending && !loadingDemoLabel ? (
             <>
               <Loader2 size={16} className="animate-spin" />
               Logging in...
@@ -180,7 +207,7 @@ export default function Login() {
       </form>
 
       {/* =====================================================
-          DEMO ACCOUNTS — click to autofill
+          DEMO ACCOUNTS — one-click login
       ===================================================== */}
       <div className="w-full mt-6">
         {/* Divider */}
@@ -194,24 +221,33 @@ export default function Login() {
 
         {/* Demo Buttons */}
         <div className="mt-3 flex flex-col gap-2">
-          {DEMO_ACCOUNTS.map((account) => (
-            <button
-              key={account.label}
-              type="button"
-              onClick={() => handleDemoFill(account)}
-              disabled={loginMutation.isPending}
-              className="w-full py-2.5 px-4 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-semibold text-left flex items-center justify-between disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
-              <span>{account.label}</span>
-              <span className="text-[10px] font-normal text-slate-500 truncate max-w-[140px]">
-                {account.email}
-              </span>
-            </button>
-          ))}
+          {DEMO_ACCOUNTS.map((account) => {
+            const isLoadingThis = loadingDemoLabel === account.label;
+
+            return (
+              <button
+                key={account.label}
+                type="button"
+                onClick={() => handleDemoFill(account)}
+                disabled={loginMutation.isPending}
+                className="w-full py-2.5 px-4 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-semibold text-left flex items-center justify-between disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  {isLoadingThis && (
+                    <Loader2 size={12} className="animate-spin" />
+                  )}
+                  {account.label}
+                </span>
+                <span className="text-[10px] font-normal text-slate-500 truncate max-w-[140px]">
+                  {isLoadingThis ? "Logging in..." : account.email}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         <p className="text-[10px] text-slate-500 text-center mt-2">
-          Click any role to autofill credentials, then press Login.
+          Click any role to log in instantly.
         </p>
       </div>
 

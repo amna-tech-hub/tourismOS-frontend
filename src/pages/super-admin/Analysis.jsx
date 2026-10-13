@@ -29,7 +29,7 @@ import {
   Legend,
 } from 'recharts';
 
-// Tooltip for Revenue Breakdown Pie Chart — light card, no shadow
+// Tooltip for Revenue Breakdown Pie Chart —
 const DonutTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
@@ -305,19 +305,19 @@ export default function Analysis() {
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-center pt-2 border-t border-slate-100">
-            <div className="p-2 rounded-xl bg-yellow-300/20 border border-yellow-300/40 min-w-0">
-              <span className="text-[10px] font-semibold uppercase text-white block bg-yellow-400">
+            <div className="p-2 rounded-xl bg-yellow-300 border border-yellow-300 min-w-0">
+              <span className="text-[10px]  uppercase text-white block bg-yellow-300 font-bold">
                 Commission
               </span>
               <p className="text-xs font-bold text-slate-900 mt-0.5 break-words">
                 {formatPKR(bookingCommission)}
               </p>
             </div>
-            <div className="p-2 rounded-xl bg-black/10 border border-amber-500/20 min-w-0">
-              <span className="text-[10px] font-semibold uppercase text-white bg-black block">
+            <div className="p-2 rounded-xl bg-black/80 border  min-w-0">
+              <span className="text-[10px] font-bold uppercase text-white  block">
                 Subscriptions
               </span>
-              <p className="text-xs font-bold text-slate-900 mt-0.5 break-words">
+              <p className="text-xs font-bold text-white! mt-0.5 break-words">
                 {formatPKR(subscriptionRevenue)}
               </p>
             </div>

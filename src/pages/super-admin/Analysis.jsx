@@ -5,7 +5,6 @@ import {
   Building2,
   Ticket,
   Percent,
-  Crown,
   Calendar,
   BarChart3,
   PieChart,
@@ -30,29 +29,35 @@ import {
   Legend,
 } from 'recharts';
 
-// Custom Tooltip for Revenue Breakdown Pie Chart
+// Tooltip for Revenue Breakdown Pie Chart — light card, no shadow
 const DonutTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
     return (
-      <div className="bg-slate-900 text-white text-xs px-3 py-2 rounded-xl shadow-lg border border-slate-800 font-sans">
-        <p className="font-semibold text-slate-200 capitalize">{name}</p>
-        <p className="text-amber-primary font-bold mt-0.5">PKR {(value || 0).toLocaleString()}</p>
+      <div className="bg-white text-slate-900 text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 font-sans">
+        <p className="font-semibold text-slate-700 capitalize">{name}</p>
+        <p className="text-yellow-600 font-bold mt-0.5">
+          PKR {(value || 0).toLocaleString()}
+        </p>
       </div>
     );
   }
   return null;
 };
 
-// Custom Tooltip for Company Performance Bar Chart
+// Tooltip for Company Performance Bar Chart — dark card, no shadow
 const CompanyBarTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-slate-900 text-white text-xs p-3 rounded-xl shadow-xl border border-slate-800 font-sans space-y-1">
+      <div className="bg-[#1a1a1a] text-white text-xs p-3 rounded-xl border border-white/10 font-sans space-y-1">
         <p className="font-semibold text-slate-200">{data.name}</p>
-        <p className="text-amber-primary font-medium">Revenue: PKR {(data.revenue || 0).toLocaleString()}</p>
-        <p className="text-purple-400 font-medium">Commission: PKR {(data.commission || 0).toLocaleString()}</p>
+        <p className="text-yellow-400 font-medium">
+          Revenue: PKR {(data.revenue || 0).toLocaleString()}
+        </p>
+        <p className="text-yellow-300 font-medium">
+          Commission: PKR {(data.commission || 0).toLocaleString()}
+        </p>
         <p className="text-slate-300">Bookings: {data.bookings || 0}</p>
       </div>
     );
@@ -67,13 +72,17 @@ export default function Analysis() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="relative">
-          <div className="w-16 h-16 border-4 border-amber-light border-t-amber-primary rounded-full animate-spin" />
+          <div className="w-16 h-16 border-4 border-amber-500/20 border-t-yellow-500 rounded-full animate-spin" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="w-6 h-6 text-amber-primary animate-spin" />
+            <Loader2 className="w-6 h-6 text-yellow-500 animate-spin" />
           </div>
         </div>
-        <p className="text-sm font-medium text-text-secondary mt-6">Loading Platform Analytics...</p>
-        <p className="text-xs text-text-muted mt-1">Aggregating revenue, bookings, and company metrics</p>
+        <p className="text-sm font-medium text-slate-700 mt-6">
+          Loading Platform Analytics...
+        </p>
+        <p className="text-xs text-slate-500 mt-1">
+          Aggregating revenue, bookings, and company metrics
+        </p>
       </div>
     );
   }
@@ -81,15 +90,19 @@ export default function Analysis() {
   if (isError) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="bg-red-50/80 border border-red-200 rounded-2xl p-8 text-center max-w-md mx-auto">
-          <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-6 h-6 text-error" />
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center max-w-md mx-auto">
+          <div className="w-12 h-12 bg-rose-50 border border-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-6 h-6 text-rose-500" />
           </div>
-          <h3 className="text-base font-bold text-text-primary font-serif">Unable to Load Analytics</h3>
-          <p className="text-xs text-text-muted mt-1">Failed to fetch intelligence metrics from the server.</p>
-          <button 
-            onClick={() => refetch()} 
-            className="mt-5 btn-yellow text-xs py-2.5 px-4 gap-2"
+          <h3 className="text-base font-bold text-slate-900 font-serif">
+            Unable to Load Analytics
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">
+            Failed to fetch intelligence metrics from the server.
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-yellow-300 text-slate-900 font-semibold text-xs py-2.5 px-4 border border-yellow-400/40 cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Retry Connection
@@ -121,10 +134,17 @@ export default function Analysis() {
     { name: 'Commission', value: bookingCommission },
     { name: 'Subscriptions', value: subscriptionRevenue },
   ];
-  const PIE_COLORS = ['#F59E0B', '#8B5CF6'];
+  // Yellow + black only
+  const PIE_COLORS = ['#FACC15', '#1a1a1a'];
 
   const getCompanyName = (c, defaultIndex) => {
-    return c.companyName || c.name || c.company?.name || c.companyDetails?.name || `Company ${c._id ? c._id.slice(-4) : defaultIndex + 1}`;
+    return (
+      c.companyName ||
+      c.name ||
+      c.company?.name ||
+      c.companyDetails?.name ||
+      `Company ${c._id ? c._id.slice(-4) : defaultIndex + 1}`
+    );
   };
 
   const companyChartData = topCompanies.map((c, i) => ({
@@ -135,123 +155,119 @@ export default function Analysis() {
   }));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
-      
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-1 py-2 space-y-4 sm:space-y-5 min-w-0">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-border-subtle pb-6">
-        <div>
-          
-          <h1 className="text-3xl md:text-4xl font-bold font-serif text-text-primary">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-3xl md:text-4xl font-bold font-serif text-slate-900">
             Platform Analytics
           </h1>
-          <p className="subheading text-xs mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
             Comprehensive overview of revenue, bookings, and company performance across TourismOS.
           </p>
         </div>
-
-       
       </div>
 
       {/* KPI TOP CARDS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mt-6">
         {/* Platform Revenue */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-w-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-500">
                 Platform Revenue
               </span>
-              <p className="text-2xl font-bold font-sans text-text-primary mt-2">
+              <p className="text-xl sm:text-2xl font-bold font-sans text-slate-900 mt-2 break-words">
                 {formatPKR(totalPlatformRevenue)}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-light/70 border border-amber-200 flex items-center justify-center text-amber-primary">
+            <div className="w-10 h-10 rounded-xl bg-yellow-400/30 border border-yellow-300/50 flex items-center justify-center text-yellow-700 shrink-0">
               <Wallet className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-border-light text-[10px] text-text-muted flex justify-between">
+          <div className="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-500 flex justify-between gap-2 flex-wrap">
             <span>Comm: {formatPKR(bookingCommission)}</span>
             <span>Subs: {formatPKR(subscriptionRevenue)}</span>
           </div>
         </div>
 
         {/* Booking Volume */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-w-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-500">
                 Booking Volume
               </span>
-              <p className="text-2xl font-bold font-sans text-text-primary mt-2">
+              <p className="text-xl sm:text-2xl font-bold font-sans text-slate-900 mt-2 break-words">
                 {formatPKR(totalBookingValue)}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-100/70 border border-blue-200 flex items-center justify-center text-blue-700">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-yellow-500/20 flex items-center justify-center text-amber-700 shrink-0">
               <Ticket className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-border-light text-[10px] text-text-muted flex justify-between">
+          <div className="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-500 flex justify-between gap-2 flex-wrap">
             <span>{totalTransactions} transactions</span>
             <span>Payouts: {formatPKR(totalPayouts)}</span>
           </div>
         </div>
 
         {/* Active Companies */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-w-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700">
                 Active Companies
               </span>
-              <p className="text-2xl font-bold font-sans text-text-primary mt-2">
+              <p className="text-xl sm:text-2xl font-bold font-sans text-slate-900 mt-2 break-words">
                 {totalActiveCompanies}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-100/70 border border-emerald-200 flex items-center justify-center text-emerald-700">
+            <div className="w-10 h-10 rounded-xl bg-[#1a1a1a]/5 border border-[#1a1a1a]/15 flex items-center justify-center text-[#1a1a1a] shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-border-light text-[10px] text-text-muted flex justify-between">
+          <div className="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-500 flex justify-between gap-2 flex-wrap">
             <span>Total Companies: {topCompanies.length}</span>
-            <span>Active: {((totalActiveCompanies / (topCompanies.length || 1)) * 100).toFixed(0)}%</span>
+            <span>
+              Active:{' '}
+              {((totalActiveCompanies / (topCompanies.length || 1)) * 100).toFixed(0)}%
+            </span>
           </div>
         </div>
 
         {/* Commission Rate */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-w-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-500">
                 Avg Commission Rate
               </span>
-              <p className="text-2xl font-bold font-sans text-purple-700 mt-2">
+              <p className="text-xl sm:text-2xl font-bold font-sans text-yellow-600 mt-2 break-words">
                 {effectiveCommissionRate.toFixed(2)}%
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-purple-100/70 border border-purple-200 flex items-center justify-center text-purple-700">
+            <div className="w-10 h-10 rounded-xl bg-yellow-300/30 border border-yellow-300/50 flex items-center justify-center text-yellow-700 shrink-0">
               <Percent className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-border-light text-[10px] text-text-muted flex justify-between">
+          <div className="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-500 flex justify-between gap-2 flex-wrap">
             <span>Industry avg: 8-15%</span>
-            <span className="text-success font-semibold">Healthy Rate</span>
+            <span className="text-emerald-600 font-semibold">Healthy Rate</span>
           </div>
         </div>
-
       </div>
 
       {/* REVENUE BREAKDOWN & COMPANY PERFORMANCE CHARTS */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Revenue Breakdown Pie Chart */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col min-w-0">
           <div>
-            <h3 className="text-base font-bold font-serif text-text-primary inline-flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-amber-primary" />
+            <h3 className="text-base font-bold font-serif text-slate-900 inline-flex items-center gap-2">
+              <PieChart className="w-5 h-5 text-yellow-500" />
               Revenue Breakdown
             </h3>
-            <p className="text-xs text-text-muted mt-0.5">Commission vs Subscriptions</p>
+            <p className="text-xs text-slate-500 mt-0.5">Commission vs Subscriptions</p>
           </div>
 
           <div className="relative w-full h-[200px] my-2">
@@ -267,7 +283,11 @@ export default function Analysis() {
                   dataKey="value"
                 >
                   {revenueBreakdownData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={PIE_COLORS[index % PIE_COLORS.length]}
+                      stroke="none"
+                    />
                   ))}
                 </Pie>
                 <Tooltip content={<DonutTooltip />} />
@@ -275,114 +295,155 @@ export default function Analysis() {
             </ResponsiveContainer>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xs font-bold text-text-primary">
+              <span className="text-xs font-bold text-slate-900">
                 PKR {(totalPlatformRevenue / 1000).toFixed(0)}k
               </span>
-              <span className="text-[9px] font-semibold text-text-muted uppercase tracking-wider">Total</span>
+              <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">
+                Total
+              </span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-center pt-2 border-t border-border-light">
-            <div className="p-2 rounded-xl bg-amber-light/50 border border-amber-200/60">
-              <span className="text-[10px] font-semibold uppercase text-amber-800 block">Commission</span>
-              <p className="text-xs font-bold text-text-primary mt-0.5">{formatPKR(bookingCommission)}</p>
+          <div className="grid grid-cols-2 gap-2 text-center pt-2 border-t border-slate-100">
+            <div className="p-2 rounded-xl bg-yellow-300/20 border border-yellow-300/40 min-w-0">
+              <span className="text-[10px] font-semibold uppercase text-white block bg-yellow-400">
+                Commission
+              </span>
+              <p className="text-xs font-bold text-slate-900 mt-0.5 break-words">
+                {formatPKR(bookingCommission)}
+              </p>
             </div>
-            <div className="p-2 rounded-xl bg-purple-50 border border-purple-100">
-              <span className="text-[10px] font-semibold uppercase text-purple-800 block">Subscriptions</span>
-              <p className="text-xs font-bold text-text-primary mt-0.5">{formatPKR(subscriptionRevenue)}</p>
+            <div className="p-2 rounded-xl bg-black/10 border border-amber-500/20 min-w-0">
+              <span className="text-[10px] font-semibold uppercase text-white bg-black block">
+                Subscriptions
+              </span>
+              <p className="text-xs font-bold text-slate-900 mt-0.5 break-words">
+                {formatPKR(subscriptionRevenue)}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Company Performance Bar Chart */}
-        <div className="bg-bg-card border border-border-subtle rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow lg:col-span-2">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 lg:col-span-2 min-w-0">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold font-serif text-text-primary inline-flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-emerald-500" />
+            <div className="min-w-0">
+              <h3 className="text-base font-bold font-serif text-slate-900 inline-flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-yellow-500" />
                 Company Output
               </h3>
-              <p className="text-xs text-text-muted mt-0.5">Revenue vs Commission generated by top companies</p>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Revenue vs Commission generated by top companies
+              </p>
             </div>
           </div>
 
-          <div className="h-[240px] w-full">
+          <div className="h-[220px] sm:h-[240px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={companyChartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+              <BarChart
+                data={companyChartData}
+                margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748B' }} tickLine={false} />
-                <YAxis 
-                  tick={{ fontSize: 11, fill: '#64748B' }} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: '#64748B' }}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: '#64748B' }}
+                  tickLine={false}
                   axisLine={false}
                   tickFormatter={(val) => `PKR ${(val / 1000).toFixed(0)}k`}
                 />
-                <Tooltip content={<CompanyBarTooltip />} />
+                <Tooltip
+                  content={<CompanyBarTooltip />}
+                  cursor={{ fill: 'rgba(250, 204, 21, 0.08)' }}
+                />
                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                <Bar dataKey="revenue" name="Revenue" fill="#F59E0B" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="commission" name="Commission" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="revenue"
+                  name="Revenue"
+                  fill="#FACC15"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={36}
+                />
+                <Bar
+                  dataKey="commission"
+                  name="Commission"
+                  fill="#1a1a1a"
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={36}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
 
       {/* TOP COMPANIES TABLE */}
-      <div className="bg-bg-card border border-border-subtle rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-        <div className="p-6 border-b border-border-light flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold font-serif text-text-primary inline-flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-amber-primary" />
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div className="p-5 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-base font-bold font-serif text-slate-900 inline-flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
               Top Performing Companies
             </h3>
-            <p className="text-xs text-text-muted mt-0.5">Ranked by total revenue generated</p>
+            <p className="text-xs text-slate-500 mt-0.5">Ranked by total revenue generated</p>
           </div>
-          <span className="badge-yellow">{topCompanies.length} Companies</span>
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-yellow-300/30 border border-yellow-300/50 text-yellow-800 text-[10px] font-bold whitespace-nowrap shrink-0">
+            {topCompanies.length} Companies
+          </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-bg-secondary text-text-muted font-semibold border-b border-border-subtle uppercase tracking-wider">
+        <div className="overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <table className="w-full min-w-[820px] text-left text-xs">
+            <thead className="bg-amber-500/5 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider">
               <tr>
-                <th className="py-3.5 px-6">#</th>
-                <th className="py-3.5 px-6">Company Name</th>
-                <th className="py-3.5 px-6 text-right">Total Revenue</th>
-                <th className="py-3.5 px-6 text-right">Bookings</th>
-                <th className="py-3.5 px-6 text-right">Avg Value</th>
-                <th className="py-3.5 px-6 text-right">Commission</th>
+                <th className="py-3.5 px-6 whitespace-nowrap">#</th>
+                <th className="py-3.5 px-6 whitespace-nowrap">Company Name</th>
+                <th className="py-3.5 px-6 text-right whitespace-nowrap">Total Revenue</th>
+                <th className="py-3.5 px-6 text-right whitespace-nowrap">Bookings</th>
+                <th className="py-3.5 px-6 text-right whitespace-nowrap">Avg Value</th>
+                <th className="py-3.5 px-6 text-right whitespace-nowrap">Commission</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-light">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {topCompanies.length > 0 ? (
                 topCompanies.map((company, index) => {
                   const isEarning = company.totalRevenue > 0;
                   const companyName = getCompanyName(company, index);
 
                   return (
-                    <tr key={company._id || index} className="hover:bg-bg-secondary/70 transition-colors">
-                      <td className="py-4 px-6 font-semibold text-text-muted">
-                        {index === 0 ? <Trophy className="w-4 h-4 text-amber-primary" /> :
-                         index === 1 ? <Medal className="w-4 h-4 text-slate-400" /> :
-                         index === 2 ? <Medal className="w-4 h-4 text-amber-700" /> :
-                         `#${index + 1}`}
+                    <tr key={company._id || index}>
+                      <td className="py-4 px-6 font-semibold text-slate-500">
+                        {index === 0 ? (
+                          <Trophy className="w-4 h-4 text-yellow-500" />
+                        ) : index === 1 ? (
+                          <Medal className="w-4 h-4 text-slate-400" />
+                        ) : index === 2 ? (
+                          <Medal className="w-4 h-4 text-yellow-400" />
+                        ) : (
+                          `#${index + 1}`
+                        )}
                       </td>
-                      <td className="py-4 px-6 font-semibold text-text-primary">
-                        <div className="flex items-center gap-2">
-                          <Store className="w-4 h-4 text-text-muted" />
-                          <span>{companyName}</span>
+                      <td className="py-4 px-6 font-semibold text-slate-900">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Store className="w-4 h-4 text-slate-400 shrink-0" />
+                          <span className="truncate max-w-[220px]">{companyName}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-right font-bold text-text-primary">
+                      <td className="py-4 px-6 text-right font-bold text-slate-900">
                         {isEarning ? formatPKR(company.totalRevenue) : '—'}
                       </td>
-                      <td className="py-4 px-6 text-right font-medium text-text-secondary">
+                      <td className="py-4 px-6 text-right font-medium text-slate-700">
                         {company.totalBookings || 0}
                       </td>
-                      <td className="py-4 px-6 text-right text-text-secondary">
+                      <td className="py-4 px-6 text-right text-slate-700">
                         {company.avgBookingValue ? formatPKR(company.avgBookingValue) : '—'}
                       </td>
-                      <td className="py-4 px-6 text-right text-amber-primary font-medium">
+                      <td className="py-4 px-6 text-right text-yellow-600 font-medium">
                         {company.totalCommission ? formatPKR(company.totalCommission) : '—'}
                       </td>
                     </tr>
@@ -390,7 +451,7 @@ export default function Analysis() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-8 text-center text-text-muted">
+                  <td colSpan="6" className="py-8 text-center text-slate-500">
                     No active company records available.
                   </td>
                 </tr>
@@ -399,7 +460,6 @@ export default function Analysis() {
           </table>
         </div>
       </div>
-
     </div>
   );
 }

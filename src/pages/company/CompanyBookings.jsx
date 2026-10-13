@@ -644,22 +644,14 @@ const CompanyBookings = () => {
     );
   };
 
-  /* =========================================================
-     LOADING
-  ========================================================= */
-
-  // IMPORTANT:
-  // Only show the full-page loader on the very first load.
-  // When search/filters/pagination change, keep the current page visible
-  // and use isFetching for the small loading indicators instead.
-
+  
   /* =========================================================
      PAGE
   ========================================================= */
 
   return (
     <div className="min-h-[calc(100vh-80px)] ">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 ">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-1 ">
 
         {/* =====================================================
             HEADER
@@ -667,13 +659,7 @@ const CompanyBookings = () => {
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-7">
           <div>
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <span>Company</span>
-              <span>/</span>
-              <span className="text-slate-900">
-                Bookings
-              </span>
-            </div>
+
 
             <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
               Bookings

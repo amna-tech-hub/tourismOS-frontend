@@ -100,11 +100,8 @@ export default function SuperAdminDashboard() {
       ===================================================== */}
       <section className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4">
         <div>
-          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-yellow-600 mb-1 sm:mb-2">
-            Super Admin
-          </p>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-slate-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-bold font-serif text-slate-900">
             Platform Overview
           </h1>
 

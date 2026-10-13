@@ -278,8 +278,8 @@ button,
       px-3 py-1
       rounded-full
       text-xs font-semibold
-      bg-yellow-100
-      text-yellow-800;
+      bg-white
+      text-yellow-400;
   }
 
   .badge-yellow-filled {

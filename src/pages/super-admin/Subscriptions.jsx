@@ -229,26 +229,16 @@ export default function Subscriptions() {
   // =========================================================
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-8 font-sans">
+    <div className="max-w-7xl mx-auto px-4  space-y-3 font-sans">
 
       {/* =====================================================
           HEADER
       ====================================================== */}
 
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-slate-200/60 pb-6">
+      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between ">
 
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-
-            <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full border border-yellow-200/60 inline-flex items-center gap-1.5">
-
-              <Crown className="w-3 h-3 text-yellow-600" />
-
-              Subscription Management
-
-            </span>
-
-          </div>
+        <div className='mb-6'>
+       
 
           <h1 className="text-3xl md:text-4xl font-bold font-serif text-slate-900">
             Plans & Subscriptions
@@ -259,7 +249,7 @@ export default function Subscriptions() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
 
           <button
             onClick={handleOpenCreateModal}
@@ -350,7 +340,7 @@ export default function Subscriptions() {
           onClick={() => setActiveTab('plans')}
           className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 cursor-pointer ${
             activeTab === 'plans'
-              ? 'border-yellow-500 text-yellow-600'
+              ? 'border-yellow-500 text-yellow-400'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -361,7 +351,7 @@ export default function Subscriptions() {
           onClick={() => setActiveTab('company-subscriptions')}
           className={`pb-3 px-4 text-xs font-bold tracking-wide border-b-2 cursor-pointer ${
             activeTab === 'company-subscriptions'
-              ? 'border-yellow-500 text-yellow-600'
+              ? 'border-yellow-500 text-yellow-400'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >

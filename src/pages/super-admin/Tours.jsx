@@ -246,15 +246,15 @@ const Tours = () => {
   // =========================================================
 
   return (
-    <div className="min-h-screen bg-bg-secondary px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-bg-secondary px-4  sm:px-6 lg:px-1">
       <div className="mx-auto max-w-7xl" id="tours-section">
         
         {/* HEADER */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
-            <div className="flex items-center gap-3">
+            <div className="flex gap-3">
               <div>
-                <h1 className="font-serif text-3xl font-bold text-text-primary">
+                <h1 className="text-3xl md:text-4xl font-bold font-serif text-slate-900">
                   Tours Management
                 </h1>
                 <p className="text-sm text-slate-500">
@@ -267,7 +267,7 @@ const Tours = () => {
           <button
             type="button"
             onClick={handleCreateTour}
-            className="btn-primary text-xs py-2.5 px-4 gap-2 cursor-pointer"
+            className="btn-primary text-xs py-2.5 px-4 gap-2 cursor-pointer bg-yellow-400"
           >
             <Plus className="h-4 w-4" />
             Create New Tour
@@ -517,9 +517,9 @@ const Tours = () => {
                       Tours currently available to travelers
                     </p>
                   </div>
-                  <span className="badge-yellow">
+                  {/* <span className="badge-yellow">
                     {publishedTours.length}
-                  </span>
+                  </span> */}
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -675,9 +675,7 @@ const Tours = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl bg-white p-8">
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-50">
-                <Sparkles className="h-6 w-6 text-yellow-500" />
-              </div>
+             
               <h3 className="mt-4 font-serif text-lg font-bold text-text-primary">
                 Publish this tour?
               </h3>

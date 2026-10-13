@@ -839,15 +839,7 @@ const CompanyProfile = () => {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-yellow-600">
-              Company Management
-            </p>
-
-            <span className="badge-yellow">
-              Profile
-            </span>
-          </div>
+       
 
           <h1 className="mt-1 text-3xl font-semibold text-slate-900">
             Company Profile

@@ -401,7 +401,7 @@ const InviteEmployeeModal = ({
               <Send size={18} />
             </div>
 
-            <h2 className="mt-4 text-xl font-semibold text-slate-900">
+            <h2 className="mt-4 text-xl font-semibold text-slate-900 ">
               Invite Employee
             </h2>
 
@@ -1181,13 +1181,6 @@ console.log(employees," data");
   // INITIAL LOADING ONLY
   // ====================================================
 
-  // FIX:
-  // Do NOT replace the whole page when searching,
-  // filtering, changing page, or refreshing.
-  //
-  // The full-page loader is only shown when there
-  // is no response/data yet.
-
   if (isLoading && !response) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center">
@@ -1254,15 +1247,7 @@ console.log(employees," data");
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-yellow-600">
-              Company Management
-            </p>
-
-            <span className="badge-yellow">
-              Employees
-            </span>
-          </div>
+         
 
           <h1 className="mt-1 text-3xl font-semibold text-slate-900">
             Employees

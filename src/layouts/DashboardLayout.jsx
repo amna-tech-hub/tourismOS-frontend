@@ -88,7 +88,7 @@ return [
             />
             <div className="min-w-0">
               <span className="font-serif font-bold text-lg text-white tracking-wide leading-none block truncate">
-                Tourism<span className="text-yellow-500 ">OS</span>
+                Tourism<span className="text-yellow-400 ">OS</span>
               </span>
               <span className="block text-[9px] font-medium text-slate-400 tracking-wider uppercase truncate">
                 {portalType.replace('-', ' ')}
@@ -108,7 +108,7 @@ return [
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
           isActive
-            ? 'bg-yellow-500 text-[#1a1a1a] shadow-lg shadow-yellow-500/25'
+            ? 'bg-yellow-400 text-[#1a1a1a] shadow-lg shadow-yellow-500/25'
             : 'text-slate-400 hover:text-white hover:bg-white/5'
         }`
       }
@@ -141,12 +141,7 @@ return [
               <FaSignOutAlt className="text-xs shrink-0" />
               <span className="truncate">Logout</span>
             </button>
-            <button
-              className="px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors shrink-0"
-              title="Settings"
-            >
-              <FaCog className="text-sm" />
-            </button>
+          
           </div>
         </div>
       </aside>
@@ -165,10 +160,7 @@ return [
           </button>
           
           <div className="flex items-center gap-2 sm:gap-4 ml-auto flex-wrap justify-end">
-            <span className="hidden sm:inline-flex items-center gap-2 text-xs text-text-muted shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              System Online
-            </span>
+          
             <span className="text-[11px] sm:text-xs font-medium text-text-secondary bg-bg-card px-2.5 sm:px-3 py-1.5 rounded-lg border border-border-subtle shadow-sm shrink-0">
               {new Date().toLocaleDateString('en-US', { 
                 weekday: 'short',

@@ -147,9 +147,9 @@ export default function UserManagement() {
       {/* --------------------------------------------------
           Header
       -------------------------------------------------- */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4  pb-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Users Directory</h1>
+          <h1 className="text-3xl md:text-4xl font-bold font-serif text-slate-900">Users Directory</h1>
           <p className="text-xs text-slate-500 mt-1">
             Manage platform user accounts, assign authorization roles, and audit account status.
           </p>
@@ -159,7 +159,7 @@ export default function UserManagement() {
       {/* --------------------------------------------------
           Search & Filters Bar
       -------------------------------------------------- */}
-      <div className="bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-xl  p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />

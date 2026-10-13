@@ -68,16 +68,14 @@ const formatTourForForm = (tour) => {
 
     price: tour.price ?? 15000,
 
-    maxParticipants:
-      tour.maxParticipants ?? 10,
+    maxParticipants: tour.maxParticipants ?? 10,
 
     status: tour.status || "draft",
 
     coverImage: {
       url: tour.coverImage?.url || "",
 
-      public_id:
-        tour.coverImage?.public_id || "",
+      public_id: tour.coverImage?.public_id || "",
     },
 
     images: tour.images || [],
@@ -85,26 +83,20 @@ const formatTourForForm = (tour) => {
     itinerary: tour.itinerary || [],
 
     budgetBreakdown: {
-      hotel:
-        tour.budgetBreakdown?.hotel ?? 0,
+      hotel: tour.budgetBreakdown?.hotel ?? 0,
 
-      transport:
-        tour.budgetBreakdown?.transport ?? 0,
+      transport: tour.budgetBreakdown?.transport ?? 0,
 
-      food:
-        tour.budgetBreakdown?.food ?? 0,
+      food: tour.budgetBreakdown?.food ?? 0,
 
-      activities:
-        tour.budgetBreakdown?.activities ?? 0,
+      activities: tour.budgetBreakdown?.activities ?? 0,
     },
 
     travelTips: tour.travelTips || [],
 
-    bestTimeToVisit:
-      tour.bestTimeToVisit || "",
+    bestTimeToVisit: tour.bestTimeToVisit || "",
 
-    importantNotes:
-      tour.importantNotes || [],
+    importantNotes: tour.importantNotes || [],
 
     faqs: tour.faqs || [],
   };
@@ -137,8 +129,7 @@ const CreateTour = ({
 
   const [step, setStep] = useState("method");
 
-  const [tourFormData, setTourFormData] =
-    useState(getInitialTourFormData());
+  const [tourFormData, setTourFormData] = useState(getInitialTourFormData());
 
   // ==========================================================
   // POPULATE FORM
@@ -154,18 +145,11 @@ const CreateTour = ({
     // --------------------------------------------------------
 
     if (editTour) {
-      console.log(
-        "CreateTour - Edit Tour:",
-        editTour
-      );
+      ("CreateTour - Edit Tour:", editTour);
 
-      const formattedTour =
-        formatTourForForm(editTour);
+      const formattedTour = formatTourForForm(editTour);
 
-      console.log(
-        "CreateTour - Formatted Data:",
-        formattedTour
-      );
+      ("CreateTour - Formatted Data:", formattedTour);
 
       setTourFormData(formattedTour);
 
@@ -178,9 +162,7 @@ const CreateTour = ({
     // CREATE MODE
     // --------------------------------------------------------
 
-    setTourFormData(
-      getInitialTourFormData()
-    );
+    setTourFormData(getInitialTourFormData());
 
     setStep("method");
   }, [isOpen, editTour]);
@@ -192,9 +174,7 @@ const CreateTour = ({
   const handleClose = () => {
     setStep("method");
 
-    setTourFormData(
-      getInitialTourFormData()
-    );
+    setTourFormData(getInitialTourFormData());
 
     onClose?.();
   };
@@ -211,9 +191,7 @@ const CreateTour = ({
   // AI GENERATED TOUR
   // ==========================================================
 
-  const handleAIGeneratedTour = (
-    generatedTour
-  ) => {
+  const handleAIGeneratedTour = (generatedTour) => {
     setTourFormData({
       ...getInitialTourFormData(),
       ...(generatedTour || {}),
@@ -264,40 +242,28 @@ const CreateTour = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-
       <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl my-8 max-h-[92vh] flex flex-col overflow-hidden">
-
         {/* ==================================================
             HEADER
         ================================================== */}
 
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
-
           <div className="flex items-center gap-3">
-
             <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-amber-600" />
             </div>
 
             <div>
-
               <h2 className="text-lg font-bold font-serif text-slate-900">
+                {step === "method" && "Create a New Tour"}
 
-                {step === "method" &&
-                  "Create a New Tour"}
-
-                {step === "ai-input" &&
-                  "Generate Tour with AI"}
+                {step === "ai-input" && "Generate Tour with AI"}
 
                 {step === "form" &&
-                  (isEditMode
-                    ? "Edit Tour"
-                    : "Build Your Tour")}
-
+                  (isEditMode ? "Edit Tour" : "Build Your Tour")}
               </h2>
 
               <p className="text-[11px] text-slate-500 mt-0.5">
-
                 {step === "method" &&
                   "Choose how you would like to create your tour."}
 
@@ -308,11 +274,8 @@ const CreateTour = ({
                   (isEditMode
                     ? "Update the tour details and save your changes."
                     : "Review and customize your tour before saving.")}
-
               </p>
-
             </div>
-
           </div>
 
           {/* CLOSE */}
@@ -324,7 +287,6 @@ const CreateTour = ({
           >
             <X className="w-5 h-5" />
           </button>
-
         </div>
 
         {/* ==================================================
@@ -332,37 +294,28 @@ const CreateTour = ({
         ================================================== */}
 
         <div className="overflow-y-auto flex-1 p-6">
-
           {/* ==================================================
               CREATE METHOD
           ================================================== */}
 
-          {step === "method" &&
-            !isEditMode && (
-              <TourCreationMethod
-                onGenerateWithAI={() =>
-                  setStep("ai-input")
-                }
-                onCreateYourself={
-                  handleManualCreation
-                }
-              />
-            )}
+          {step === "method" && !isEditMode && (
+            <TourCreationMethod
+              onGenerateWithAI={() => setStep("ai-input")}
+              onCreateYourself={handleManualCreation}
+            />
+          )}
 
           {/* ==================================================
               AI INPUT
           ================================================== */}
 
-          {step === "ai-input" &&
-            !isEditMode && (
-              <TourGenerationInput
-                onGenerated={
-                  handleAIGeneratedTour
-                }
-                onBack={handleBack}
-                userRole={userRole}
-              />
-            )}
+          {step === "ai-input" && !isEditMode && (
+            <TourGenerationInput
+              onGenerated={handleAIGeneratedTour}
+              onBack={handleBack}
+              userRole={userRole}
+            />
+          )}
 
           {/* ==================================================
               TOUR FORM
@@ -370,30 +323,18 @@ const CreateTour = ({
 
           {step === "form" && (
             <TourForm
-              key={
-                editTour?._id ||
-                editTour?.id ||
-                "new-tour"
-              }
+              key={editTour?._id || editTour?.id || "new-tour"}
               tourFormData={tourFormData}
-              setTourFormData={
-                setTourFormData
-              }
+              setTourFormData={setTourFormData}
               onBack={handleBack}
               onSuccess={onSuccess}
               onClose={handleClose}
               editMode={isEditMode}
-              tourId={
-                editTour?._id ||
-                editTour?.id ||
-                null
-              }
+              tourId={editTour?._id || editTour?.id || null}
               userRole={userRole}
             />
           )}
-
         </div>
-
       </div>
     </div>
   );

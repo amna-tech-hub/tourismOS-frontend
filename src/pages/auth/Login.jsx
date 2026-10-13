@@ -4,6 +4,25 @@ import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLogin } from "../../api/queries/useAuth";
 import { useAuth } from "../../context/AuthContext";
 
+// Demo accounts shown on the login page (click-to-autofill)
+const DEMO_ACCOUNTS = [
+  {
+    label: "Company Dashboard",
+    email: "example@gmail.com",
+    password: "example1234",
+  },
+  {
+    label: "Employee Dashboard",
+    email: "exampleemp@gmail.com",
+    password: "exampleemp1234",
+  },
+  {
+    label: "Traveler",
+    email: "userexample@gmail.com",
+    password: "exampleuser1234",
+  },
+];
+
 export default function Login() {
   const navigate = useNavigate();
   const loginMutation = useLogin();
@@ -34,6 +53,12 @@ export default function Login() {
       default:
         navigate("/traveler/home", { replace: true });
     }
+  };
+
+  // Autofill helper for demo buttons
+  const handleDemoFill = (account) => {
+    setFormData({ email: account.email, password: account.password });
+    setErrorMsg("");
   };
 
   const handleSubmit = async (e) => {
@@ -100,7 +125,10 @@ export default function Login() {
             disabled={loginMutation.isPending}
             className="w-full px-4 py-3 pr-10 rounded-full bg-white border-2 border-[#fbbf24] focus:border-slate-800 placeholder:text-slate-500 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800/10 transition-all duration-200 shadow-sm"
           />
-          <Mail size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600" />
+          <Mail
+            size={16}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600"
+          />
         </div>
 
         {/* Password Input */}
@@ -151,10 +179,49 @@ export default function Login() {
         </button>
       </form>
 
+      {/* =====================================================
+          DEMO ACCOUNTS — click to autofill
+      ===================================================== */}
+      <div className="w-full mt-6">
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <span className="flex-1 h-px bg-slate-300/60" />
+          <span className="text-[10px] uppercase tracking-widest text-slate-600 font-semibold">
+            or try a demo
+          </span>
+          <span className="flex-1 h-px bg-slate-300/60" />
+        </div>
+
+        {/* Demo Buttons */}
+        <div className="mt-3 flex flex-col gap-2">
+          {DEMO_ACCOUNTS.map((account) => (
+            <button
+              key={account.label}
+              type="button"
+              onClick={() => handleDemoFill(account)}
+              disabled={loginMutation.isPending}
+              className="w-full py-2.5 px-4 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-semibold text-left flex items-center justify-between disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+            >
+              <span>{account.label}</span>
+              <span className="text-[10px] font-normal text-slate-500 truncate max-w-[140px]">
+                {account.email}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <p className="text-[10px] text-slate-500 text-center mt-2">
+          Click any role to autofill credentials, then press Login.
+        </p>
+      </div>
+
       {/* Account Signup Link */}
-      <p className="mt-4 text-xs text-slate-800">
+      <p className="mt-5 text-xs text-slate-800">
         Don't have an account yet?{" "}
-        <Link to="/auth/register" className="font-bold underline hover:text-black">
+        <Link
+          to="/auth/register"
+          className="font-bold underline hover:text-black"
+        >
           Create here
         </Link>
       </p>

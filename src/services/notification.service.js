@@ -10,7 +10,7 @@ export const registerFcmToken = async (saveToken) => {
     const permission = await Notification.requestPermission();
 
     if (permission !== "granted") {
-      console.log("Notification permission denied");
+      ("Notification permission denied");
       return null;
     }
 
@@ -19,15 +19,15 @@ export const registerFcmToken = async (saveToken) => {
     });
 
     if (!token) {
-      console.log("No FCM token received");
+      ("No FCM token received");
       return null;
     }
 
-    console.log("FCM Token:", token);
+    ("FCM Token:", token);
 
     await saveToken(token);
 
-    console.log("FCM token saved to backend");
+    ("FCM token saved to backend");
 
     return token;
   } catch (error) {
@@ -36,14 +36,13 @@ export const registerFcmToken = async (saveToken) => {
   }
 };
 
-
 // ==========================================
 // FOREGROUND MESSAGE LISTENER
 // ==========================================
 
 export const listenForForegroundMessages = (callback) => {
   return onMessage(messaging, (payload) => {
-    console.log("[FCM] Foreground message received:", payload);
+    ("[FCM] Foreground message received:", payload);
 
     callback(payload);
   });

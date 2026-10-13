@@ -188,6 +188,7 @@ const JournalDetail = () => {
       </div>
     );
   }
+console.log(journal," journal data",journal.tour.coverImage,"kkkkk");
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
@@ -206,7 +207,7 @@ const JournalDetail = () => {
         {journal.tour?.coverImage ? (
           <div className="relative h-64 sm:h-80 md:h-96 rounded-3xl overflow-hidden shadow-sm">
             <img
-              src={journal.tour.coverImage}
+              src={journal.tour.coverImage.url}
               alt={
                 journal.tour?.title ||
                 "Travel journal"
@@ -216,11 +217,11 @@ const JournalDetail = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
             <div className="absolute bottom-8 left-8 right-8 text-white">
-              <span className="badge-yellow mb-3 inline-flex items-center gap-1.5 backdrop-blur-md bg-white/20 text-white border border-white/30">
+              {/* <span className="badge-yellow mb-3 inline-flex items-center gap-1.5 backdrop-blur-md bg-white/20 text-white border border-white/30">
                 <BookOpen size={13} />
                 Travel Journal
-              </span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold leading-tight text-white drop-shadow-sm">
+              </span> */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold leading-tight text-white! drop-shadow-sm">
                 {journal.tour?.title || "My Journey"}
               </h1>
 

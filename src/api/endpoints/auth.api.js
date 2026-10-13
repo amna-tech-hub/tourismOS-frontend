@@ -13,7 +13,6 @@ export const authApi = {
   register: async (userData) => {
     const { data } = await api.post("/auth/register", userData);
 
-    console.log(data, "returned");
 
     return data;
   },

@@ -1,9 +1,9 @@
-import api from '../axios';
+import api from "../axios";
 
 export const superAdminApi = {
   // Get all companies with search, pagination, and filters
   getCompanies: async (params = {}) => {
-    const { data } = await api.get('/admin/companies', { params });
+    const { data } = await api.get("/admin/companies", { params });
     return data;
   },
 
@@ -15,7 +15,8 @@ export const superAdminApi = {
 
   // Create new company and trigger invitation email
   createCompany: async (payload) => {
-    const { data } = await api.post('/admin/companies', payload);
+
+    const { data } = await api.post("/admin/companies", payload);
     return data;
   },
 
@@ -51,30 +52,30 @@ export const superAdminApi = {
 
   // Get payment fraud attempt analysis
   getFraudAttempts: async () => {
-    const { data } = await api.get('/admin/fraud-attempts');
+    const { data } = await api.get("/admin/fraud-attempts");
     return data;
   },
 
-   getAdminDashboardRevenue: async () => {
-    const { data } = await api.get('admin/dashboard/revenue');
+  getAdminDashboardRevenue: async () => {
+    const { data } = await api.get("admin/dashboard/revenue");
     return data;
   },
 
-    getCompanyOverview: async () => {
-    const { data } = await api.get('admin/dashboard/company-overview');
+  getCompanyOverview: async () => {
+    const { data } = await api.get("admin/dashboard/company-overview");
     return data;
   },
-    getBookingOverview: async () => {
-    const { data } = await api.get('admin/dashboard/booking-overview');
+  getBookingOverview: async () => {
+    const { data } = await api.get("admin/dashboard/booking-overview");
     return data;
   },
-      getPlatformStats: async () => {
-    const { data } = await api.get('admin/dashboard/platform-stats');
+  getPlatformStats: async () => {
+    const { data } = await api.get("admin/dashboard/platform-stats");
     return data;
   },
 
-      getAnalysis: async () => {
-    const { data } = await api.get('admin/dashboard/platform-analysis');
+  getAnalysis: async () => {
+    const { data } = await api.get("admin/dashboard/platform-analysis");
     return data;
   },
 
@@ -93,14 +94,15 @@ export const superAdminApi = {
     return data;
   },
 
-
   updateUserRole: async (id, roleId) => {
     const { data } = await api.patch(`/users/${id}/role`, { roleId });
     return data;
   },
 
   toggleEmailVerification: async (id, emailVerified) => {
-    const { data } = await api.patch(`/users/${id}/verify-email`, { emailVerified });
+    const { data } = await api.patch(`/users/${id}/verify-email`, {
+      emailVerified,
+    });
     return data;
   },
 
@@ -120,38 +122,35 @@ export const superAdminApi = {
   },
 
   getPlans: async () => {
-    const response = await api.get('/subscription/plans');
+    const response = await api.get("/subscription/plans");
     return response.data;
   },
 
   // Company: Create Checkout Session
   createCheckoutSession: async (payload) => {
-    const response = await api.post('/subscription/checkout', payload);
+    const response = await api.post("/subscription/checkout", payload);
     return response.data;
   },
 
   // Super Admin: Get All Plans
   getAllPlansAdmin: async () => {
-    const response = await api.get('/subscription/admin/plans');
+    const response = await api.get("/subscription/admin/plans");
     return response.data;
   },
 
   // Super Admin: Create Plan
   createPlan: async (planData) => {
-    const response = await api.post('/subscription/admin/plans', planData);
+    const response = await api.post("/subscription/admin/plans", planData);
     return response.data;
   },
 
   // Super Admin: Update Plan
- // Super Admin: Update Plan
-updatePlan: async (id, planData) => {
-  const response = await api.put(
-    `/subscription/admin/plans/${id}`,
-    planData
-  );
+  // Super Admin: Update Plan
+  updatePlan: async (id, planData) => {
+    const response = await api.put(`/subscription/admin/plans/${id}`, planData);
 
-  return response.data;
-},
+    return response.data;
+  },
 
   // Super Admin: Toggle Active Status
   togglePlanStatus: async (id) => {
@@ -161,19 +160,19 @@ updatePlan: async (id, planData) => {
 
   // Super Admin: Get Company Subscriptions Ledger
   getCompanySubscriptions: async () => {
-    const response = await api.get('/subscription/admin/company-subscriptions');
+    const response = await api.get("/subscription/admin/company-subscriptions");
     return response.data;
   },
   // Tours & Reviews Management
-getTourAnalytics: async () => {
-  const response = await api.get('/admin/dashboard/tours/analytics');
-  return response.data;
-},
+  getTourAnalytics: async () => {
+    const response = await api.get("/admin/dashboard/tours/analytics");
+    return response.data;
+  },
 
-deleteAdminReview: async (reviewId) => {
-  const response = await api.delete(`/admin/dashboard/tours/reviews/${reviewId}`);
-  return response.data;
-},
-
-
+  deleteAdminReview: async (reviewId) => {
+    const response = await api.delete(
+      `/admin/dashboard/tours/reviews/${reviewId}`,
+    );
+    return response.data;
+  },
 };

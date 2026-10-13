@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 let DefaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -28,7 +28,7 @@ function FixMapResize({ center }) {
 
 export default function MyMap({ lat, lng, locationName }) {
   // Console check to verify numbers are reaching the map
-  console.log("MyMap received coordinates:", { lat, lng });
+  ("MyMap received coordinates:", { lat, lng });
 
   if (!lat || !lng) {
     return (
@@ -41,12 +41,12 @@ export default function MyMap({ lat, lng, locationName }) {
   const position = [Number(lat), Number(lng)];
 
   return (
-    <div style={{ height: '350px', width: '100%', position: 'relative' }}>
-      <MapContainer 
+    <div style={{ height: "350px", width: "100%", position: "relative" }}>
+      <MapContainer
         key={`${lat}-${lng}`}
-        center={position} 
-        zoom={13} 
-        style={{ height: '100%', width: '100%', zIndex: 0 }}
+        center={position}
+        zoom={13}
+        style={{ height: "100%", width: "100%", zIndex: 0 }}
         className="rounded-xl"
       >
         <FixMapResize center={position} />

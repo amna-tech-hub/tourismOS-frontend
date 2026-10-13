@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../constants/queryKeys";
@@ -11,108 +6,90 @@ import { useForegroundNotifications } from "../api/queries/useForegroundNotifica
 import { userService } from "../services/token.service";
 import { registerFcmToken } from "../services/notification.service";
 import { useSaveFcmToken } from "../api/queries/useNotifications";
-import {
-  useCurrentAuthUser,
-  useLogout,
-} from "../api/queries/useAuth";
-import toast from 'react-hot-toast';
+import { useCurrentAuthUser, useLogout } from "../api/queries/useAuth";
+import toast from "react-hot-toast";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   // ==========================================
   // RESTORE CACHED USER
   // ==========================================
-const saveFcmTokenMutation = useSaveFcmToken();
-  const [user, setUser] = useState(() =>
-    userService.getUser()
+  const saveFcmTokenMutation = useSaveFcmToken();
+  const [user, setUser] = useState(() => userService.getUser());
+  useEffect(() => {
+    if (!user) return;
+
+    registerFcmToken(saveFcmTokenMutation.mutateAsync);
+  }, [user]);
+  const queryClient = useQueryClient();
+
+  const handleForegroundNotification = useCallback(
+    (payload) => {
+      ("[Notification] Foreground notification:", payload);
+
+      const title = payload.notification?.title || "TourismOS";
+
+      const body = payload.notification?.body || "";
+
+      toast(
+        <div>
+          <p className="font-semibold">{title}</p>
+          {body && <p className="text-sm mt-1">{body}</p>}
+        </div>,
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.NOTIFICATION_KEYS.ALL,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.NOTIFICATION_KEYS.UNREAD_COUNT,
+      });
+    },
+    [queryClient],
   );
-useEffect(() => {
-  if (!user) return;
 
-  registerFcmToken(
-    saveFcmTokenMutation.mutateAsync
-  );
-}, [user]);
-const queryClient = useQueryClient();
+  useForegroundNotifications(handleForegroundNotification);
+  // ==========================================
+  // CHECK HTTP-ONLY SESSION
+  // ==========================================
 
-const handleForegroundNotification = useCallback(
-  (payload) => {
-    console.log(
-      "[Notification] Foreground notification:",
-      payload
-    );
+  const {
+    data: authData,
+    isLoading: isCheckingAuth,
+    isError: isAuthError,
+  } = useCurrentAuthUser();
 
-    const title =
-      payload.notification?.title || "TourismOS";
+  const logoutMutation = useLogout();
 
-    const body =
-      payload.notification?.body || "";
+  // ==========================================
+  // SYNC SERVER USER
+  // ==========================================
 
-    toast(
-      <div>
-        <p className="font-semibold">{title}</p>
-        {body && (
-          <p className="text-sm mt-1">{body}</p>
-        )}
-      </div>
-    );
+  useEffect(() => {
+    if (authData?.user) {
+      setUser(authData.user);
+      userService.setUser(authData.user);
+    }
+  }, [authData]);
 
-    queryClient.invalidateQueries({
-      queryKey:QUERY_KEYS. NOTIFICATION_KEYS.ALL,
-    });
+  // ==========================================
+  // CLEAR USER IF SESSION IS INVALID
+  // ==========================================
 
-    queryClient.invalidateQueries({
-      queryKey:QUERY_KEYS.NOTIFICATION_KEYS.UNREAD_COUNT,
-    });
-  },
-  [queryClient]
-);
-
-useForegroundNotifications(
-  handleForegroundNotification
-);
-// ==========================================
-// CHECK HTTP-ONLY SESSION
-// ==========================================
-
-const {
-  data: authData,
-  isLoading: isCheckingAuth,
-  isError: isAuthError,
-} = useCurrentAuthUser();
-
-const logoutMutation = useLogout();
-
-// ==========================================
-// SYNC SERVER USER
-// ==========================================
-
-useEffect(() => {
-  if (authData?.user) {
-    setUser(authData.user);
-    userService.setUser(authData.user);
-  }
-}, [authData]);
-
-// ==========================================
-// CLEAR USER IF SESSION IS INVALID
-// ==========================================
-
-useEffect(() => {
-  if (isAuthError) {
-    setUser(null);
-    userService.removeUser();
-  }
-}, [isAuthError]);
+  useEffect(() => {
+    if (isAuthError) {
+      setUser(null);
+      userService.removeUser();
+    }
+  }, [isAuthError]);
 
   // ==========================================
   // LOGIN
   // ==========================================
 
   const loginUser = (response) => {
-    const userData =
-      response?.user ||
-      response?.data?.user;
+    const userData = response?.user || response?.data?.user;
 
     if (userData) {
       setUser(userData);
@@ -164,9 +141,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error(
-      "useAuth must be used within an AuthProvider"
-    );
+    throw new Error("useAuth must be used within an AuthProvider");
   }
 
   return context;

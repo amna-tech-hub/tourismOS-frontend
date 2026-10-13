@@ -62,15 +62,11 @@ export default function Company() {
     isError,
   } = useSuperAdminCompanies(queryParams);
 
-  const {
-    data: companyStatsData,
-    isLoading: isStatsLoading,
-  } = useCompanyStats(selectedCompanyId);
+  const { data: companyStatsData, isLoading: isStatsLoading } =
+    useCompanyStats(selectedCompanyId);
 
-  const {
-    data: tourAnalyticsData,
-    isLoading: isAnalyticsLoading,
-  } = useTourAnalytics();
+  const { data: tourAnalyticsData, isLoading: isAnalyticsLoading } =
+    useTourAnalytics();
 
   const createCompanyMutation = useCreateCompany();
   const suspendCompanyMutation = useSuspendCompany();
@@ -96,6 +92,7 @@ export default function Company() {
 
   const handleInviteSubmit = (e) => {
     e.preventDefault();
+    (companyForm, "com form");
 
     createCompanyMutation.mutate(companyForm, {
       onSuccess: () => {
@@ -192,9 +189,7 @@ export default function Company() {
 
   const handleSuspend = (company) => {
     if (
-      window.confirm(
-        `Are you sure you want to suspend ${company.companyName}?`
-      )
+      window.confirm(`Are you sure you want to suspend ${company.companyName}?`)
     ) {
       suspendCompanyMutation.mutate(company._id);
     }
@@ -207,7 +202,7 @@ export default function Company() {
   const handleDelete = (company) => {
     if (
       window.confirm(
-        `Delete ${company.companyName}? This action cannot be easily undone.`
+        `Delete ${company.companyName}? This action cannot be easily undone.`,
       )
     ) {
       deleteCompanyMutation.mutate(company._id);
@@ -362,53 +357,38 @@ export default function Company() {
 
               {isLoading ? (
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="py-14 text-center text-slate-500"
-                  >
+                  <td colSpan="7" className="py-14 text-center text-slate-500">
                     <div className="w-7 h-7 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin mx-auto mb-3" />
 
-                    <p className="text-xs">
-                      Loading companies directory...
-                    </p>
+                    <p className="text-xs">Loading companies directory...</p>
                   </td>
                 </tr>
               ) : isError ? (
                 /* Error */
 
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="py-14 text-center text-rose-500"
-                  >
+                  <td colSpan="7" className="py-14 text-center text-rose-500">
                     <FaExclamationCircle className="mx-auto mb-2 text-lg" />
 
-                    <p className="text-xs">
-                      Failed to fetch companies.
-                    </p>
+                    <p className="text-xs">Failed to fetch companies.</p>
                   </td>
                 </tr>
               ) : companies.length > 0 ? (
                 /* Companies */
 
                 companies.map((company) => {
-                  const totalCredits =
-                    company.aiCredits?.total || 500;
+                  const totalCredits = company.aiCredits?.total || 500;
 
-                  const usedCredits =
-                    company.aiCredits?.used || 0;
+                  const usedCredits = company.aiCredits?.used || 0;
 
                   const remainingCredits = Math.max(
                     0,
-                    totalCredits - usedCredits
+                    totalCredits - usedCredits,
                   );
 
                   const creditPercentage =
                     totalCredits > 0
-                      ? Math.min(
-                          100,
-                          (remainingCredits / totalCredits) * 100
-                        )
+                      ? Math.min(100, (remainingCredits / totalCredits) * 100)
                       : 0;
 
                   return (
@@ -436,9 +416,7 @@ export default function Company() {
                       {/* Verification */}
 
                       <td className="py-4 px-4 sm:px-5 align-middle">
-                        {getVerificationBadge(
-                          company.verificationStatus
-                        )}
+                        {getVerificationBadge(company.verificationStatus)}
                       </td>
 
                       {/* AI Plan */}
@@ -476,13 +454,14 @@ export default function Company() {
 
                       <td className="py-4 px-4 sm:px-5 align-middle text-slate-500 whitespace-nowrap">
                         {company.createdAt
-                          ? new Date(
-                              company.createdAt
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })
+                          ? new Date(company.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              },
+                            )
                           : "N/A"}
                       </td>
 
@@ -495,9 +474,7 @@ export default function Company() {
                           <button
                             type="button"
                             title="View company details"
-                            onClick={() =>
-                              setSelectedCompanyId(company._id)
-                            }
+                            onClick={() => setSelectedCompanyId(company._id)}
                             className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 cursor-pointer shrink-0"
                           >
                             <FaEye className="text-[11px]" />
@@ -509,12 +486,8 @@ export default function Company() {
                             <button
                               type="button"
                               title="Suspend company"
-                              onClick={() =>
-                                handleSuspend(company)
-                              }
-                              disabled={
-                                suspendCompanyMutation.isPending
-                              }
+                              onClick={() => handleSuspend(company)}
+                              disabled={suspendCompanyMutation.isPending}
                               className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-yellow-300/20 text-yellow-700 cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaBan className="text-[11px]" />
@@ -527,12 +500,8 @@ export default function Company() {
                             <button
                               type="button"
                               title="Activate company"
-                              onClick={() =>
-                                handleActivate(company)
-                              }
-                              disabled={
-                                activateCompanyMutation.isPending
-                              }
+                              onClick={() => handleActivate(company)}
+                              disabled={activateCompanyMutation.isPending}
                               className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-emerald-50 text-emerald-600 cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               <FaCheck className="text-[11px]" />
@@ -544,12 +513,8 @@ export default function Company() {
                           <button
                             type="button"
                             title="Delete company"
-                            onClick={() =>
-                              handleDelete(company)
-                            }
-                            disabled={
-                              deleteCompanyMutation.isPending
-                            }
+                            onClick={() => handleDelete(company)}
+                            disabled={deleteCompanyMutation.isPending}
                             className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-rose-50 text-rose-500 cursor-pointer disabled:opacity-50 shrink-0"
                           >
                             <FaTrash className="text-[11px]" />
@@ -563,10 +528,7 @@ export default function Company() {
                 /* Empty */
 
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="py-14 text-center text-slate-500"
-                  >
+                  <td colSpan="7" className="py-14 text-center text-slate-500">
                     <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-3 border border-slate-200">
                       <FaSearch className="text-slate-400" />
                     </div>
@@ -598,9 +560,7 @@ export default function Company() {
           <div className="flex items-center justify-center gap-2">
             <button
               disabled={page === 1}
-              onClick={() =>
-                setPage((p) => Math.max(1, p - 1))
-              }
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold py-1.5 px-3 text-xs disabled:opacity-40 cursor-pointer"
             >
               Previous
@@ -639,9 +599,7 @@ export default function Company() {
 
               <button
                 type="button"
-                onClick={() =>
-                  setIsInviteModalOpen(false)
-                }
+                onClick={() => setIsInviteModalOpen(false)}
                 className="text-slate-400 p-1 cursor-pointer shrink-0"
               >
                 <FaTimes />
@@ -658,8 +616,7 @@ export default function Company() {
 
               <div>
                 <label className="block font-semibold mb-1.5 text-slate-700">
-                  Company Name{" "}
-                  <span className="text-rose-500">*</span>
+                  Company Name <span className="text-rose-500">*</span>
                 </label>
 
                 <input
@@ -681,8 +638,7 @@ export default function Company() {
 
               <div>
                 <label className="block font-semibold mb-1.5 text-slate-700">
-                  Company Email{" "}
-                  <span className="text-rose-500">*</span>
+                  Company Email <span className="text-rose-500">*</span>
                 </label>
 
                 <input
@@ -747,9 +703,7 @@ export default function Company() {
               <div className="pt-2 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() =>
-                    setIsInviteModalOpen(false)
-                  }
+                  onClick={() => setIsInviteModalOpen(false)}
                   className="rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold py-2 px-4 text-xs cursor-pointer w-full sm:w-auto"
                 >
                   Cancel
@@ -783,14 +737,11 @@ export default function Company() {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-900 break-words">
-                    {companyStats?.companyName ||
-                      "Company Details"}
+                    {companyStats?.companyName || "Company Details"}
                   </h3>
 
                   {companyStats &&
-                    getStatusBadge(
-                      companyStats.status || "active"
-                    )}
+                    getStatusBadge(companyStats.status || "active")}
                 </div>
 
                 <p className="text-xs text-slate-500 mt-1.5 flex items-start gap-1.5 break-all">
@@ -802,9 +753,7 @@ export default function Company() {
 
               <button
                 type="button"
-                onClick={() =>
-                  setSelectedCompanyId(null)
-                }
+                onClick={() => setSelectedCompanyId(null)}
                 className="text-slate-400 p-1 cursor-pointer shrink-0"
               >
                 <FaTimes className="text-sm" />
@@ -817,9 +766,7 @@ export default function Company() {
               <div className="py-12 text-center text-slate-500">
                 <div className="w-8 h-8 border-2 border-slate-200 border-t-yellow-500 rounded-full animate-spin mx-auto mb-3" />
 
-                <p className="text-xs">
-                  Fetching company details...
-                </p>
+                <p className="text-xs">Fetching company details...</p>
               </div>
             ) : (
               <>
@@ -874,8 +821,7 @@ export default function Company() {
                     <span className="text-base sm:text-xl font-bold text-slate-900 break-words">
                       PKR{" "}
                       {(
-                        companyStats?.stats?.revenue?.total ||
-                        0
+                        companyStats?.stats?.revenue?.total || 0
                       ).toLocaleString()}
                     </span>
                   </div>
@@ -902,8 +848,7 @@ export default function Company() {
                       <span className="font-bold text-slate-900 break-words">
                         PKR{" "}
                         {(
-                          companyStats?.stats?.revenue
-                            ?.totalBookingValue || 0
+                          companyStats?.stats?.revenue?.totalBookingValue || 0
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -918,8 +863,7 @@ export default function Company() {
                       <span className="font-bold text-yellow-600 break-words">
                         - PKR{" "}
                         {(
-                          companyStats?.stats?.revenue
-                            ?.platformCommission || 0
+                          companyStats?.stats?.revenue?.platformCommission || 0
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -934,8 +878,7 @@ export default function Company() {
                       <span className="font-bold text-emerald-600 break-words">
                         PKR{" "}
                         {(
-                          companyStats?.stats?.revenue?.total ||
-                          0
+                          companyStats?.stats?.revenue?.total || 0
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -950,8 +893,8 @@ export default function Company() {
                       <span className="font-bold text-slate-900 break-words">
                         PKR{" "}
                         {Math.round(
-                          companyStats?.stats?.revenue
-                            ?.averageBookingValue || 0
+                          companyStats?.stats?.revenue?.averageBookingValue ||
+                            0,
                         ).toLocaleString()}
                       </span>
                     </div>
@@ -963,25 +906,18 @@ export default function Company() {
                 ================================================= */}
 
                 {(() => {
-                  const aiCredits =
-                    companyStats?.stats?.aiCredits;
+                  const aiCredits = companyStats?.stats?.aiCredits;
 
                   const total = aiCredits?.total || 500;
 
                   const used = aiCredits?.used || 0;
 
                   const remaining =
-                    aiCredits?.remaining ??
-                    Math.max(0, total - used);
+                    aiCredits?.remaining ?? Math.max(0, total - used);
 
                   const percentage =
                     total > 0
-                      ? Math.min(
-                          100,
-                          Math.round(
-                            (remaining / total) * 100
-                          )
-                        )
+                      ? Math.min(100, Math.round((remaining / total) * 100))
                       : 0;
 
                   return (
@@ -991,10 +927,7 @@ export default function Company() {
                           <FaCheckCircle className="text-yellow-500 text-[10px] shrink-0" />
 
                           <span>
-                            AI Credits ·{" "}
-                            {aiCredits?.plan ||
-                              "Starter"}{" "}
-                            Plan
+                            AI Credits · {aiCredits?.plan || "Starter"} Plan
                           </span>
                         </span>
 
@@ -1014,22 +947,18 @@ export default function Company() {
                       </div>
 
                       <div className="flex flex-col gap-1 sm:flex-row sm:justify-between text-[10px] text-slate-500">
-                        <span>
-                          Used: {used.toLocaleString()}
-                        </span>
+                        <span>Used: {used.toLocaleString()}</span>
 
                         <span>
                           Expires:{" "}
                           {aiCredits?.expiresAt
-                            ? new Date(
-                                aiCredits.expiresAt
-                              ).toLocaleDateString(
+                            ? new Date(aiCredits.expiresAt).toLocaleDateString(
                                 "en-US",
                                 {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                }
+                                },
                               )
                             : "N/A"}
                         </span>
@@ -1083,8 +1012,7 @@ export default function Company() {
                       </span>
 
                       {getVerificationBadge(
-                        companyStats?.verificationStatus ||
-                          "pending"
+                        companyStats?.verificationStatus || "pending",
                       )}
                     </div>
 
@@ -1095,9 +1023,7 @@ export default function Company() {
                         AI Plan
                       </span>
 
-                      {getPlanBadge(
-                        companyStats?.stats?.aiCredits?.plan
-                      )}
+                      {getPlanBadge(companyStats?.stats?.aiCredits?.plan)}
                     </div>
 
                     {/* Registered */}
@@ -1110,15 +1036,13 @@ export default function Company() {
 
                       <span className="text-slate-900 break-words">
                         {companyStats?.createdAt
-                          ? new Date(
-                              companyStats.createdAt
-                            ).toLocaleDateString(
+                          ? new Date(companyStats.createdAt).toLocaleDateString(
                               "en-US",
                               {
                                 month: "long",
                                 day: "numeric",
                                 year: "numeric",
-                              }
+                              },
                             )
                           : "N/A"}
                       </span>
@@ -1135,9 +1059,7 @@ export default function Company() {
             <div className="pt-4 border-t border-slate-100 flex justify-end mt-4">
               <button
                 type="button"
-                onClick={() =>
-                  setSelectedCompanyId(null)
-                }
+                onClick={() => setSelectedCompanyId(null)}
                 className="rounded-xl border border-slate-200 bg-white text-slate-700 font-semibold py-2 px-5 text-xs cursor-pointer w-full sm:w-auto"
               >
                 Close

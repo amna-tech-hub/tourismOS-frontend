@@ -33,22 +33,22 @@ const BookingModal = ({
 
   // Show error coming from parent mutation - FIXED VERSION
   useEffect(() => {
-    console.log('External error received:', externalError);
-    
+    ("External error received:", externalError);
+
     if (externalError) {
       // Try multiple ways to extract the error message
       let errorMessage = "Unable to create your booking. Please try again.";
-      
+
       // Check if it's an Axios error with response.data.message
       if (externalError?.response?.data?.message) {
         errorMessage = externalError.response.data.message;
-      } 
+      }
       // Check if it's a direct error object with message
       else if (externalError?.message) {
         errorMessage = externalError.message;
       }
       // Check if the error is the message itself (string)
-      else if (typeof externalError === 'string') {
+      else if (typeof externalError === "string") {
         errorMessage = externalError;
       }
       // Check for nested error structures
@@ -56,14 +56,17 @@ const BookingModal = ({
         errorMessage = externalError.data.message;
       }
       // Check if response.data is the message directly
-      else if (externalError?.response?.data && typeof externalError.response.data === 'string') {
+      else if (
+        externalError?.response?.data &&
+        typeof externalError.response.data === "string"
+      ) {
         errorMessage = externalError.response.data;
       }
       // Check for error in the response data object
       else if (externalError?.response?.data?.error?.message) {
         errorMessage = externalError.response.data.error.message;
       }
-      
+
       setError(errorMessage);
     } else {
       setError(""); // Clear error when externalError is null/undefined
@@ -121,7 +124,7 @@ const BookingModal = ({
       Number(participants) > Number(tour.maxParticipants)
     ) {
       setError(
-        `This tour allows a maximum of ${tour.maxParticipants} travelers.`
+        `This tour allows a maximum of ${tour.maxParticipants} travelers.`,
       );
       return;
     }
@@ -146,13 +149,9 @@ const BookingModal = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
           <div>
-            <h2 className="text-xl font-semibold text-slate-900">
-              Book Tour
-            </h2>
+            <h2 className="text-xl font-semibold text-slate-900">Book Tour</h2>
 
-            <p className="text-sm text-slate-500 mt-1">
-              {tour.title}
-            </p>
+            <p className="text-sm text-slate-500 mt-1">{tour.title}</p>
           </div>
 
           <button
@@ -170,19 +169,14 @@ const BookingModal = ({
           {/* Error Message */}
           {error && (
             <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-              <AlertCircle
-                size={18}
-                className="text-red-500 mt-0.5 shrink-0"
-              />
+              <AlertCircle size={18} className="text-red-500 mt-0.5 shrink-0" />
 
               <div>
                 <p className="text-sm font-medium text-red-700">
                   Booking unavailable
                 </p>
 
-                <p className="text-sm text-red-600 mt-0.5">
-                  {error}
-                </p>
+                <p className="text-sm text-red-600 mt-0.5">{error}</p>
               </div>
             </div>
           )}
@@ -190,9 +184,7 @@ const BookingModal = ({
           {/* Tour Price */}
           <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">
-                Price per person
-              </span>
+              <span className="text-sm text-slate-600">Price per person</span>
 
               <span className="text-lg font-bold text-slate-900">
                 {formattedPrice.format(tour.price)}
@@ -271,9 +263,7 @@ const BookingModal = ({
               disabled={isProcessing}
               className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none disabled:bg-slate-50"
             >
-              <option value="stripe">
-                Stripe (Credit/Debit Card)
-              </option>
+              <option value="stripe">Stripe (Credit/Debit Card)</option>
               <option value="jazzcash">JazzCash</option>
               <option value="easypaisa">EasyPaisa</option>
             </select>
@@ -310,10 +300,7 @@ const BookingModal = ({
             >
               {isProcessing ? (
                 <>
-                  <Loader2
-                    size={18}
-                    className="mr-2 animate-spin"
-                  />
+                  <Loader2 size={18} className="mr-2 animate-spin" />
                   Processing...
                 </>
               ) : (

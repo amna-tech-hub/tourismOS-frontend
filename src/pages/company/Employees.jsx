@@ -59,16 +59,11 @@ const formatDate = (date) => {
 
 const getEmployeeName = (employee) => {
   return (
-    employee?.user?.name ||
-    employee?.name ||
-    employee?.email ||
-    "Employee"
+    employee?.user?.name || employee?.name || employee?.email || "Employee"
   );
 };
 
 const getEmployeeEmail = (employee) => {
- 
-  
   return employee?.user?.email || employee?.email || "—";
 };
 
@@ -114,19 +109,12 @@ const StatusBadge = ({ status }) => {
 // STAT CARD
 // ======================================================
 
-const StatCard = ({
-  title,
-  value,
-  icon: Icon,
-  iconClass,
-}) => {
+const StatCard = ({ title, value, icon: Icon, iconClass }) => {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-500">
-            {title}
-          </p>
+          <p className="text-sm font-medium text-slate-500">{title}</p>
 
           <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
             {value}
@@ -147,12 +135,7 @@ const StatCard = ({
 // EMPLOYEE CARD
 // ======================================================
 
-const EmployeeCard = ({
-  employee,
-  onView,
-  onEdit,
-  onDelete,
-}) => {
+const EmployeeCard = ({ employee, onView, onEdit, onDelete }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const name = getEmployeeName(employee);
@@ -162,8 +145,6 @@ const EmployeeCard = ({
   return (
     <div className="relative rounded-2xl border border-slate-200 bg-white p-5">
       {/* TOP */}
-{console.log(employee," data from 163")
-}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-50 text-sm font-semibold text-yellow-600">
@@ -179,9 +160,7 @@ const EmployeeCard = ({
           </div>
 
           <div className="min-w-0">
-            <h3 className="truncate font-semibold text-slate-900">
-              {name}
-            </h3>
+            <h3 className="truncate font-semibold text-slate-900">{name}</h3>
 
             <p className="mt-0.5 truncate text-xs text-slate-500">
               {employee?.designation || "Employee"}
@@ -261,36 +240,21 @@ const EmployeeCard = ({
 
       <div className="mt-5 space-y-3">
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Mail
-            size={15}
-            className="shrink-0 text-slate-400"
-          />
+          <Mail size={15} className="shrink-0 text-slate-400" />
 
-          <span className="truncate">
-            {email}
-          </span>
+          <span className="truncate">{email}</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <Phone
-            size={15}
-            className="shrink-0 text-slate-400"
-          />
+          <Phone size={15} className="shrink-0 text-slate-400" />
 
-          <span className="truncate">
-            {phone}
-          </span>
+          <span className="truncate">{phone}</span>
         </div>
 
         <div className="flex items-center gap-2 text-sm text-slate-500">
-          <BriefcaseBusiness
-            size={15}
-            className="shrink-0 text-slate-400"
-          />
+          <BriefcaseBusiness size={15} className="shrink-0 text-slate-400" />
 
-          <span className="truncate">
-            {employee?.department || "General"}
-          </span>
+          <span className="truncate">{employee?.department || "General"}</span>
         </div>
       </div>
 
@@ -323,11 +287,7 @@ const EmployeeCard = ({
 // INVITE EMPLOYEE MODAL
 // ======================================================
 
-const InviteEmployeeModal = ({
-  isOpen,
-  onClose,
-  onSuccess,
-}) => {
+const InviteEmployeeModal = ({ isOpen, onClose, onSuccess }) => {
   const [form, setForm] = useState({
     email: "",
     designation: "",
@@ -385,7 +345,7 @@ const InviteEmployeeModal = ({
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          "Unable to send employee invitation."
+          "Unable to send employee invitation.",
       );
     }
   };
@@ -422,16 +382,10 @@ const InviteEmployeeModal = ({
 
         {/* FORM */}
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 px-6 py-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
           {error && (
             <div className="flex items-start gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600">
-              <AlertCircle
-                size={16}
-                className="mt-0.5 shrink-0"
-              />
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
 
               <span>{error}</span>
             </div>
@@ -542,18 +496,12 @@ const InviteEmployeeModal = ({
             >
               {inviteMutation.isPending ? (
                 <>
-                  <Loader2
-                    size={16}
-                    className="mr-2 animate-spin"
-                  />
+                  <Loader2 size={16} className="mr-2 animate-spin" />
                   Sending...
                 </>
               ) : (
                 <>
-                  <Send
-                    size={16}
-                    className="mr-2"
-                  />
+                  <Send size={16} className="mr-2" />
                   Send Invitation
                 </>
               )}
@@ -569,11 +517,7 @@ const InviteEmployeeModal = ({
 // VIEW EMPLOYEE MODAL
 // ======================================================
 
-const EmployeeDetailsModal = ({
-  employee,
-  onClose,
-  onEdit,
-}) => {
+const EmployeeDetailsModal = ({ employee, onClose, onEdit }) => {
   if (!employee) return null;
 
   const name = getEmployeeName(employee);
@@ -600,9 +544,7 @@ const EmployeeDetailsModal = ({
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {name}
-              </h2>
+              <h2 className="text-lg font-semibold text-slate-900">{name}</h2>
 
               <p className="text-sm text-slate-500">
                 {employee?.designation || "Employee"}
@@ -623,9 +565,7 @@ const EmployeeDetailsModal = ({
 
         <div className="space-y-5 px-6 py-6">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Status
-            </span>
+            <span className="text-sm text-slate-500">Status</span>
 
             <StatusBadge status={employee.status} />
           </div>
@@ -648,9 +588,7 @@ const EmployeeDetailsModal = ({
                 Phone
               </div>
 
-              <p className="mt-2 text-sm font-medium text-slate-700">
-                {phone}
-              </p>
+              <p className="mt-2 text-sm font-medium text-slate-700">{phone}</p>
             </div>
 
             <div className="rounded-xl bg-slate-50 p-4">
@@ -705,10 +643,7 @@ const EmployeeDetailsModal = ({
             onClick={() => onEdit(employee)}
             className="btn-primary cursor-pointer"
           >
-            <Edit3
-              size={16}
-              className="mr-2"
-            />
+            <Edit3 size={16} className="mr-2" />
             Edit Employee
           </button>
         </div>
@@ -721,18 +656,12 @@ const EmployeeDetailsModal = ({
 // EDIT EMPLOYEE MODAL
 // ======================================================
 
-const EditEmployeeModal = ({
-  employee,
-  onClose,
-  onSuccess,
-}) => {
+const EditEmployeeModal = ({ employee, onClose, onSuccess }) => {
   const [form, setForm] = useState({
     designation: employee?.designation || "",
     department: employee?.department || "",
     status: employee?.status || "active",
-    joiningDate: employee?.joiningDate
-      ? employee.joiningDate.slice(0, 10)
-      : "",
+    joiningDate: employee?.joiningDate ? employee.joiningDate.slice(0, 10) : "",
   });
 
   const [error, setError] = useState("");
@@ -766,7 +695,7 @@ const EditEmployeeModal = ({
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          "Unable to update employee."
+          "Unable to update employee.",
       );
     }
   };
@@ -799,16 +728,10 @@ const EditEmployeeModal = ({
 
         {/* FORM */}
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 px-6 py-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
           {error && (
             <div className="flex items-start gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600">
-              <AlertCircle
-                size={16}
-                className="mt-0.5 shrink-0"
-              />
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
 
               <span>{error}</span>
             </div>
@@ -877,13 +800,9 @@ const EditEmployeeModal = ({
                 onChange={handleChange}
                 className="h-11 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
               >
-                <option value="active">
-                  Active
-                </option>
+                <option value="active">Active</option>
 
-                <option value="inactive">
-                  Inactive
-                </option>
+                <option value="inactive">Inactive</option>
               </select>
             </div>
 
@@ -921,18 +840,12 @@ const EditEmployeeModal = ({
             >
               {updateMutation.isPending ? (
                 <>
-                  <Loader2
-                    size={16}
-                    className="mr-2 animate-spin"
-                  />
+                  <Loader2 size={16} className="mr-2 animate-spin" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Edit3
-                    size={16}
-                    className="mr-2"
-                  />
+                  <Edit3 size={16} className="mr-2" />
                   Save Changes
                 </>
               )}
@@ -948,12 +861,7 @@ const EditEmployeeModal = ({
 // DELETE MODAL
 // ======================================================
 
-const DeleteModal = ({
-  employee,
-  isDeleting,
-  onCancel,
-  onConfirm,
-}) => {
+const DeleteModal = ({ employee, isDeleting, onCancel, onConfirm }) => {
   if (!employee) return null;
 
   const name = getEmployeeName(employee);
@@ -971,10 +879,9 @@ const DeleteModal = ({
 
         <p className="mt-2 text-sm leading-6 text-slate-500">
           Are you sure you want to remove{" "}
-          <span className="font-semibold text-slate-700">
-            "{name}"
-          </span>
-          ? The employee will be marked as inactive and removed from your active employee list.
+          <span className="font-semibold text-slate-700">"{name}"</span>? The
+          employee will be marked as inactive and removed from your active
+          employee list.
         </p>
 
         <div className="mt-6 flex justify-end gap-3">
@@ -995,18 +902,12 @@ const DeleteModal = ({
           >
             {isDeleting ? (
               <>
-                <Loader2
-                  size={16}
-                  className="mr-2 animate-spin"
-                />
+                <Loader2 size={16} className="mr-2 animate-spin" />
                 Removing...
               </>
             ) : (
               <>
-                <Trash2
-                  size={16}
-                  className="mr-2"
-                />
+                <Trash2 size={16} className="mr-2" />
                 Remove
               </>
             )}
@@ -1033,14 +934,11 @@ const Employees = () => {
 
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
-  const [selectedEmployee, setSelectedEmployee] =
-    useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const [editingEmployee, setEditingEmployee] =
-    useState(null);
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
-  const [deletingEmployee, setDeletingEmployee] =
-    useState(null);
+  const [deletingEmployee, setDeletingEmployee] = useState(null);
 
   // ====================================================
   // QUERY
@@ -1056,19 +954,15 @@ const Employees = () => {
     page,
     limit,
     search,
-    status:
-      statusFilter === "all"
-        ? undefined
-        : statusFilter,
+    status: statusFilter === "all" ? undefined : statusFilter,
   });
-console.log(response," employee response");
+  (response, " employee response");
 
   // ====================================================
   // MUTATIONS
   // ====================================================
 
-  const deleteEmployeeMutation =
-    useDeleteEmployee();
+  const deleteEmployeeMutation = useDeleteEmployee();
 
   // ====================================================
   // API DATA
@@ -1076,26 +970,21 @@ console.log(response," employee response");
 
   const employees = response?.data || [];
   const meta = response?.meta || {};
-console.log(employees," data");
+  (employees, " data");
 
   // ====================================================
   // STATS
   // ====================================================
 
   const stats = useMemo(() => {
-    const total =
-      meta.totalDocuments ??
-      meta.total ??
-      employees.length;
+    const total = meta.totalDocuments ?? meta.total ?? employees.length;
 
     const active = employees.filter(
-      (employee) =>
-        employee?.status?.toLowerCase() === "active"
+      (employee) => employee?.status?.toLowerCase() === "active",
     ).length;
 
     const inactive = employees.filter(
-      (employee) =>
-        employee?.status?.toLowerCase() === "inactive"
+      (employee) => employee?.status?.toLowerCase() === "inactive",
     ).length;
 
     return {
@@ -1103,11 +992,7 @@ console.log(employees," data");
       active,
       inactive,
     };
-  }, [
-    employees,
-    meta.totalDocuments,
-    meta.total,
-  ]);
+  }, [employees, meta.totalDocuments, meta.total]);
 
   // ====================================================
   // SEARCH
@@ -1162,18 +1047,13 @@ console.log(employees," data");
     if (!deletingEmployee?._id) return;
 
     try {
-      await deleteEmployeeMutation.mutateAsync(
-        deletingEmployee._id
-      );
+      await deleteEmployeeMutation.mutateAsync(deletingEmployee._id);
 
       setDeletingEmployee(null);
 
       await refetch();
     } catch (error) {
-      console.error(
-        "Delete Employee Error:",
-        error
-      );
+      console.error("Delete Employee Error:", error);
     }
   };
 
@@ -1185,14 +1065,9 @@ console.log(employees," data");
     return (
       <div className="flex min-h-[70vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2
-            size={30}
-            className="animate-spin text-yellow-500"
-          />
+          <Loader2 size={30} className="animate-spin text-yellow-500" />
 
-          <p className="text-sm text-slate-500">
-            Loading your employees...
-          </p>
+          <p className="text-sm text-slate-500">Loading your employees...</p>
         </div>
       </div>
     );
@@ -1223,10 +1098,7 @@ console.log(employees," data");
             onClick={() => refetch()}
             className="btn-primary mt-5 cursor-pointer"
           >
-            <RefreshCw
-              size={16}
-              className="mr-2"
-            />
+            <RefreshCw size={16} className="mr-2" />
             Try Again
           </button>
         </div>
@@ -1240,15 +1112,12 @@ console.log(employees," data");
 
   return (
     <div className="space-y-6 pb-10">
-
       {/* ==================================================
           HEADER
       ================================================== */}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-         
-
           <h1 className="mt-1 text-3xl font-semibold text-slate-900">
             Employees
           </h1>
@@ -1263,10 +1132,7 @@ console.log(employees," data");
           onClick={() => setIsInviteOpen(true)}
           className="btn-primary self-start cursor-pointer sm:self-auto"
         >
-          <Plus
-            size={17}
-            className="mr-2"
-          />
+          <Plus size={17} className="mr-2" />
           Invite Employee
         </button>
       </div>
@@ -1304,7 +1170,6 @@ console.log(employees," data");
 
       <div className="rounded-2xl border border-slate-200 bg-white p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-
           {/* SEARCH */}
 
           <div className="relative w-full lg:max-w-md">
@@ -1316,9 +1181,7 @@ console.log(employees," data");
             <input
               type="text"
               value={search}
-              onChange={(e) =>
-                handleSearch(e.target.value)
-              }
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search employees, departments..."
               className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
             />
@@ -1337,7 +1200,6 @@ console.log(employees," data");
           {/* FILTER + REFRESH */}
 
           <div className="flex items-center gap-3">
-
             {/* FIX:
                 Small fetching indicator instead of
                 replacing the whole page.
@@ -1345,20 +1207,14 @@ console.log(employees," data");
 
             {isFetching && (
               <div className="hidden items-center gap-1.5 text-xs text-slate-400 sm:flex">
-                <Loader2
-                  size={13}
-                  className="animate-spin"
-                />
+                <Loader2 size={13} className="animate-spin" />
                 Updating...
               </div>
             )}
 
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1">
-                <Filter
-                  size={15}
-                  className="ml-2 mr-1 text-slate-400"
-                />
+                <Filter size={15} className="ml-2 mr-1 text-slate-400" />
 
                 {[
                   ["all", "All"],
@@ -1391,11 +1247,7 @@ console.log(employees," data");
               >
                 <RefreshCw
                   size={16}
-                  className={
-                    isFetching
-                      ? "animate-spin"
-                      : ""
-                  }
+                  className={isFetching ? "animate-spin" : ""}
                 />
               </button>
             </div>
@@ -1409,10 +1261,7 @@ console.log(employees," data");
 
       {isFetching && employees.length > 0 && (
         <div className="flex items-center gap-2 text-xs text-slate-400">
-          <Loader2
-            size={13}
-            className="animate-spin"
-          />
+          <Loader2 size={13} className="animate-spin" />
           Updating employee list...
         </div>
       )}
@@ -1439,22 +1288,16 @@ console.log(employees," data");
               : "Invite employees to your company and start building your travel operations team."}
           </p>
 
-          {!search &&
-            statusFilter === "all" && (
-              <button
-                type="button"
-                onClick={() =>
-                  setIsInviteOpen(true)
-                }
-                className="btn-primary mt-6 cursor-pointer"
-              >
-                <Send
-                  size={16}
-                  className="mr-2"
-                />
-                Invite Employee
-              </button>
-            )}
+          {!search && statusFilter === "all" && (
+            <button
+              type="button"
+              onClick={() => setIsInviteOpen(true)}
+              className="btn-primary mt-6 cursor-pointer"
+            >
+              <Send size={16} className="mr-2" />
+              Invite Employee
+            </button>
+          )}
         </div>
       ) : (
         /* ==================================================
@@ -1464,10 +1307,7 @@ console.log(employees," data");
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {employees.map((employee) => (
             <EmployeeCard
-              key={
-                employee._id ||
-                employee.id
-              }
+              key={employee._id || employee.id}
               employee={employee}
               onView={handleView}
               onEdit={handleEdit}
@@ -1489,23 +1329,14 @@ console.log(employees," data");
               {employees.length}
             </span>{" "}
             employee
-            {employees.length !== 1
-              ? "s"
-              : ""}
+            {employees.length !== 1 ? "s" : ""}
           </p>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
-              disabled={
-                page <= 1 ||
-                isFetching
-              }
-              onClick={() =>
-                setPage((prev) =>
-                  Math.max(1, prev - 1)
-                )
-              }
+              disabled={page <= 1 || isFetching}
+              onClick={() => setPage((prev) => Math.max(1, prev - 1))}
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronLeft size={16} />
@@ -1523,9 +1354,7 @@ console.log(employees," data");
                   ? page >= meta.totalPages
                   : employees.length < limit)
               }
-              onClick={() =>
-                setPage((prev) => prev + 1)
-              }
+              onClick={() => setPage((prev) => prev + 1)}
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:pointer-events-none disabled:opacity-40"
             >
               <ChevronRight size={16} />
@@ -1540,9 +1369,7 @@ console.log(employees," data");
 
       <InviteEmployeeModal
         isOpen={isInviteOpen}
-        onClose={() =>
-          setIsInviteOpen(false)
-        }
+        onClose={() => setIsInviteOpen(false)}
         onSuccess={handleInviteSuccess}
       />
 
@@ -1562,9 +1389,7 @@ console.log(employees," data");
 
       <EditEmployeeModal
         employee={editingEmployee}
-        onClose={() =>
-          setEditingEmployee(null)
-        }
+        onClose={() => setEditingEmployee(null)}
         onSuccess={handleEditSuccess}
       />
 
@@ -1574,12 +1399,8 @@ console.log(employees," data");
 
       <DeleteModal
         employee={deletingEmployee}
-        isDeleting={
-          deleteEmployeeMutation.isPending
-        }
-        onCancel={() =>
-          setDeletingEmployee(null)
-        }
+        isDeleting={deleteEmployeeMutation.isPending}
+        onCancel={() => setDeletingEmployee(null)}
         onConfirm={handleDelete}
       />
     </div>

@@ -14,28 +14,28 @@ export const travelerApi = {
     return data;
   },
 
-updateJournalEntry: async ({
-  id,
-  entryId,
-  day,
-  title,
-  memory,
-  photos,
-  expenses,
-}) => {
-  const { data } = await api.patch(
-    `/travel-journals/${id}/entries/${entryId}`,
-    {
-      day,
-      title,
-      memory,
-      photos,
-      expenses,
-    }
-  );
+  updateJournalEntry: async ({
+    id,
+    entryId,
+    day,
+    title,
+    memory,
+    photos,
+    expenses,
+  }) => {
+    const { data } = await api.patch(
+      `/travel-journals/${id}/entries/${entryId}`,
+      {
+        day,
+        title,
+        memory,
+        photos,
+        expenses,
+      },
+    );
 
-  return data;
-},
+    return data;
+  },
   getJournalById: async (id) => {
     const { data } = await api.get(`/travel-journals/${id}`);
     return data;
@@ -46,9 +46,10 @@ updateJournalEntry: async ({
     return data;
   },
 
-
   deleteJournalEntry: async ({ id, entryId }) => {
-    const { data } = await api.delete(`/travel-journals/${id}/entries/${entryId}`);
+    const { data } = await api.delete(
+      `/travel-journals/${id}/entries/${entryId}`,
+    );
     return data;
   },
 
@@ -79,115 +80,109 @@ updateJournalEntry: async ({
   },
 
   // Get all public tours (for frontend showcase)
-getPublicTours: async (params = {}) => {
-  const {
-    page = 1,
-    limit = 8,
-    search = "",
-    provider = "",
-    minPrice = "",
-    maxPrice = "",
-    sort = "createdAt",
-    order = "desc",
-    companyId = "",
-  } = params;
+  getPublicTours: async (params = {}) => {
+    const {
+      page = 1,
+      limit = 8,
+      search = "",
+      provider = "",
+      minPrice = "",
+      maxPrice = "",
+      sort = "createdAt",
+      order = "desc",
+      companyId = "",
+    } = params;
 
-  const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams();
 
-  queryParams.append("page", page);
-  queryParams.append("limit", limit);
+    queryParams.append("page", page);
+    queryParams.append("limit", limit);
 
-  // Search
-  if (search.trim()) {
-    queryParams.append("search", search.trim());
-  }
+    // Search
+    if (search.trim()) {
+      queryParams.append("search", search.trim());
+    }
 
-  // Company filter
-  if (companyId) {
-    queryParams.append("companyId", companyId);
-  }
+    // Company filter
+    if (companyId) {
+      queryParams.append("companyId", companyId);
+    }
 
-  // Provider
-  // Backend expects `platform`
-  if (provider && provider !== "all") {
-    queryParams.append("platform", provider);
-  }
+    // Provider
+    // Backend expects `platform`
+    if (provider && provider !== "all") {
+      queryParams.append("platform", provider);
+    }
 
-  // Price filters
-  if (minPrice !== "") {
-    queryParams.append("minPrice", minPrice);
-  }
+    // Price filters
+    if (minPrice !== "") {
+      queryParams.append("minPrice", minPrice);
+    }
 
-  if (maxPrice !== "") {
-    queryParams.append("maxPrice", maxPrice);
-  }
+    if (maxPrice !== "") {
+      queryParams.append("maxPrice", maxPrice);
+    }
 
-  // Sorting
-  queryParams.append("sort", sort);
-  queryParams.append("order", order);
-
-  const { data } = await api.get(
-    `/tours?${queryParams.toString()}`
-  );
-
-  return data;
-},
-// Publish draft tour
-publishTour: async (id) => {
-  const { data } = await api.patch(
-    `/tours/${id}/publish`
-  );
-
-  return data;
-},
-  // Get company-specific tours
- // Get company-specific tours
-getCompanyTours: async (params = {}) => {
-  const {
-    page = 1,
-    limit = 9,
-    search = "",
-    status = "",
-    sort = "createdAt",
-    order = "desc",
-    companyId = "",
-  } = params;
-
-  const queryParams = new URLSearchParams();
-
-  queryParams.append("page", page);
-  queryParams.append("limit", limit);
-
-  if (search.trim()) {
-    queryParams.append("search", search.trim());
-  }
-
-  if (status && status !== "all") {
-    queryParams.append("status", status);
-  }
-
-  if (sort) {
+    // Sorting
     queryParams.append("sort", sort);
-  }
-
-  if (order) {
     queryParams.append("order", order);
-  }
 
-  if (companyId) {
-    queryParams.append("companyId", companyId);
-  }
+    const { data } = await api.get(`/tours?${queryParams.toString()}`);
 
-  const url = `/tours/company?${queryParams.toString()}`;
+    return data;
+  },
+  // Publish draft tour
+  publishTour: async (id) => {
+    const { data } = await api.patch(`/tours/${id}/publish`);
 
-  console.log("GET TOURS URL:", url);
+    return data;
+  },
+  // Get company-specific tours
+  // Get company-specific tours
+  getCompanyTours: async (params = {}) => {
+    const {
+      page = 1,
+      limit = 9,
+      search = "",
+      status = "",
+      sort = "createdAt",
+      order = "desc",
+      companyId = "",
+    } = params;
 
-  const response = await api.get(url);
+    const queryParams = new URLSearchParams();
 
-  console.log("GET TOURS RESPONSE:", response.data);
+    queryParams.append("page", page);
+    queryParams.append("limit", limit);
 
-  return response.data;
-},
+    if (search.trim()) {
+      queryParams.append("search", search.trim());
+    }
+
+    if (status && status !== "all") {
+      queryParams.append("status", status);
+    }
+
+    if (sort) {
+      queryParams.append("sort", sort);
+    }
+
+    if (order) {
+      queryParams.append("order", order);
+    }
+
+    if (companyId) {
+      queryParams.append("companyId", companyId);
+    }
+
+    const url = `/tours/company?${queryParams.toString()}`;
+
+
+    const response = await api.get(url);
+
+
+    return response.data;
+  },
 
   // Get single tour by ID
   getTourById: async (id) => {
@@ -195,7 +190,6 @@ getCompanyTours: async (params = {}) => {
     return data;
   },
 
- 
   // Update an existing tour
   updateTour: async ({ id, ...payload }) => {
     const { data } = await api.patch(`/tours/${id}`, payload);
@@ -210,7 +204,6 @@ getCompanyTours: async (params = {}) => {
 
   // Check tour safety
   checkTourSafety: async (payload) => {
-    
     const { data } = await api.post("tours/tour-detail", payload);
     return data;
   },

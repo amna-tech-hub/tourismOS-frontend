@@ -23,11 +23,12 @@ const PaymentSuccessPage = () => {
   const [paymentData, setPaymentData] = useState(null);
   const [error, setError] = useState(null);
 
-  console.log("Payment Success Params:", {
-    type,
-    paymentId,
-    sessionId,
-  });
+  ("Payment Success Params:",
+    {
+      type,
+      paymentId,
+      sessionId,
+    });
 
   // =========================================================
   // VERIFY PAYMENT
@@ -46,24 +47,19 @@ const PaymentSuccessPage = () => {
 
         const result = response.data;
 
-        console.log("Payment verification response:", result);
+        ("Payment verification response:", result);
 
         if (result.success) {
           setPaymentData(result.data);
         } else {
-          setError(
-            result.message || "Could not verify payment."
-          );
+          setError(result.message || "Could not verify payment.");
         }
       } catch (err) {
-        console.error(
-          "Payment verification error:",
-          err.response?.data || err
-        );
+        console.error("Payment verification error:", err.response?.data || err);
 
         setError(
           err.response?.data?.message ||
-            "Network error while verifying payment."
+            "Network error while verifying payment.",
         );
       } finally {
         setLoading(false);
@@ -104,9 +100,7 @@ const PaymentSuccessPage = () => {
             Verification Failed
           </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
-            {error}
-          </p>
+          <p className="mt-2 text-sm text-slate-500">{error}</p>
 
           <button
             type="button"
@@ -134,7 +128,7 @@ const PaymentSuccessPage = () => {
         navigate(
           type === "subscription"
             ? "/dashboard/billing"
-            : "/dashboard/bookings"
+            : "/dashboard/bookings",
         );
       }}
     />

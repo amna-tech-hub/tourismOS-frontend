@@ -64,8 +64,8 @@ const getInitials = (name = "") => {
 // ======================================================
 
 const getCloudinaryPublicId = (url) => {
-    console.log(url,"ppp");
-    
+  (url, "ppp");
+
   if (!url || typeof url !== "string") return "";
 
   try {
@@ -96,8 +96,8 @@ const getCloudinaryPublicId = (url) => {
 // ======================================================
 
 const getImageData = (response) => {
-    console.log(response," res");
-    
+  (response, " res");
+
   const data =
     response?.data?.image ||
     response?.data?.avatar ||
@@ -143,12 +143,7 @@ const Profile = () => {
   // QUERIES
   // ====================================================
 
-  const {
-    data: profileResponse,
-    isLoading,
-    isError,
-    refetch,
-  } = useMyProfile();
+  const { data: profileResponse, isLoading, isError, refetch } = useMyProfile();
 
   const { data: companyResponse } = useMyCompany();
 
@@ -164,7 +159,7 @@ const Profile = () => {
   // ====================================================
   // API DATA
   // ====================================================
-console.log(profileResponse);
+  profileResponse;
 
   const profile = profileResponse?.data || {};
   const user = profile?.user || {};
@@ -309,7 +304,7 @@ console.log(profileResponse);
 
       const response = await uploadSingleImageMutation.mutateAsync(file);
       const imageData = getImageData(response);
-console.log(imageData,"image data");
+      (imageData, "image data");
 
       if (!imageData.url) {
         throw new Error("Server did not return an image URL.");
@@ -335,7 +330,7 @@ console.log(imageData,"image data");
       setAvatarError(
         err?.response?.data?.message ||
           err?.message ||
-          "Failed to upload avatar."
+          "Failed to upload avatar.",
       );
     } finally {
       event.target.value = "";
@@ -360,7 +355,7 @@ console.log(imageData,"image data");
         setAvatarError(
           err?.response?.data?.message ||
             err?.message ||
-            "Failed to remove avatar."
+            "Failed to remove avatar.",
         );
         return;
       }
@@ -409,7 +404,7 @@ console.log(imageData,"image data");
         } catch (deleteErr) {
           console.error(
             "Profile updated but old avatar cleanup failed:",
-            deleteErr
+            deleteErr,
           );
         }
       }
@@ -431,7 +426,7 @@ console.log(imageData,"image data");
         } catch (cleanupErr) {
           console.error(
             "Failed to clean up new avatar after update failure:",
-            cleanupErr
+            cleanupErr,
           );
         }
       }
@@ -441,7 +436,7 @@ console.log(imageData,"image data");
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          "Unable to update profile."
+          "Unable to update profile.",
       );
     }
   };
@@ -513,13 +508,6 @@ console.log(imageData,"image data");
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-yellow-600">
-              Employee Portal
-            </p>
-            <span className="badge-yellow">Profile</span>
-          </div>
-
           <h1 className="mt-1 text-3xl font-semibold text-text-primary">
             My Profile
           </h1>
@@ -653,8 +641,8 @@ console.log(imageData,"image data");
                         {isUploadingAvatar
                           ? "Uploading..."
                           : avatar
-                          ? "Change Photo"
-                          : "Upload Photo"}
+                            ? "Change Photo"
+                            : "Upload Photo"}
 
                         <input
                           type="file"
@@ -895,7 +883,10 @@ console.log(imageData,"image data");
                 />
               ) : (
                 <div className="flex items-start gap-2 text-sm text-text-secondary">
-                  <MapPin size={14} className="mt-0.5 shrink-0 text-slate-400" />
+                  <MapPin
+                    size={14}
+                    className="mt-0.5 shrink-0 text-slate-400"
+                  />
                   {profile?.address || "—"}
                 </div>
               )}

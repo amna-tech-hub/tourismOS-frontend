@@ -67,39 +67,33 @@ const BookingStatusBadge = ({ status }) => {
     pending: {
       label: "Pending",
       icon: Clock3,
-      className:
-        "bg-yellow-50 text-yellow-700 border-yellow-200",
+      className: "bg-yellow-50 text-yellow-700 border-yellow-200",
     },
 
     confirmed: {
       label: "Confirmed",
       icon: CheckCircle2,
-      className:
-        "bg-emerald-50 text-emerald-700 border-emerald-200",
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
     },
 
     cancelled: {
       label: "Cancelled",
       icon: XCircle,
-      className:
-        "bg-rose-50 text-rose-700 border-rose-200",
+      className: "bg-rose-50 text-rose-700 border-rose-200",
     },
 
     completed: {
       label: "Completed",
       icon: CheckCircle2,
-      className:
-        "bg-blue-50 text-blue-700 border-blue-200",
+      className: "bg-blue-50 text-blue-700 border-blue-200",
     },
   };
 
-  const current =
-    config[status] || {
-      label: status || "Unknown",
-      icon: Clock3,
-      className:
-        "bg-slate-50 text-slate-600 border-slate-200",
-    };
+  const current = config[status] || {
+    label: status || "Unknown",
+    icon: Clock3,
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+  };
 
   const Icon = current.icon;
 
@@ -117,29 +111,24 @@ const PaymentStatusBadge = ({ status }) => {
   const config = {
     paid: {
       label: "Paid",
-      className:
-        "bg-emerald-50 text-emerald-700 border-emerald-200",
+      className: "bg-emerald-50 text-emerald-700 border-emerald-200",
     },
 
     pending: {
       label: "Pending",
-      className:
-        "bg-yellow-50 text-yellow-700 border-yellow-200",
+      className: "bg-yellow-50 text-yellow-700 border-yellow-200",
     },
 
     refunded: {
       label: "Refunded",
-      className:
-        "bg-purple-50 text-purple-700 border-purple-200",
+      className: "bg-purple-50 text-purple-700 border-purple-200",
     },
   };
 
-  const current =
-    config[status] || {
-      label: status || "Unknown",
-      className:
-        "bg-slate-50 text-slate-600 border-slate-200",
-    };
+  const current = config[status] || {
+    label: status || "Unknown",
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+  };
 
   return (
     <span
@@ -166,18 +155,14 @@ const StatCard = ({
     <div className="bg-white border border-slate-200 rounded-2xl p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-slate-500">
-            {title}
-          </p>
+          <p className="text-sm font-medium text-slate-500">{title}</p>
 
           <h3 className="mt-2 text-2xl font-semibold text-slate-900 ">
             {value}
           </h3>
 
           {subtitle && (
-            <p className="mt-1 text-xs text-slate-400">
-              {subtitle}
-            </p>
+            <p className="mt-1 text-xs text-slate-400">{subtitle}</p>
           )}
         </div>
 
@@ -195,12 +180,7 @@ const StatCard = ({
    BOOKING ACTIONS
 ========================================================= */
 
-const BookingActions = ({
-  booking,
-  onView,
-  onUpdateStatus,
-  updating,
-}) => {
+const BookingActions = ({ booking, onView, onUpdateStatus, updating }) => {
   const status = booking.status;
 
   const handleAction = (newStatus) => {
@@ -230,10 +210,7 @@ const BookingActions = ({
           className="w-9 h-9 rounded-lg border border-emerald-200 bg-emerald-50 flex items-center justify-center text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 cursor-pointer disabled:opacity-50"
         >
           {updating ? (
-            <Loader2
-              size={16}
-              className="animate-spin"
-            />
+            <Loader2 size={16} className="animate-spin" />
           ) : (
             <Check size={16} />
           )}
@@ -263,10 +240,7 @@ const BookingActions = ({
           className="w-9 h-9 rounded-lg border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-600 hover:bg-blue-100 hover:text-blue-700 cursor-pointer disabled:opacity-50"
         >
           {updating ? (
-            <Loader2
-              size={16}
-              className="animate-spin"
-            />
+            <Loader2 size={16} className="animate-spin" />
           ) : (
             <CheckCircle2 size={16} />
           )}
@@ -292,10 +266,7 @@ const BookingActions = ({
    BOOKING DETAILS MODAL
 ========================================================= */
 
-const BookingDetailsModal = ({
-  booking,
-  onClose,
-}) => {
+const BookingDetailsModal = ({ booking, onClose }) => {
   if (!booking) return null;
 
   const traveler = booking.traveler || {};
@@ -341,19 +312,14 @@ const BookingDetailsModal = ({
             <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
-                  <User
-                    size={18}
-                    className="text-yellow-700"
-                  />
-                  {console.log(traveler)
-                  }
+                  <User size={18} className="text-yellow-700" />
+                  {traveler}
                   <img src={traveler.profilePicture.url} alt="" />
                 </div>
 
                 <div className="min-w-0">
                   <p className="font-semibold text-slate-900">
-                    {traveler.name ||
-                      "Unknown Traveler"}
+                    {traveler.name || "Unknown Traveler"}
                   </p>
 
                   <p className="text-sm text-slate-500 truncate">
@@ -380,9 +346,7 @@ const BookingDetailsModal = ({
               <div className="border border-slate-200 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-slate-400 mb-1">
                   <MapPin size={15} />
-                  <span className="text-xs">
-                    Tour
-                  </span>
+                  <span className="text-xs">Tour</span>
                 </div>
 
                 <p className="font-medium text-slate-900">
@@ -393,9 +357,7 @@ const BookingDetailsModal = ({
               <div className="border border-slate-200 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-slate-400 mb-1">
                   <CircleDollarSign size={15} />
-                  <span className="text-xs">
-                    Tour Price
-                  </span>
+                  <span className="text-xs">Tour Price</span>
                 </div>
 
                 <p className="font-medium text-slate-900">
@@ -413,9 +375,7 @@ const BookingDetailsModal = ({
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="border border-slate-200 rounded-xl p-3">
-                <p className="text-xs text-slate-400">
-                  Participants
-                </p>
+                <p className="text-xs text-slate-400">Participants</p>
 
                 <p className="mt-1 font-semibold text-slate-900">
                   {booking.participants || 1}
@@ -423,39 +383,26 @@ const BookingDetailsModal = ({
               </div>
 
               <div className="border border-slate-200 rounded-xl p-3">
-                <p className="text-xs text-slate-400">
-                  Amount
-                </p>
+                <p className="text-xs text-slate-400">Amount</p>
 
                 <p className="mt-1 font-semibold text-slate-900">
-                  {formatCurrency(
-                    booking.totalAmount
-                  )}
+                  {formatCurrency(booking.totalAmount)}
                 </p>
               </div>
 
               <div className="border border-slate-200 rounded-xl p-3">
-                <p className="text-xs text-slate-400">
-                  Travel Date
-                </p>
+                <p className="text-xs text-slate-400">Travel Date</p>
 
                 <p className="mt-1 font-semibold text-slate-900">
-                  {formatDate(
-                    booking.travelDate
-                  )}
+                  {formatDate(booking.travelDate)}
                 </p>
               </div>
 
               <div className="border border-slate-200 rounded-xl p-3">
-                <p className="text-xs text-slate-400">
-                  Booked On
-                </p>
+                <p className="text-xs text-slate-400">Booked On</p>
 
                 <p className="mt-1 font-semibold text-slate-900">
-                  {formatDate(
-                    booking.bookingDate ||
-                      booking.createdAt
-                  )}
+                  {formatDate(booking.bookingDate || booking.createdAt)}
                 </p>
               </div>
             </div>
@@ -468,13 +415,9 @@ const BookingDetailsModal = ({
             </h3>
 
             <div className="flex flex-wrap items-center gap-2">
-              <BookingStatusBadge
-                status={booking.status}
-              />
+              <BookingStatusBadge status={booking.status} />
 
-              <PaymentStatusBadge
-                status={booking.paymentStatus}
-              />
+              <PaymentStatusBadge status={booking.paymentStatus} />
 
               {booking.paymentMethod && (
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200">
@@ -507,38 +450,24 @@ const BookingDetailsModal = ({
 
 const CompanyBookings = () => {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState("all");
-  const [paymentFilter, setPaymentFilter] =
-    useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [paymentFilter, setPaymentFilter] = useState("all");
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const [selectedBooking, setSelectedBooking] =
-    useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const queryParams = useMemo(
     () => ({
       page,
       limit,
       search,
-      status:
-        statusFilter !== "all"
-          ? statusFilter
-          : "",
-      paymentStatus:
-        paymentFilter !== "all"
-          ? paymentFilter
-          : "",
+      status: statusFilter !== "all" ? statusFilter : "",
+      paymentStatus: paymentFilter !== "all" ? paymentFilter : "",
       sort: "createdAt",
       order: "desc",
     }),
-    [
-      page,
-      search,
-      statusFilter,
-      paymentFilter,
-    ]
+    [page, search, statusFilter, paymentFilter],
   );
 
   const {
@@ -548,8 +477,7 @@ const CompanyBookings = () => {
     refetch,
   } = useCompanyBookings(queryParams);
 
-  const updateStatusMutation =
-    useUpdateBookingStatus();
+  const updateStatusMutation = useUpdateBookingStatus();
 
   const bookings = response?.data || [];
   const meta = response?.meta || {};
@@ -560,24 +488,16 @@ const CompanyBookings = () => {
 
   const stats = useMemo(() => {
     const pending = bookings.filter(
-      (booking) => booking.status === "pending"
+      (booking) => booking.status === "pending",
     ).length;
 
     const confirmed = bookings.filter(
-      (booking) => booking.status === "confirmed"
+      (booking) => booking.status === "confirmed",
     ).length;
 
     const paidRevenue = bookings
-      .filter(
-        (booking) =>
-          booking.paymentStatus === "paid"
-      )
-      .reduce(
-        (total, booking) =>
-          total +
-          Number(booking.totalAmount || 0),
-        0
-      );
+      .filter((booking) => booking.paymentStatus === "paid")
+      .reduce((total, booking) => total + Number(booking.totalAmount || 0), 0);
 
     return {
       pending,
@@ -590,20 +510,14 @@ const CompanyBookings = () => {
      STATUS UPDATE
   ========================================================= */
 
-  const handleUpdateStatus = async (
-    bookingId,
-    status
-  ) => {
+  const handleUpdateStatus = async (bookingId, status) => {
     try {
       await updateStatusMutation.mutateAsync({
         id: bookingId,
         status,
       });
     } catch (error) {
-      console.error(
-        "Booking status update failed:",
-        error
-      );
+      console.error("Booking status update failed:", error);
     }
   };
 
@@ -633,18 +547,13 @@ const CompanyBookings = () => {
   const totalPages = meta.totalPages || 1;
 
   const goToPreviousPage = () => {
-    setPage((prev) =>
-      Math.max(prev - 1, 1)
-    );
+    setPage((prev) => Math.max(prev - 1, 1));
   };
 
   const goToNextPage = () => {
-    setPage((prev) =>
-      Math.min(prev + 1, totalPages)
-    );
+    setPage((prev) => Math.min(prev + 1, totalPages));
   };
 
-  
   /* =========================================================
      PAGE
   ========================================================= */
@@ -652,15 +561,12 @@ const CompanyBookings = () => {
   return (
     <div className="min-h-[calc(100vh-80px)] ">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-1 ">
-
         {/* =====================================================
             HEADER
         ===================================================== */}
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-7">
           <div>
-
-
             <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
               Bookings
             </h1>
@@ -676,14 +582,7 @@ const CompanyBookings = () => {
             disabled={isFetching}
             className="btn-outline self-start lg:self-auto px-4 py-2.5 gap-2 cursor-pointer"
           >
-            <RefreshCw
-              size={16}
-              className={
-                isFetching
-                  ? "animate-spin"
-                  : ""
-              }
-            />
+            <RefreshCw size={16} className={isFetching ? "animate-spin" : ""} />
             Refresh
           </button>
         </div>
@@ -693,13 +592,9 @@ const CompanyBookings = () => {
         ===================================================== */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-
           <StatCard
             title="Total Bookings"
-            value={
-              meta.totalDocuments ??
-              bookings.length
-            }
+            value={meta.totalDocuments ?? bookings.length}
             subtitle="All company bookings"
             icon={CalendarDays}
             iconWrapper="bg-yellow-50"
@@ -726,9 +621,7 @@ const CompanyBookings = () => {
 
           <StatCard
             title="Paid Revenue"
-            value={formatCurrency(
-              stats.paidRevenue
-            )}
+            value={formatCurrency(stats.paidRevenue)}
             subtitle="From current results"
             icon={CircleDollarSign}
             iconWrapper="bg-blue-50"
@@ -742,9 +635,7 @@ const CompanyBookings = () => {
 
         <div className="bg-white rounded-2xl border border-slate-200 mb-5">
           <div className="p-4">
-
             <div className="flex flex-col xl:flex-row gap-3">
-
               {/* Search */}
               <div className="relative flex-1">
                 <Search
@@ -755,11 +646,7 @@ const CompanyBookings = () => {
                 <input
                   type="text"
                   value={search}
-                  onChange={(e) =>
-                    handleSearchChange(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   placeholder="Search traveler, tour or booking..."
                   className="w-full h-11 pl-10 pr-4 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
                 />
@@ -774,28 +661,14 @@ const CompanyBookings = () => {
 
                 <select
                   value={statusFilter}
-                  onChange={(e) =>
-                    handleStatusChange(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => handleStatusChange(e.target.value)}
                   className="h-11 w-full xl:w-[170px] pl-9 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 cursor-pointer appearance-none"
                 >
-                  <option value="all">
-                    All Statuses
-                  </option>
-                  <option value="pending">
-                    Pending
-                  </option>
-                  <option value="confirmed">
-                    Confirmed
-                  </option>
-                  <option value="completed">
-                    Completed
-                  </option>
-                  <option value="cancelled">
-                    Cancelled
-                  </option>
+                  <option value="all">All Statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </div>
 
@@ -808,25 +681,13 @@ const CompanyBookings = () => {
 
                 <select
                   value={paymentFilter}
-                  onChange={(e) =>
-                    handlePaymentChange(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => handlePaymentChange(e.target.value)}
                   className="h-11 w-full xl:w-[170px] pl-9 pr-8 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 cursor-pointer appearance-none"
                 >
-                  <option value="all">
-                    All Payments
-                  </option>
-                  <option value="paid">
-                    Paid
-                  </option>
-                  <option value="pending">
-                    Pending
-                  </option>
-                  <option value="refunded">
-                    Refunded
-                  </option>
+                  <option value="all">All Payments</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="refunded">Refunded</option>
                 </select>
               </div>
             </div>
@@ -838,7 +699,6 @@ const CompanyBookings = () => {
         ===================================================== */}
 
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-
           {/* Table heading */}
           <div className="px-5 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
@@ -854,10 +714,7 @@ const CompanyBookings = () => {
             <div className="inline-flex items-center gap-3 text-xs font-medium text-slate-500">
               {isFetching && (
                 <span className="inline-flex items-center gap-1.5 text-slate-400">
-                  <Loader2
-                    size={13}
-                    className="animate-spin"
-                  />
+                  <Loader2 size={13} className="animate-spin" />
                   Updating...
                 </span>
               )}
@@ -871,22 +728,14 @@ const CompanyBookings = () => {
           {/* Initial loading only */}
           {isLoading && bookings.length === 0 ? (
             <div className="py-20 flex flex-col items-center justify-center text-center px-6">
-              <Loader2
-                size={30}
-                className="animate-spin text-yellow-500"
-              />
+              <Loader2 size={30} className="animate-spin text-yellow-500" />
 
-              <p className="text-sm text-slate-500 mt-3">
-                Loading bookings...
-              </p>
+              <p className="text-sm text-slate-500 mt-3">Loading bookings...</p>
             </div>
           ) : bookings.length === 0 ? (
             <div className="py-20 flex flex-col items-center justify-center text-center px-6">
               <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
-                <CalendarDays
-                  size={28}
-                  className="text-slate-400"
-                />
+                <CalendarDays size={28} className="text-slate-400" />
               </div>
 
               <h3 className="text-lg font-semibold text-slate-900">
@@ -905,10 +754,8 @@ const CompanyBookings = () => {
 
               <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
-
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50/60">
-
                       <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                         Traveler
                       </th>
@@ -940,44 +787,35 @@ const CompanyBookings = () => {
                       <th className="text-right px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                         Action
                       </th>
-
                     </tr>
                   </thead>
 
                   <tbody className="divide-y divide-slate-100">
-
                     {bookings.map((booking) => {
-                      const traveler =
-                        booking.traveler || {};
+                      const traveler = booking.traveler || {};
 
-                      const tour =
-                        booking.tour || {};
+                      const tour = booking.tour || {};
 
                       return (
-                        <tr
-                          key={booking._id}
-                          className="hover:bg-slate-50/50"
-                        >
-
+                        <tr key={booking._id} className="hover:bg-slate-50/50">
                           {/* Traveler */}
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
-
                               <div className="w-9 h-9 rounded-full bg-yellow-50 border border-yellow-100 flex items-center justify-center shrink-0">
-                              
-                                <img src={traveler.profilePicture.url} alt="" className="text-yellow-600"/>
-                               
+                                <img
+                                  src={traveler.profilePicture.url}
+                                  alt=""
+                                  className="text-yellow-600"
+                                />
                               </div>
 
                               <div className="min-w-0">
                                 <p className="text-sm font-semibold text-slate-900  max-w-[155px]">
-                                  {traveler.name ||
-                                    "Unknown Traveler"}
+                                  {traveler.name || "Unknown Traveler"}
                                 </p>
 
                                 <p className="text-xs text-slate-400 truncate max-w-[170px] mt-0.5">
-                                  {traveler.email ||
-                                    "—"}
+                                  {traveler.email || "—"}
                                 </p>
                               </div>
                             </div>
@@ -987,15 +825,11 @@ const CompanyBookings = () => {
                           <td className="px-5 py-4">
                             <div className="min-w-0">
                               <p className="text-sm font-medium text-slate-900 truncate max-w-[190px]">
-                                {tour.title ||
-                                  "Unknown Tour"}
+                                {tour.title || "Unknown Tour"}
                               </p>
 
                               <p className="text-xs text-slate-400 mt-1">
-                                {formatCurrency(
-                                  tour.price
-                                )}{" "}
-                                / person
+                                {formatCurrency(tour.price)} / person
                               </p>
                             </div>
                           </td>
@@ -1009,9 +843,7 @@ const CompanyBookings = () => {
                               />
 
                               <span className="text-sm text-slate-600 whitespace-nowrap">
-                                {formatDate(
-                                  booking.travelDate
-                                )}
+                                {formatDate(booking.travelDate)}
                               </span>
                             </div>
                           </td>
@@ -1019,62 +851,43 @@ const CompanyBookings = () => {
                           {/* Guests */}
                           <td className="px-5 py-4">
                             <div className="inline-flex items-center gap-1.5 text-sm text-slate-700">
-                              <Users
-                                size={15}
-                                className="text-slate-400"
-                              />
+                              <Users size={15} className="text-slate-400" />
 
-                              {booking.participants ||
-                                1}
+                              {booking.participants || 1}
                             </div>
                           </td>
 
                           {/* Amount */}
                           <td className="px-5 py-4">
                             <p className="text-sm font-semibold text-slate-900 whitespace-nowrap">
-                              {formatCurrency(
-                                booking.totalAmount
-                              )}
+                              {formatCurrency(booking.totalAmount)}
                             </p>
                           </td>
 
                           {/* Payment */}
                           <td className="px-5 py-4">
                             <PaymentStatusBadge
-                              status={
-                                booking.paymentStatus
-                              }
+                              status={booking.paymentStatus}
                             />
                           </td>
 
                           {/* Status */}
                           <td className="px-5 py-4">
-                            <BookingStatusBadge
-                              status={
-                                booking.status
-                              }
-                            />
+                            <BookingStatusBadge status={booking.status} />
                           </td>
 
                           {/* Action */}
                           <td className="px-5 py-4">
                             <BookingActions
                               booking={booking}
-                              onView={
-                                setSelectedBooking
-                              }
-                              onUpdateStatus={
-                                handleUpdateStatus
-                              }
-                              updating={
-                                updateStatusMutation.isPending
-                              }
+                              onView={setSelectedBooking}
+                              onUpdateStatus={handleUpdateStatus}
+                              updating={updateStatusMutation.isPending}
                             />
                           </td>
                         </tr>
                       );
                     })}
-
                   </tbody>
                 </table>
               </div>
@@ -1084,34 +897,26 @@ const CompanyBookings = () => {
               ================================================= */}
 
               <div className="lg:hidden divide-y divide-slate-100">
-
                 {bookings.map((booking) => {
-                  const traveler =
-                    booking.traveler || {};
+                  const traveler = booking.traveler || {};
 
-                  const tour =
-                    booking.tour || {};
+                  const tour = booking.tour || {};
 
                   return (
-                    <div
-                      key={booking._id}
-                      className="p-5"
-                    >
-
+                    <div key={booking._id} className="p-5">
                       <div className="flex items-start justify-between gap-3">
-
                         <div className="flex items-center gap-3 min-w-0">
-
                           <div className="w-10 h-10 rounded-full bg-yellow-50 border border-yellow-100 flex items-center justify-center shrink-0">
-                           
-                                <img src={traveler.profilePicture.url} alt="" className="text-yellow-600"/>
-                               
+                            <img
+                              src={traveler.profilePicture.url}
+                              alt=""
+                              className="text-yellow-600"
+                            />
                           </div>
 
                           <div className="min-w-0">
                             <p className="text-sm font-semibold text-slate-900 truncate">
-                              {traveler.name ||
-                                "Unknown Traveler"}
+                              {traveler.name || "Unknown Traveler"}
                             </p>
 
                             <p className="text-xs text-slate-400 truncate mt-0.5">
@@ -1122,54 +927,36 @@ const CompanyBookings = () => {
 
                         <BookingActions
                           booking={booking}
-                          onView={
-                            setSelectedBooking
-                          }
-                          onUpdateStatus={
-                            handleUpdateStatus
-                          }
-                          updating={
-                            updateStatusMutation.isPending
-                          }
+                          onView={setSelectedBooking}
+                          onUpdateStatus={handleUpdateStatus}
+                          updating={updateStatusMutation.isPending}
                         />
                       </div>
 
                       <div className="mt-5">
                         <p className="text-sm font-semibold text-slate-900">
-                          {tour.title ||
-                            "Unknown Tour"}
+                          {tour.title || "Unknown Tour"}
                         </p>
 
                         <p className="text-xs text-slate-400 mt-1">
-                          {formatCurrency(
-                            tour.price
-                          )}{" "}
-                          per person
+                          {formatCurrency(tour.price)} per person
                         </p>
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5">
-
                         <div>
-                          <p className="text-[11px] text-slate-400">
-                            Guests
-                          </p>
+                          <p className="text-[11px] text-slate-400">Guests</p>
 
                           <p className="text-sm font-medium text-slate-700 mt-1">
-                            {booking.participants ||
-                              1}
+                            {booking.participants || 1}
                           </p>
                         </div>
 
                         <div>
-                          <p className="text-[11px] text-slate-400">
-                            Amount
-                          </p>
+                          <p className="text-[11px] text-slate-400">Amount</p>
 
                           <p className="text-sm font-medium text-slate-700 mt-1">
-                            {formatCurrency(
-                              booking.totalAmount
-                            )}
+                            {formatCurrency(booking.totalAmount)}
                           </p>
                         </div>
 
@@ -1179,9 +966,7 @@ const CompanyBookings = () => {
                           </p>
 
                           <p className="text-sm font-medium text-slate-700 mt-1">
-                            {formatDate(
-                              booking.travelDate
-                            )}
+                            {formatDate(booking.travelDate)}
                           </p>
                         </div>
 
@@ -1192,24 +977,16 @@ const CompanyBookings = () => {
 
                           <p className="text-sm font-medium text-slate-700 mt-1">
                             {formatDate(
-                              booking.bookingDate ||
-                                booking.createdAt
+                              booking.bookingDate || booking.createdAt,
                             )}
                           </p>
                         </div>
-
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 mt-5">
-                        <BookingStatusBadge
-                          status={booking.status}
-                        />
+                        <BookingStatusBadge status={booking.status} />
 
-                        <PaymentStatusBadge
-                          status={
-                            booking.paymentStatus
-                          }
-                        />
+                        <PaymentStatusBadge status={booking.paymentStatus} />
                       </div>
                     </div>
                   );
@@ -1221,7 +998,6 @@ const CompanyBookings = () => {
               ================================================= */}
 
               <div className="px-5 py-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-
                 <p className="text-xs text-slate-500">
                   Showing page{" "}
                   <span className="font-medium text-slate-700">
@@ -1234,7 +1010,6 @@ const CompanyBookings = () => {
                 </p>
 
                 <div className="flex items-center gap-2">
-
                   <button
                     type="button"
                     onClick={goToPreviousPage}
@@ -1251,14 +1026,11 @@ const CompanyBookings = () => {
                   <button
                     type="button"
                     onClick={goToNextPage}
-                    disabled={
-                      page >= totalPages
-                    }
+                    disabled={page >= totalPages}
                     className="w-9 h-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                   >
                     <ChevronRight size={17} />
                   </button>
-
                 </div>
               </div>
             </>
@@ -1272,9 +1044,7 @@ const CompanyBookings = () => {
 
       <BookingDetailsModal
         booking={selectedBooking}
-        onClose={() =>
-          setSelectedBooking(null)
-        }
+        onClose={() => setSelectedBooking(null)}
       />
     </div>
   );

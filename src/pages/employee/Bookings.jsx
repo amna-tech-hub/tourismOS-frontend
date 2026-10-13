@@ -541,11 +541,7 @@ const Bookings = () => {
       ================================================== */}
 
       <div>
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-yellow-600">Employee Portal</p>
-
-          <span className="badge-yellow">Bookings</span>
-        </div>
+     
 
         <h1 className="mt-1 text-3xl font-semibold text-text-primary">
           Bookings

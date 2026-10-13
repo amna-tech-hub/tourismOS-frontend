@@ -313,12 +313,7 @@ const Reviews = () => {
       ================================================== */}
 
       <div>
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-yellow-600">Employee Portal</p>
-
-          <span className="badge-yellow">Reviews</span>
-        </div>
-
+       
         <h1 className="mt-1 text-3xl font-semibold text-text-primary">
           Reviews
         </h1>

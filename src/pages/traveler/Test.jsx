@@ -12,7 +12,7 @@ import { useState } from "react";
 import TourCard from "../../components/tour/TourCard";
 
 export default function Test() {
-  console.log("came in public test");
+  ("came in public test");
   const [isCreateTourOpen, setIsCreateTourOpen] = useState(false);
 
   return (

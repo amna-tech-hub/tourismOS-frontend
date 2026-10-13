@@ -64,7 +64,7 @@ const BookingModal = ({
 
   useEffect(() => {
     if (externalError) {
-      console.log("External error received:", externalError);
+      ("External error received:", externalError);
 
       const errorMessage =
         externalError?.response?.data?.message ||
@@ -502,7 +502,7 @@ const Home = () => {
   ======================================================= */
   const handleConfirmBooking = async (bookingData) => {
     try {
-      console.log(bookingData);
+      bookingData;
 
       const cleanBookingData = {
         tourId: bookingData.tourId,
